@@ -47,7 +47,7 @@ export function ContactForm() {
   }
 
   return (
-    <div className="flex flex-col px-10 py-12 max-w-md">
+    <div className="flex flex-col overflow-y-auto px-10 py-12 max-w-md">
       <p className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground mb-2">Send a message</p>
       <h2 className="text-2xl font-bold tracking-tight mb-4">Contact us</h2>
 

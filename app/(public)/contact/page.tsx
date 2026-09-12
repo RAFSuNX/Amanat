@@ -5,10 +5,10 @@ import { ContactForm } from "./contact-form"
 
 export default function ContactPage() {
   return (
-    <div className="min-h-dvh flex flex-col">
+    <div className="h-dvh flex flex-col overflow-hidden">
       <PublicNav donateButton />
 
-      <div className="flex-1 grid md:grid-cols-[1fr_1.4fr]">
+      <div className="flex-1 grid md:grid-cols-[1fr_1.4fr] overflow-hidden">
         {/* Left: contact info */}
         <div className="hidden md:flex flex-col px-10 py-12 border-r border-border/40 bg-muted/20 gap-8">
           <div className="flex flex-col gap-4">
