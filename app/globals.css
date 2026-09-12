@@ -113,12 +113,23 @@ nav a, nav button {
   letter-spacing: 0.06em;
 }
 
-/* Refined inputs - tighter, more intentional */
+/* Refined inputs - taller, more intentional */
 input:not([type="checkbox"]):not([type="radio"]):not([type="file"]),
-textarea,
 select {
   border-color: oklch(0.86 0.018 155) !important;
-  transition: border-color 0.15s, box-shadow 0.15s;
+  min-height: 2.75rem !important;
+  transition: border-color 0.15s;
+}
+
+input[type="file"] {
+  border-color: oklch(0.86 0.018 155) !important;
+  min-height: 2.75rem !important;
+  transition: border-color 0.15s;
+}
+
+textarea {
+  border-color: oklch(0.86 0.018 155) !important;
+  transition: border-color 0.15s;
 }
 
 input:not([type="checkbox"]):not([type="radio"]):not([type="file"]):focus,

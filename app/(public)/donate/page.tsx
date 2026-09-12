@@ -125,7 +125,7 @@ export default function DonatePage() {
               <div className="flex gap-2">
                 {PRESETS.map((a) => (
                   <button key={a} type="button" onClick={() => setAmount(String(a))}
-                    className={`flex-1 h-10 text-sm border rounded transition-colors ${
+                    className={`flex-1 text-sm border rounded transition-colors ${
                       amount === String(a) ? "bg-primary text-primary-foreground border-primary" : "border-border hover:bg-muted"
                     }`}>
                     {a.toLocaleString()}
@@ -202,9 +202,9 @@ export default function DonatePage() {
                 </div>
               ) : (
                 <div className="flex items-center gap-3 border border-border/60 rounded px-3 py-2 bg-muted/20">
-                  <Input type="file" accept="image/*"
+                  <input type="file" accept="image/*"
                     onChange={(e) => { const f = e.target.files?.[0]; if (f) { setReceiptFile(f); uploadReceipt(f) } }}
-                    className="text-xs h-10 cursor-pointer" />
+                    className="w-full text-xs border border-border/60 rounded bg-muted/20 px-3 cursor-pointer" style={{ minHeight: "2.75rem", paddingTop: "0.6rem" }} />
                   {receiptUploading && <span className="text-[10px] text-muted-foreground shrink-0">Uploading...</span>}
                 </div>
               )}
