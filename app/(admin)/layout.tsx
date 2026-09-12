@@ -1,5 +1,4 @@
 import Link from "next/link"
-import Image from "next/image"
 import { requireAdmin } from "@/lib/session"
 import { redirect } from "next/navigation"
 import { SignOutButton } from "@/components/sign-out-button"
@@ -24,7 +23,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
       <aside className="w-52 border-r border-border/40 flex flex-col shrink-0 bg-muted/20">
         <div className="h-16 px-4 border-b border-border/40 flex items-center gap-2">
           <Link href="/">
-            <Image src="/logo.png" alt="Amanat" width={80} height={32} className="h-8 w-auto object-contain" />
+            <img src="/logo.png" alt="Amanat" className="h-8 w-auto object-contain" />
           </Link>
           <span className="text-[10px] uppercase tracking-[0.15em] text-muted-foreground">Admin</span>
         </div>
