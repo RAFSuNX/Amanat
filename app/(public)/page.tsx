@@ -64,18 +64,17 @@ export default async function LandingPage() {
           </div>
         </nav>
 
-        {/* Hero body — fills space, anchors content to bottom third */}
-        <div className="flex-1 flex flex-col justify-between px-10 py-12">
-          {/* Top: eyebrow */}
-          <p className="text-xs tracking-[0.22em] uppercase text-primary font-medium">
-            {t.hero.eyebrow}
-          </p>
+        {/* Hero body — two columns: content left, hologram right */}
+        <div className="flex-1 flex items-center gap-12 px-10 py-12">
 
-          {/* Middle: headline + CTA */}
-          <div className="flex flex-col gap-8 max-w-4xl">
+          {/* Left: content */}
+          <div className="flex flex-col gap-8 flex-1 max-w-xl">
+            <p className="text-xs tracking-[0.22em] uppercase text-primary font-medium">
+              {t.hero.eyebrow}
+            </p>
             <h1
               className="font-bold leading-[1.02] tracking-tight"
-              style={{ fontSize: "clamp(2.8rem, 6vw, 5.5rem)" }}
+              style={{ fontSize: "clamp(2.6rem, 5.5vw, 5rem)" }}
             >
               {t.hero.headline}
             </h1>
@@ -92,19 +91,99 @@ export default async function LandingPage() {
             </div>
           </div>
 
-          {/* Bottom: stats strip */}
-          <div className="grid grid-cols-3 border-t border-border/30 pt-6 gap-8 max-w-lg">
-            {[
-              { label: t.stats.totalDonated, value: `${stats.totalDonated.toLocaleString()} BDT` },
-              { label: t.stats.familiesActive, value: stats.familiesHelped.toString() },
-              { label: t.stats.cyclesDone, value: stats.cyclesCompleted.toString() },
-            ].map((s) => (
-              <div key={s.label}>
-                <p className="text-2xl font-bold tabular-nums">{s.value}</p>
-                <p className="text-xs text-muted-foreground mt-1 uppercase tracking-wider">{s.label}</p>
+          {/* Right: hologram stats card */}
+          <div className="shrink-0 relative" style={{ width: "340px" }}>
+            {/* Outer glow */}
+            <div
+              className="absolute inset-0 rounded-2xl"
+              style={{
+                background: "radial-gradient(ellipse at center, rgba(59,94,69,0.18) 0%, transparent 70%)",
+                filter: "blur(24px)",
+                transform: "scale(1.15)",
+              }}
+              aria-hidden="true"
+            />
+
+            {/* Card */}
+            <div
+              className="relative rounded-2xl overflow-hidden"
+              style={{
+                background: "linear-gradient(145deg, rgba(59,94,69,0.10) 0%, rgba(26,46,32,0.06) 100%)",
+                border: "1px solid rgba(59,94,69,0.22)",
+                backdropFilter: "blur(16px)",
+                boxShadow: "0 0 0 1px rgba(255,255,255,0.06) inset, 0 4px 40px rgba(59,94,69,0.10)",
+              }}
+            >
+              {/* Grid overlay */}
+              <div
+                className="absolute inset-0 pointer-events-none"
+                style={{
+                  backgroundImage:
+                    "linear-gradient(rgba(59,94,69,0.07) 1px, transparent 1px), linear-gradient(90deg, rgba(59,94,69,0.07) 1px, transparent 1px)",
+                  backgroundSize: "28px 28px",
+                }}
+                aria-hidden="true"
+              />
+
+              {/* Scan line */}
+              <div
+                className="absolute left-0 right-0 pointer-events-none"
+                style={{
+                  height: "1px",
+                  background: "linear-gradient(90deg, transparent, rgba(122,171,138,0.5), transparent)",
+                  animation: "scan 3s linear infinite",
+                  top: 0,
+                }}
+                aria-hidden="true"
+              />
+
+              <div className="relative px-7 py-8 flex flex-col gap-6">
+                {/* Header */}
+                <div className="flex items-center justify-between">
+                  <span className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground">
+                    Fund Status
+                  </span>
+                  <span className="flex items-center gap-1.5 text-[10px] text-primary uppercase tracking-wider">
+                    <span
+                      className="w-1.5 h-1.5 rounded-full bg-primary"
+                      style={{ animation: "pulse 2s ease-in-out infinite" }}
+                    />
+                    Live
+                  </span>
+                </div>
+
+                {/* Stats */}
+                <div className="flex flex-col gap-5">
+                  {[
+                    { label: t.stats.totalDonated, value: `${stats.totalDonated.toLocaleString()} BDT`, accent: true },
+                    { label: t.stats.familiesActive, value: stats.familiesHelped.toLocaleString(), accent: false },
+                    { label: t.stats.cyclesDone, value: stats.cyclesCompleted.toLocaleString(), accent: false },
+                  ].map((s) => (
+                    <div key={s.label} className="flex flex-col gap-1 border-t border-border/20 pt-5">
+                      <p className="text-[10px] uppercase tracking-[0.15em] text-muted-foreground">
+                        {s.label}
+                      </p>
+                      <p
+                        className="font-bold tabular-nums leading-none"
+                        style={{
+                          fontSize: "clamp(1.5rem, 2.5vw, 2rem)",
+                          color: s.accent ? "oklch(0.40 0.11 155)" : "inherit",
+                        }}
+                      >
+                        {s.value}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+
+                {/* Footer note */}
+                <p className="text-[10px] text-muted-foreground/50 border-t border-border/20 pt-4">
+                  Updated in real time. All figures publicly verifiable.
+                </p>
               </div>
-            ))}
+            </div>
           </div>
+
         </div>
 
         {/* Scroll hint */}

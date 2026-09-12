@@ -11,7 +11,7 @@ const en = {
   },
   hero: {
     eyebrow: "The Hope of All of Us",
-    headline: "A welfare system built on trust, not charity.",
+    headline: "Built on trust. Sustained by charity.",
     body: "Amanat connects people who want to give with volunteers who help those who genuinely cannot support themselves. Every taka in, every taka out is on public record.",
     ctaDonate: "Make a Donation",
     ctaLedger: "Public Ledger",
@@ -95,7 +95,7 @@ const bn: typeof en = {
   },
   hero: {
     eyebrow: "আমাদের সকলের আশা",
-    headline: "বিশ্বাসের উপর গড়া একটি কল্যাণ ব্যবস্থা, দয়া নয়।",
+    headline: "বিশ্বাসের উপর গড়া। দানের মাধ্যমে টিকে থাকা।",
     body: "আমানত দাতাদের সাথে স্বেচ্ছাসেবীদের সংযুক্ত করে যারা সত্যিকারের অসহায় মানুষদের সাহায্য করে। প্রতিটি টাকার হিসাব প্রকাশ্যে থাকে।",
     ctaDonate: "অনুদান দিন",
     ctaLedger: "পাবলিক লেজার",
