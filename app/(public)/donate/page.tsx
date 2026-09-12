@@ -135,11 +135,12 @@ export default function DonatePage() {
             </div>
 
             {/* Donor info */}
+            <div className="flex flex-col gap-2">
+              <label className={labelClass}>Your Name</label>
+              <Input placeholder="As on your NID or passport" value={name} onChange={(e) => setName(e.target.value)} />
+              <p className="text-[10px] text-muted-foreground">Use your real name as on NID or passport for future verification.</p>
+            </div>
             <div className="grid grid-cols-2 gap-4">
-              <div className={fieldClass}>
-                <label className={labelClass}>Your Name</label>
-                <Input placeholder="Full name" value={name} onChange={(e) => setName(e.target.value)} />
-              </div>
               <div className={fieldClass}>
                 <label className={labelClass}>Phone</label>
                 <Input type="tel" placeholder="01XXXXXXXXX" value={phone} onChange={(e) => setPhone(e.target.value)} />

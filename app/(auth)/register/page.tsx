@@ -92,7 +92,10 @@ export default function RegisterPage() {
       <form onSubmit={handleSubmit} className="flex flex-col gap-5">
         <div className={fieldClass}>
           <label className={labelClass}>Full Name</label>
-          <Input value={name} onChange={(e) => setName(e.target.value)} required />
+          <Input value={name} onChange={(e) => setName(e.target.value)} required placeholder="As on your NID or passport" />
+          <p className="text-[10px] text-muted-foreground leading-relaxed">
+            Please use your name exactly as it appears on your NID or passport. This helps us verify your identity if needed.
+          </p>
         </div>
         <div className={fieldClass}>
           <label className={labelClass}>Email</label>

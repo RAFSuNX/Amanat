@@ -61,7 +61,8 @@ export default function NewVolunteerPage() {
       <form onSubmit={submit} className="flex flex-col gap-5">
         <div className="flex flex-col gap-2">
           <Label>Full Name *</Label>
-          <Input required value={form.name} onChange={(e) => set("name", e.target.value)} />
+          <Input required value={form.name} onChange={(e) => set("name", e.target.value)} placeholder="As on NID or passport" />
+          <p className="text-[10px] text-muted-foreground">Use the volunteer's name exactly as on their NID or passport for KYC matching.</p>
         </div>
         <div className="flex flex-col gap-2">
           <Label>Email *</Label>

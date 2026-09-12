@@ -141,7 +141,10 @@ export default function NewBeneficiaryPage() {
 
           <div className="flex flex-col gap-2">
             <Label>Full Name *</Label>
-            <Input value={name} onChange={(e) => setName(e.target.value)} placeholder="As on NID or known name" />
+            <Input value={name} onChange={(e) => setName(e.target.value)} placeholder="As on NID or passport" />
+            <p className="text-[10px] text-muted-foreground leading-relaxed">
+              Please record the name exactly as it appears on their NID or passport. This is important for identity verification and future authentication.
+            </p>
           </div>
           <div className="flex flex-col gap-2">
             <Label>Phone Number</Label>
