@@ -46,7 +46,13 @@ export default function RegisterPage() {
 
     setLoading(true)
 
-    const { data, error: authError } = await signUp.email({ email, password, name })
+    const { data, error: authError } = await signUp.email({
+      email,
+      password,
+      name,
+      // @ts-expect-error -- additional field
+      phone: phone || undefined,
+    })
 
     if (authError || !data) {
       setError(authError?.message ?? "Registration failed.")
@@ -65,11 +71,10 @@ export default function RegisterPage() {
         setLoading(false)
         return
       }
-      router.push("/volunteer/kyc")
-    } else {
-      router.push("/account/donations")
     }
 
+    // Email verification required -- redirect to a pending page
+    router.push("/verify-email")
     setLoading(false)
   }
 
@@ -120,13 +125,13 @@ export default function RegisterPage() {
           <Input id="password" type="password" autoComplete="new-password" value={password} onChange={(e) => setPassword(e.target.value)} required minLength={8} />
         </div>
 
+        <div className="flex flex-col gap-2">
+          <Label htmlFor="phone">Mobile Number</Label>
+          <Input id="phone" type="tel" placeholder="01XXXXXXXXX" value={phone} onChange={(e) => setPhone(e.target.value)} />
+        </div>
+
         {type === "volunteer" && (
           <>
-            <div className="flex flex-col gap-2">
-              <Label htmlFor="phone">Phone</Label>
-              <Input id="phone" placeholder="01XXXXXXXXX" value={phone} onChange={(e) => setPhone(e.target.value)} />
-            </div>
-
             <div className="flex flex-col gap-2">
               <Label htmlFor="district">District you will cover *</Label>
               <select

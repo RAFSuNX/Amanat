@@ -35,7 +35,7 @@ export default function LoginPage() {
     const role = (data.user as { role?: string }).role
     if (role === "ADMIN") router.push("/admin")
     else if (role === "VOLUNTEER") router.push("/volunteer")
-    else router.push("/account/donations")
+    else router.push("/account")
   }
 
   return (
