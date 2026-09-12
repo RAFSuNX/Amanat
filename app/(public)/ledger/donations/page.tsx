@@ -85,10 +85,10 @@ export default async function LedgerDonationsPage() {
   ])
 
   return (
-    <div className="h-dvh w-dvw flex flex-col overflow-hidden">
+    <div className="min-h-dvh flex flex-col">
       <PublicNav activeHref="/ledger/donations" donateButton />
 
-      <main className="flex-1 overflow-y-auto px-6 py-8 max-w-5xl mx-auto w-full">
+      <main className="flex-1 px-6 py-8 max-w-5xl mx-auto w-full">
         <h1 className="text-2xl font-bold mb-1">Donation Ledger</h1>
         <p className="text-sm text-muted-foreground mb-6">
           All donations including those pending confirmation. Pending donations are in review and will be added to the fund once verified. Click a receipt to view details.

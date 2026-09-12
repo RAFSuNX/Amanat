@@ -15,7 +15,7 @@ export function PublicNav({ donateButton = false, activeHref }: PublicNavProps) 
   ]
 
   return (
-    <nav className="border-b border-border/40 px-10 py-5 flex items-center justify-between shrink-0">
+    <nav className="sticky top-0 z-20 bg-background border-b border-border/40 px-10 py-5 flex items-center justify-between">
       <Link href="/" className="text-sm font-semibold tracking-tight">Amanat</Link>
       <div className="flex items-center gap-6">
         {links.map((l) => (

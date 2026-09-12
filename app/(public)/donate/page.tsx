@@ -56,7 +56,7 @@ export default function DonatePage() {
 
   if (done) {
     return (
-      <div className="h-dvh w-dvw flex flex-col overflow-hidden">
+      <div className="min-h-dvh flex flex-col">
         <PublicNav />
         <div className="flex-1 flex flex-col items-center justify-center gap-6 px-10 text-center">
           <p className="text-[10px] uppercase tracking-[0.2em] text-primary">Submitted</p>
@@ -76,12 +76,12 @@ export default function DonatePage() {
   }
 
   return (
-    <div className="h-dvh w-dvw flex flex-col overflow-hidden">
+    <div className="min-h-dvh flex flex-col">
       <PublicNav donateButton={false} />
 
-      <div className="flex-1 grid md:grid-cols-[1fr_1.4fr] overflow-hidden">
+      <div className="flex-1 grid md:grid-cols-[1fr_1.4fr]">
         {/* Left: context */}
-        <div className="hidden md:flex flex-col overflow-y-auto px-10 py-12 border-r border-border/40 bg-muted/20 gap-8">
+        <div className="hidden md:flex flex-col justify-between px-10 py-12 border-r border-border/40 bg-muted/20">
           <div className="flex flex-col gap-4">
             <p className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground">How it works</p>
             <div className="flex flex-col gap-6 mt-4">
@@ -106,7 +106,7 @@ export default function DonatePage() {
         </div>
 
         {/* Right: form */}
-        <div className="flex flex-col overflow-y-auto px-10 py-12 max-w-md">
+        <div className="flex flex-col px-10 py-12 max-w-md">
           <p className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground mb-2">Make a donation</p>
           <h1 className="text-2xl font-bold tracking-tight mb-8">Donate to Amanat</h1>
 
