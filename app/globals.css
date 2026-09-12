@@ -125,7 +125,7 @@ input:not([type="checkbox"]):not([type="radio"]):not([type="file"]):focus,
 textarea:focus,
 select:focus {
   border-color: oklch(0.40 0.11 155) !important;
-  box-shadow: 0 0 0 3px oklch(0.40 0.11 155 / 0.10) !important;
+  box-shadow: none !important;
   outline: none !important;
 }
 
