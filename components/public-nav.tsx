@@ -11,6 +11,7 @@ export function PublicNav({ donateButton = false, activeHref }: PublicNavProps) 
     { href: "/ledger/donations", label: "Donations" },
     { href: "/ledger/distributions", label: "Distributions" },
     { href: "/ledger/volunteers", label: "Volunteers" },
+    { href: "/contact", label: "Contact" },
   ]
 
   return (

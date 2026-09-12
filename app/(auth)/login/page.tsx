@@ -36,11 +36,11 @@ export default function LoginPage() {
 
       <form onSubmit={handleSubmit} className="flex flex-col gap-5">
         <div className="flex flex-col gap-2">
-          <label className="text-[10px] uppercase tracking-[0.15em] text-muted-foreground">Email</label>
+          <label className="text-xs font-semibold text-foreground">Email</label>
           <Input type="email" autoComplete="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
         </div>
         <div className="flex flex-col gap-2">
-          <label className="text-[10px] uppercase tracking-[0.15em] text-muted-foreground">Password</label>
+          <label className="text-xs font-semibold text-foreground">Password</label>
           <Input type="password" autoComplete="current-password" value={password} onChange={(e) => setPassword(e.target.value)} required />
         </div>
 

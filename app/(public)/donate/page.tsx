@@ -9,7 +9,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { PublicNav } from "@/components/public-nav"
 
 const PRESETS = [500, 1000, 2500, 5000]
-const labelClass = "text-[10px] uppercase tracking-[0.15em] text-muted-foreground"
+const labelClass = "text-xs font-semibold text-foreground"
 const fieldClass = "flex flex-col gap-2"
 
 export default function DonatePage() {

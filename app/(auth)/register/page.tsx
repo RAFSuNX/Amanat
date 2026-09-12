@@ -61,7 +61,7 @@ export default function RegisterPage() {
   }
 
   const fieldClass = "flex flex-col gap-2"
-  const labelClass = "text-[10px] uppercase tracking-[0.15em] text-muted-foreground"
+  const labelClass = "text-xs font-semibold text-foreground"
   const selectClass = "flex h-10 w-full rounded border border-input bg-background px-3 py-2 text-sm"
 
   return (
