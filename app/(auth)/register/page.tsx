@@ -125,11 +125,6 @@ export default function RegisterPage() {
           <Input id="password" type="password" autoComplete="new-password" value={password} onChange={(e) => setPassword(e.target.value)} required minLength={8} />
         </div>
 
-        <div className="flex flex-col gap-2">
-          <Label htmlFor="phone">Mobile Number</Label>
-          <Input id="phone" type="tel" placeholder="01XXXXXXXXX" value={phone} onChange={(e) => setPhone(e.target.value)} />
-        </div>
-
         {type === "volunteer" && (
           <>
             <div className="flex flex-col gap-2">

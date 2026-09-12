@@ -1,12 +1,13 @@
 import { getSession } from "@/lib/session"
 import { redirect } from "next/navigation"
 import { db } from "@/db"
-import { donations } from "@/db/schema"
+import { donations, users } from "@/db/schema"
 import { eq, sql } from "drizzle-orm"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { SignOutButton } from "@/components/sign-out-button"
+import { PhoneForm } from "./phone-form"
 
 export default async function AccountPage() {
   const session = await getSession()
@@ -16,6 +17,11 @@ export default async function AccountPage() {
 
   if (role === "ADMIN") redirect("/admin")
   if (role === "VOLUNTEER") redirect("/volunteer")
+
+  const [userRow] = await db
+    .select({ phone: users.phone })
+    .from(users)
+    .where(eq(users.id, session.user.id))
 
   const [totals] = await db
     .select({
@@ -75,6 +81,16 @@ export default async function AccountPage() {
               <p className="text-2xl font-bold">{Number(totals?.pendingCount ?? 0)}</p>
             </CardContent>
           </Card>
+        </div>
+
+        <div className="flex flex-col">
+          <div className="flex items-center py-3 border-t border-border/40 justify-between">
+            <div>
+              <p className="text-xs text-muted-foreground uppercase tracking-wide mb-0.5">Email</p>
+              <p className="text-sm">{session.user.email}</p>
+            </div>
+          </div>
+          <PhoneForm current={userRow?.phone ?? null} />
         </div>
 
         <div className="flex flex-col gap-3">
