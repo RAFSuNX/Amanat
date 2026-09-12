@@ -106,13 +106,13 @@ export default function DonatePage() {
         </div>
 
         {/* Right: form */}
-        <div className="flex flex-col overflow-y-auto px-10 py-8 max-w-md">
-          <div className="flex items-baseline gap-3 mb-5">
+        <div className="flex flex-col overflow-y-auto px-10 py-6 max-w-md">
+          <div className="flex items-baseline gap-3 mb-4">
             <h1 className="text-2xl font-bold tracking-tight">Donate to Amanat</h1>
             <p className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground">Make a donation</p>
           </div>
 
-          <form onSubmit={submit} className="flex flex-col gap-4">
+          <form onSubmit={submit} className="flex flex-col gap-3">
             {/* Amount */}
             <div className={fieldClass}>
               <label className={labelClass}>Amount (BDT)</label>
@@ -148,6 +148,7 @@ export default function DonatePage() {
                   <p className="text-[10px] uppercase tracking-[0.15em] text-muted-foreground mb-1">Send to this bKash number</p>
                   <p className="text-lg font-bold tracking-widest">01XXXXXXXXX</p>
                   <p className="text-xs text-muted-foreground">Use <strong>Send Money</strong>, not payment. Note the TrxID after sending.</p>
+                <p className="text-[10px] text-muted-foreground/60 mt-1">Working on integrating a gateway. Can help? <a href="/contact" className="underline">Contact us.</a></p>
                 </div>
               )}
               {method === "NAGAD" && (
@@ -170,21 +171,12 @@ export default function DonatePage() {
                 </div>
               )}
 
-              {/* Gateway note */}
-              <div className="border-l-2 border-border/40 pl-3 mt-2">
-                <p className="text-[10px] text-muted-foreground leading-relaxed">
-                  We are working on integrating a payment gateway to make donating easier.{" "}
-                  If you can help us with that, please{" "}
-                  <a href="/contact" className="text-primary underline underline-offset-2">contact us</a>.
-                </p>
-              </div>
             </div>
 
             {/* Txn ref */}
             <div className={fieldClass}>
               <label className={labelClass}>Transaction Reference</label>
-              <Input placeholder="e.g. BKA8TJD123" value={txnRef} onChange={(e) => setTxnRef(e.target.value)} />
-              <p className="text-[10px] text-muted-foreground">Find this in your bKash or Nagad transaction history.</p>
+              <Input placeholder="e.g. BKA8TJD123 — find in your bKash/Nagad history" value={txnRef} onChange={(e) => setTxnRef(e.target.value)} />
             </div>
 
             {/* Receipt upload — compact */}
@@ -208,14 +200,12 @@ export default function DonatePage() {
                   {receiptUploading && <span className="text-[10px] text-muted-foreground shrink-0">Uploading...</span>}
                 </div>
               )}
-              <p className="text-[10px] text-muted-foreground">A screenshot of your bKash/Nagad receipt helps admins verify faster.</p>
             </div>
 
             {/* Donor info — name + phone/email compact */}
             <div className={fieldClass}>
               <label className={labelClass}>Your Name</label>
               <Input placeholder="As on your NID or passport" value={name} onChange={(e) => setName(e.target.value)} />
-              <p className="text-[10px] text-muted-foreground">Use your exact name as on NID or passport.</p>
             </div>
             <div className="grid grid-cols-2 gap-3">
               <div className={fieldClass}>
