@@ -74,8 +74,8 @@ export function DonationQuickView({ donation }: { donation: Donation }) {
                   })],
                   ["Status", "Confirmed and Recorded"],
                 ].map(([label, value]) => (
-                  <div key={label} className="flex gap-4 py-2.5">
-                    <span className="text-xs text-muted-foreground uppercase tracking-wide w-44 shrink-0 pt-0.5">
+                  <div key={label} className="flex flex-col gap-0.5 py-3">
+                    <span className="text-[10px] text-muted-foreground uppercase tracking-widest">
                       {label}
                     </span>
                     <span className="text-sm font-medium break-all">{value}</span>
