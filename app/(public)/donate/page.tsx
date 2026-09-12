@@ -176,10 +176,10 @@ export default function DonatePage() {
             {/* Txn ref */}
             <div className={fieldClass}>
               <label className={labelClass}>Transaction Reference</label>
-              <Input placeholder="e.g. BKA8TJD123 — find in your bKash/Nagad history" value={txnRef} onChange={(e) => setTxnRef(e.target.value)} />
+              <Input placeholder="e.g. BKA8TJD123 (find in your bKash/Nagad history)" value={txnRef} onChange={(e) => setTxnRef(e.target.value)} />
             </div>
 
-            {/* Receipt upload — compact */}
+            {/* Receipt upload - compact */}
             <div className={fieldClass}>
               <div className="flex items-center justify-between">
                 <label className={labelClass}>Payment Receipt</label>
@@ -202,7 +202,7 @@ export default function DonatePage() {
               )}
             </div>
 
-            {/* Donor info — name + phone/email compact */}
+            {/* Donor info - name + phone/email compact */}
             <div className={fieldClass}>
               <label className={labelClass}>Your Name</label>
               <Input placeholder="As on your NID or passport" value={name} onChange={(e) => setName(e.target.value)} />
