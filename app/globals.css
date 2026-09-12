@@ -129,10 +129,11 @@ select:focus {
   outline: none !important;
 }
 
-/* Buttons - slightly tighter radius, better weight */
+/* Buttons - taller, better weight */
 button[class*="inline-flex"] {
   font-weight: 500;
   letter-spacing: 0.02em;
+  min-height: 2.75rem;
 }
 
 /* Premium focus ring */

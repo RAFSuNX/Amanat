@@ -28,15 +28,21 @@ export default function DonatePage() {
   const [error, setError] = useState("")
   const [done, setDone] = useState(false)
 
+  const [receiptError, setReceiptError] = useState("")
+
   async function uploadReceipt(file: File) {
     setReceiptUploading(true)
+    setReceiptError("")
     const fd = new FormData()
     fd.append("file", file)
     const res = await fetch("/api/upload/receipt", { method: "POST", body: fd })
     setReceiptUploading(false)
-    if (!res.ok) { setError("Receipt upload failed. You can still submit without it."); return }
-    const { url } = await res.json()
-    setReceiptUrl(url)
+    const data = await res.json()
+    if (!res.ok) {
+      setReceiptError(data.error ?? "Upload failed. You can still submit without a receipt.")
+      return
+    }
+    setReceiptUrl(data.url)
   }
 
   async function submit(e: React.FormEvent) {
@@ -200,6 +206,7 @@ export default function DonatePage() {
                   {receiptUploading && <span className="text-[10px] text-muted-foreground shrink-0">Uploading...</span>}
                 </div>
               )}
+              {receiptError && <p className="text-[10px] text-amber-600">{receiptError}</p>}
             </div>
 
             {/* Donor info - name + phone/email compact */}
