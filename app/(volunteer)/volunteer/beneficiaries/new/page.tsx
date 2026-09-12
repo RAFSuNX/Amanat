@@ -34,24 +34,24 @@ export default function NewBeneficiaryPage() {
   const [error, setError] = useState("")
   const [photoUploading, setPhotoUploading] = useState(false)
 
-  // Step 1 — Person
+  // Step 1: Person
   const [name, setName] = useState("")
   const [phone, setPhone] = useState("")
   const [nidNumber, setNidNumber] = useState("")
   const [photoUrl, setPhotoUrl] = useState("")
   const [type, setType] = useState<"INDIVIDUAL" | "FAMILY">("INDIVIDUAL")
 
-  // Step 2 — Address
+  // Step 2: Address
   const [division, setDivision] = useState("")
   const [district, setDistrict] = useState("")
   const [upazila, setUpazila] = useState("")
   const [union, setUnion] = useState("")
   const [village, setVillage] = useState("")
 
-  // Step 3 — Household
+  // Step 3: Household
   const [members, setMembers] = useState<Member[]>([blankMember()])
 
-  // Step 4 — Need
+  // Step 4: Need
   const [monthlyNeed, setMonthlyNeed] = useState("")
   const [notes, setNotes] = useState("")
 

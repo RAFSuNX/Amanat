@@ -64,7 +64,7 @@ export default async function LandingPage() {
           </div>
         </nav>
 
-        {/* Hero body — 3fr / 1fr grid */}
+        {/* Hero body - 3fr / 1fr grid */}
         <div
           className="flex-1 w-full grid items-center px-10 py-12"
           style={{ gridTemplateColumns: "3fr 1fr", gap: "5vw" }}
@@ -93,7 +93,7 @@ export default async function LandingPage() {
             </div>
           </div>
 
-          {/* Right: stats — bordered left, fills its grid cell */}
+          {/* Right: stats - bordered left, fills its grid cell */}
           <div className="flex flex-col divide-y divide-border/40 border-l border-border/40 pl-8 self-center">
             {[
               { label: t.stats.totalDonated, value: `${stats.totalDonated.toLocaleString()} BDT`, primary: true },
@@ -177,7 +177,7 @@ export default async function LandingPage() {
           {t.principles.eyebrow}
         </p>
 
-        {/* Grid fills remaining height — two equal rows */}
+        {/* Grid fills remaining height - two equal rows */}
         <div
           className="flex-1 grid grid-cols-3 mt-10 pb-2"
           style={{ gridTemplateRows: "1fr 1fr", columnGap: "3rem" }}
@@ -209,7 +209,7 @@ export default async function LandingPage() {
         className="h-dvh w-dvw flex flex-col"
         style={{ scrollSnapAlign: "start" }}
       >
-        {/* CTA — same pattern as other sections: eyebrow top, content middle, prompt bottom */}
+        {/* CTA - same pattern as other sections: eyebrow top, content middle, prompt bottom */}
         <div className="flex-1 flex flex-col justify-between px-10 py-12 bg-primary">
 
           {/* Top: eyebrow */}

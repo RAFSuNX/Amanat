@@ -5,7 +5,7 @@ import "./globals.css"
 const geist = Geist({ subsets: ["latin"], variable: "--font-geist" })
 
 export const metadata: Metadata = {
-  title: "Amanat — The Hope of All of Us",
+  title: "Amanat: The Hope of All of Us",
   description:
     "A transparent welfare platform connecting donors with those in need across Bangladesh.",
 }

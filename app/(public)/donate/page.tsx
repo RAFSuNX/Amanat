@@ -88,7 +88,7 @@ export default function DonatePage() {
               {[
                 { n: "01", t: "Send via bKash or Nagad", b: "Transfer money using the Send Money function. Note your transaction reference." },
                 { n: "02", t: "Submit the reference", b: "Fill in the amount, method, and transaction reference on this form." },
-                { n: "03", t: "Admin confirms", b: "Once you submit, your donation appears on the public ledger as pending. An admin verifies the transaction reference and confirms it — at which point it is added to the fund pool and marked confirmed." },
+                { n: "03", t: "Admin confirms", b: "Once you submit, your donation appears on the public ledger as pending. An admin verifies the transaction reference and confirms it, at which point it is added to the fund pool and marked confirmed." },
               ].map((s) => (
                 <div key={s.n} className="flex gap-4">
                   <span className="text-2xl font-bold text-border/60 tabular-nums shrink-0">{s.n}</span>
@@ -160,9 +160,9 @@ export default function DonatePage() {
                   <p className="text-[10px] uppercase tracking-[0.15em] text-muted-foreground mb-1">Bank Transfer Details</p>
                   <div className="grid grid-cols-2 gap-x-6 gap-y-1 text-xs">
                     <span className="text-muted-foreground">Account Name</span><span className="font-medium">Amanat</span>
-                    <span className="text-muted-foreground">Bank</span><span className="font-medium">—</span>
-                    <span className="text-muted-foreground">Account No.</span><span className="font-medium">—</span>
-                    <span className="text-muted-foreground">Routing No.</span><span className="font-medium">—</span>
+                    <span className="text-muted-foreground">Bank</span><span className="font-medium text-muted-foreground">TBC</span>
+                    <span className="text-muted-foreground">Account No.</span><span className="font-medium text-muted-foreground">TBC</span>
+                    <span className="text-muted-foreground">Routing No.</span><span className="font-medium text-muted-foreground">TBC</span>
                   </div>
                   <p className="text-[10px] text-muted-foreground mt-1">Contact us for bank details before transferring.</p>
                 </div>

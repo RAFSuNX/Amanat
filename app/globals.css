@@ -40,7 +40,7 @@
   --radius-xl: calc(var(--radius) * 1.4);
 }
 
-/* ── Amanat Design System — Matte Forest Green ───────────────────────────── */
+/* Amanat Design System - Matte Forest Green ───────────────────────────── */
 :root {
   /* Matte forest green primary */
   --primary:            oklch(0.40 0.11 155);
@@ -50,7 +50,7 @@
   --background:         oklch(0.985 0.004 90);
   --foreground:         oklch(0.12 0.015 155);
 
-  /* Cards — pure white for contrast */
+  /* Cards - pure white for contrast */
   --card:               oklch(1 0 0);
   --card-foreground:    oklch(0.12 0.015 155);
 
@@ -58,22 +58,22 @@
   --popover:            oklch(1 0 0);
   --popover-foreground: oklch(0.12 0.015 155);
 
-  /* Secondary — light sage */
+  /* Secondary - light sage */
   --secondary:          oklch(0.94 0.025 155);
   --secondary-foreground: oklch(0.30 0.08 155);
 
-  /* Muted — very light sage tint */
+  /* Muted - very light sage tint */
   --muted:              oklch(0.96 0.015 155);
   --muted-foreground:   oklch(0.50 0.045 155);
 
-  /* Accent — soft sage */
+  /* Accent - soft sage */
   --accent:             oklch(0.93 0.03 155);
   --accent-foreground:  oklch(0.30 0.08 155);
 
   /* Destructive stays red */
   --destructive:        oklch(0.57 0.22 27);
 
-  /* Borders — subtle sage-tinted */
+  /* Borders - subtle sage-tinted */
   --border:             oklch(0.88 0.02 155);
   --input:              oklch(0.88 0.02 155);
   --ring:               oklch(0.55 0.08 155);
@@ -81,7 +81,7 @@
   /* Tighter radius for premium feel */
   --radius: 0.375rem;
 
-  /* Sidebar — very light green-white */
+  /* Sidebar - very light green-white */
   --sidebar:                    oklch(0.97 0.012 155);
   --sidebar-foreground:         oklch(0.12 0.015 155);
   --sidebar-primary:            oklch(0.40 0.11 155);
@@ -113,7 +113,7 @@ nav a, nav button {
   letter-spacing: 0.06em;
 }
 
-/* Refined inputs — tighter, more intentional */
+/* Refined inputs - tighter, more intentional */
 input:not([type="checkbox"]):not([type="radio"]):not([type="file"]),
 textarea,
 select {
@@ -129,7 +129,7 @@ select:focus {
   outline: none !important;
 }
 
-/* Buttons — slightly tighter radius, better weight */
+/* Buttons - slightly tighter radius, better weight */
 button[class*="inline-flex"] {
   font-weight: 500;
   letter-spacing: 0.02em;

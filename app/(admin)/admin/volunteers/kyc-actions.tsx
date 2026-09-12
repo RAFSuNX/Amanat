@@ -45,7 +45,7 @@ export function KycActions({
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Review KYC — {docType}</DialogTitle>
+          <DialogTitle>Review KYC: {docType}</DialogTitle>
         </DialogHeader>
         {docImageUrl && (
           <a href={docImageUrl} target="_blank" rel="noopener noreferrer">

@@ -28,7 +28,7 @@ export function ContactForm() {
   async function submit(e: React.FormEvent) {
     e.preventDefault()
     setLoading(true)
-    // For now, just simulate — wire to email API when Resend is configured
+    // For now, just simulate - wire to email API when Resend is configured
     await new Promise((r) => setTimeout(r, 800))
     setLoading(false)
     setSent(true)

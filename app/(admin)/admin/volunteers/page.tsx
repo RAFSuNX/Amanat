@@ -57,7 +57,7 @@ export default async function AdminVolunteersPage() {
             <TableRow key={v.userId}>
               <TableCell className="font-medium">{v.name}</TableCell>
               <TableCell className="text-sm">{v.email}</TableCell>
-              <TableCell className="text-sm">{v.district ?? "—"}</TableCell>
+              <TableCell className="text-sm">{v.district ?? "Not set"}</TableCell>
               <TableCell>
                 {v.kycStatus ? (
                   <Badge

@@ -16,7 +16,7 @@ export default function ContactPage() {
               Get in touch with Amanat
             </h1>
             <p className="text-sm text-muted-foreground leading-relaxed max-w-xs mt-2">
-              Whether you want to volunteer, have a question about the system, or can help us build a better payment experience for donors — we want to hear from you.
+              Whether you want to volunteer, have a question about the system, or can help us build a better payment experience for donors. We want to hear from you..
             </p>
           </div>
 
