@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic"
+
 import { db } from "@/db"
 import { donations, distributionAllotments, distributionCycles, needAssessments, beneficiaries } from "@/db/schema"
 import { eq, desc, sql, and, inArray } from "drizzle-orm"
@@ -43,7 +45,7 @@ async function getFundStats() {
 
   // Current monthly need: sum of latest active assessments for active beneficiaries
   const [needRow] = await db
-    .select({ total: sql<string>`coalesce(sum(na.declared_monthly_need), 0)` })
+    .select({ total: sql<string>`coalesce(sum(${needAssessments.declaredMonthlyNeed}), 0)` })
     .from(needAssessments)
     .innerJoin(beneficiaries, eq(needAssessments.beneficiaryId, beneficiaries.id))
     .where(
