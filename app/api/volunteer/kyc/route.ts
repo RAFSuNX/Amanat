@@ -1,0 +1,54 @@
+import { NextRequest, NextResponse } from "next/server"
+import { z } from "zod"
+import { db } from "@/db"
+import { volunteerProfiles } from "@/db/schema"
+import { eq } from "drizzle-orm"
+import { requireVolunteer } from "@/lib/session"
+
+const schema = z.object({
+  docType: z.enum(["NID", "PASSPORT", "DRIVING_LICENSE"]),
+  docNumber: z.string().min(1),
+  docImageUrl: z.string().url(),
+})
+
+export async function POST(request: NextRequest) {
+  const session = await requireVolunteer()
+  if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+
+  const body = await request.json()
+  const parsed = schema.safeParse(body)
+  if (!parsed.success) {
+    return NextResponse.json({ error: parsed.error.issues[0].message }, { status: 400 })
+  }
+
+  const { docType, docNumber, docImageUrl } = parsed.data
+
+  const existing = await db.query.volunteerProfiles.findFirst({
+    where: eq(volunteerProfiles.userId, session.user.id),
+  })
+
+  if (existing) {
+    await db
+      .update(volunteerProfiles)
+      .set({
+        kycDocType: docType,
+        kycDocNumber: docNumber,
+        kycDocImageUrl: docImageUrl,
+        kycStatus: "PENDING", // reset to pending on resubmit
+        kycReviewNote: null,
+        kycReviewedAt: null,
+      })
+      .where(eq(volunteerProfiles.userId, session.user.id))
+  } else {
+    await db.insert(volunteerProfiles).values({
+      userId: session.user.id,
+      district: "Unknown", // set during account creation by admin
+      kycDocType: docType,
+      kycDocNumber: docNumber,
+      kycDocImageUrl: docImageUrl,
+      kycStatus: "PENDING",
+    })
+  }
+
+  return NextResponse.json({ ok: true })
+}
