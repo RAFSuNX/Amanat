@@ -71,10 +71,10 @@ export default function RegisterPage() {
         setLoading(false)
         return
       }
+      router.push("/volunteer/kyc")
+    } else {
+      router.push("/account")
     }
-
-    // Email verification required -- redirect to a pending page
-    router.push("/verify-email")
     setLoading(false)
   }
 
