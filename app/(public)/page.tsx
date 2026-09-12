@@ -210,43 +210,39 @@ export default async function LandingPage() {
         style={{ scrollSnapAlign: "start" }}
       >
         {/* CTA fills most of the section */}
-        <div className="flex-1 flex flex-col justify-between px-10 py-14 bg-primary">
-          {/* Top label */}
+        <div className="flex-1 flex flex-col justify-center px-10 py-14 bg-primary gap-10">
           <p className="text-xs tracking-[0.22em] uppercase text-primary-foreground/40">
             Amanat
           </p>
 
-          {/* Headline block */}
-          <div className="flex flex-col gap-6 max-w-2xl">
+          <div className="flex flex-col gap-5 max-w-2xl">
             <h2
               className="font-bold text-primary-foreground leading-[1.04] tracking-tight"
               style={{ fontSize: "clamp(2.4rem, 5vw, 4.5rem)" }}
             >
               {t.cta.headline}
             </h2>
-            <p className="text-base text-primary-foreground/65 max-w-sm">
+            <p className="text-base leading-relaxed max-w-sm" style={{ color: "rgba(255,255,255,0.6)" }}>
               {t.cta.body}
             </p>
-            <div className="flex gap-3 pt-2">
-              <Link href="/donate">
-                <Button size="lg" variant="secondary" className="px-8">{t.cta.donate}</Button>
-              </Link>
-              <Link href="/ledger/donations">
-                <Button
-                  size="lg"
-                  variant="outline"
-                  className="px-8 border-primary-foreground/25 text-primary-foreground hover:bg-primary-foreground/10"
-                >
-                  {t.cta.ledger}
-                </Button>
-              </Link>
-            </div>
           </div>
 
-          {/* Bottom: register prompt */}
-          <p className="text-xs text-primary-foreground/40">
+          <div className="flex gap-4 items-center">
+            <Link href="/donate">
+              <Button size="lg" variant="secondary" className="px-8">{t.cta.donate}</Button>
+            </Link>
+            <Link
+              href="/ledger/donations"
+              className="text-sm underline underline-offset-4"
+              style={{ color: "rgba(255,255,255,0.65)" }}
+            >
+              {t.cta.ledger}
+            </Link>
+          </div>
+
+          <p className="text-xs" style={{ color: "rgba(255,255,255,0.35)" }}>
             Want to help on the ground?{" "}
-            <Link href="/register" className="text-primary-foreground/70 hover:text-primary-foreground underline underline-offset-2 transition-colors">
+            <Link href="/register" className="underline underline-offset-2" style={{ color: "rgba(255,255,255,0.6)" }}>
               Register as a volunteer
             </Link>
           </p>
