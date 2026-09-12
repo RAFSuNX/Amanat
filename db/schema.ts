@@ -147,6 +147,7 @@ export const volunteerProfiles = pgTable("volunteer_profiles", {
   kycDocType: kycDocTypeEnum("kyc_doc_type"),
   kycDocNumber: text("kyc_doc_number"),
   kycDocImageUrl: text("kyc_doc_image_url"),
+  passportPhotoUrl: text("passport_photo_url"),
   kycStatus: kycStatusEnum("kyc_status").notNull().default("PENDING"),
   kycReviewNote: text("kyc_review_note"),
   kycReviewedAt: timestamp("kyc_reviewed_at"),

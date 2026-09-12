@@ -17,6 +17,8 @@ export function KycForm({
   const [docType, setDocType] = useState(existing?.docType ?? "")
   const [docNumber, setDocNumber] = useState(existing?.docNumber ?? "")
   const [file, setFile] = useState<File | null>(null)
+  const [passportFile, setPassportFile] = useState<File | null>(null)
+  const [passportPhotoUrl, setPassportPhotoUrl] = useState(existing?.docImageUrl ? "" : "")
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState("")
   const [uploadWarning, setUploadWarning] = useState("")
@@ -34,24 +36,37 @@ export function KycForm({
     setLoading(true)
 
     let docImageUrl = existing?.docImageUrl ?? ""
+    let finalPassportPhotoUrl = passportPhotoUrl
+
+    async function uploadFile(f: File, folder: string): Promise<string | null> {
+      const fd = new FormData()
+      fd.append("file", f)
+      const res = await fetch("/api/upload/kyc", { method: "POST", body: fd })
+      if (!res.ok) return null
+      const { url } = await res.json()
+      return url
+    }
 
     if (file) {
-      const formData = new FormData()
-      formData.append("file", file)
-      const uploadRes = await fetch("/api/upload/kyc", { method: "POST", body: formData })
-      if (uploadRes.ok) {
-        const { url } = await uploadRes.json()
-        docImageUrl = url
-      } else {
-        // Upload failed (e.g. Cloudinary not configured) — submit anyway, admin can request later
-        setUploadWarning("Document photo could not be uploaded. You can resubmit with a photo later. Your application will still be reviewed.")
-      }
+      const url = await uploadFile(file, "kyc")
+      if (url) docImageUrl = url
+      else setUploadWarning("Document photo could not be uploaded. You can resubmit with a photo later.")
+    }
+
+    if (passportFile) {
+      const url = await uploadFile(passportFile, "kyc")
+      if (url) finalPassportPhotoUrl = url
     }
 
     const res = await fetch("/api/volunteer/kyc", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ docType, docNumber, docImageUrl: docImageUrl || undefined }),
+      body: JSON.stringify({
+        docType,
+        docNumber,
+        docImageUrl: docImageUrl || undefined,
+        passportPhotoUrl: finalPassportPhotoUrl || undefined,
+      }),
     })
 
     setLoading(false)
@@ -105,6 +120,21 @@ export function KycForm({
         />
         <p className="text-[10px] text-muted-foreground">
           Upload a clear photo of your NID, passport, or driving license. You can add this later if not ready.
+        </p>
+      </div>
+
+      <div className="flex flex-col gap-2">
+        <div className="flex items-center justify-between">
+          <Label>Your Passport-Size Photo</Label>
+          <span className="text-[10px] text-muted-foreground">For records</span>
+        </div>
+        <Input
+          type="file"
+          accept="image/*"
+          onChange={(e) => setPassportFile(e.target.files?.[0] ?? null)}
+        />
+        <p className="text-[10px] text-muted-foreground">
+          A clear face photo of yourself. This is kept on record for identity verification.
         </p>
       </div>
 

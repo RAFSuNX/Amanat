@@ -9,6 +9,7 @@ const schema = z.object({
   docType: z.enum(["NID", "PASSPORT", "DRIVING_LICENSE"]),
   docNumber: z.string().min(1),
   docImageUrl: z.string().url().optional(),
+  passportPhotoUrl: z.string().url().optional(),
 })
 
 export async function POST(request: NextRequest) {
@@ -21,7 +22,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: parsed.error.issues[0].message }, { status: 400 })
   }
 
-  const { docType, docNumber, docImageUrl } = parsed.data
+  const { docType, docNumber, docImageUrl, passportPhotoUrl } = parsed.data
 
   const existing = await db.query.volunteerProfiles.findFirst({
     where: eq(volunteerProfiles.userId, session.user.id),
@@ -34,7 +35,8 @@ export async function POST(request: NextRequest) {
         kycDocType: docType,
         kycDocNumber: docNumber,
         kycDocImageUrl: docImageUrl ?? null,
-        kycStatus: "PENDING", // reset to pending on resubmit
+        passportPhotoUrl: passportPhotoUrl ?? null,
+        kycStatus: "PENDING",
         kycReviewNote: null,
         kycReviewedAt: null,
       })
@@ -42,10 +44,11 @@ export async function POST(request: NextRequest) {
   } else {
     await db.insert(volunteerProfiles).values({
       userId: session.user.id,
-      district: "Unknown", // set during account creation by admin
+      district: "Unknown",
       kycDocType: docType,
       kycDocNumber: docNumber,
       kycDocImageUrl: docImageUrl ?? null,
+      passportPhotoUrl: passportPhotoUrl ?? null,
       kycStatus: "PENDING",
     })
   }
