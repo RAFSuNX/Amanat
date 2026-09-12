@@ -2,6 +2,7 @@
 
 import { usePathname } from "next/navigation"
 import Link from "next/link"
+import { Button } from "@/components/ui/button"
 
 export function KycGate({ children }: { children: React.ReactNode }) {
   const pathname = usePathname()
@@ -31,9 +32,7 @@ export function KycGate({ children }: { children: React.ReactNode }) {
           </p>
         </div>
         <Link href="/donate" className="shrink-0">
-          <button className="text-sm px-4 py-2 rounded border border-border hover:bg-muted transition-colors">
-            Donate
-          </button>
+          <Button size="sm">Donate</Button>
         </Link>
       </div>
     </div>
