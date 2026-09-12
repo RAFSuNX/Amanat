@@ -38,7 +38,10 @@ export default async function AdminDonationsPage() {
             <TableRow key={d.id}>
               <TableCell>
                 <div>
-                  <p className="font-medium">{d.isAnonymous ? "Anonymous" : d.donorName}</p>
+                  <p className="font-medium">{d.donorName}</p>
+                  {d.isAnonymous && (
+                    <span className="text-[10px] uppercase tracking-wide text-muted-foreground">Public: Anonymous</span>
+                  )}
                   {d.donorPhone && (
                     <p className="text-xs text-muted-foreground">{d.donorPhone}</p>
                   )}
