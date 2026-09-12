@@ -81,7 +81,7 @@ export default function DonatePage() {
 
       <div className="flex-1 grid md:grid-cols-[1fr_1.4fr]">
         {/* Left: context */}
-        <div className="hidden md:flex flex-col justify-between px-10 py-12 border-r border-border/40 bg-muted/20">
+        <div className="hidden md:flex flex-col gap-8 px-10 py-12 border-r border-border/40 bg-muted/20">
           <div className="flex flex-col gap-4">
             <p className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground">How it works</p>
             <div className="flex flex-col gap-6 mt-4">
