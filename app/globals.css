@@ -150,30 +150,32 @@ select {
 
 input[type="file"] {
   border-color: oklch(0.86 0.018 155) !important;
-  min-height: 2.75rem !important;
-  transition: border-color 0.15s;
-  padding-top: 0 !important;
-  padding-bottom: 0 !important;
-  padding-left: 0 !important;
-  line-height: 2.75rem;
+  height: 2.75rem !important;
+  min-height: unset !important;
+  padding: 0 !important;
   background: oklch(0.96 0.015 155);
   cursor: pointer;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
 }
 
 input[type="file"]::file-selector-button {
-  height: 100%;
+  height: 2.75rem;
   padding: 0 1rem;
+  margin: 0;
   margin-right: 0.75rem;
   background: oklch(0.40 0.11 155);
   color: white;
   border: none;
+  border-right: 1px solid oklch(0.35 0.10 155);
   border-radius: calc(var(--radius) - 1px) 0 0 calc(var(--radius) - 1px);
   font-size: 0.75rem;
   font-weight: 500;
   letter-spacing: 0.04em;
   cursor: pointer;
   transition: background 0.15s;
-  align-self: stretch;
+  flex-shrink: 0;
 }
 
 input[type="file"]::file-selector-button:hover {
