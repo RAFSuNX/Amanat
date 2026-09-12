@@ -112,13 +112,13 @@ export default function DonatePage() {
         </div>
 
         {/* Right: form */}
-        <div className="flex flex-col overflow-y-auto px-12 py-6">
-          <div className="flex items-baseline gap-3 mb-4">
+        <div className="flex flex-col overflow-y-auto px-12 py-10">
+          <div className="flex items-baseline gap-3 mb-8">
             <h1 className="text-2xl font-bold tracking-tight">Donate to Amanat</h1>
             <p className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground">Make a donation</p>
           </div>
 
-          <form onSubmit={submit} className="flex flex-col gap-3">
+          <form onSubmit={submit} className="flex flex-col gap-5">
             {/* Amount */}
             <div className={fieldClass}>
               <label className={labelClass}>Amount (BDT)</label>
