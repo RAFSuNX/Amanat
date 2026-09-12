@@ -106,11 +106,13 @@ export default function DonatePage() {
         </div>
 
         {/* Right: form */}
-        <div className="flex flex-col overflow-y-auto px-10 py-12 max-w-md">
-          <p className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground mb-2">Make a donation</p>
-          <h1 className="text-2xl font-bold tracking-tight mb-8">Donate to Amanat</h1>
+        <div className="flex flex-col overflow-y-auto px-10 py-8 max-w-md">
+          <div className="flex items-baseline gap-3 mb-5">
+            <h1 className="text-2xl font-bold tracking-tight">Donate to Amanat</h1>
+            <p className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground">Make a donation</p>
+          </div>
 
-          <form onSubmit={submit} className="flex flex-col gap-6">
+          <form onSubmit={submit} className="flex flex-col gap-4">
             {/* Amount */}
             <div className={fieldClass}>
               <label className={labelClass}>Amount (BDT)</label>
@@ -185,59 +187,45 @@ export default function DonatePage() {
               <p className="text-[10px] text-muted-foreground">Find this in your bKash or Nagad transaction history.</p>
             </div>
 
-            {/* Receipt upload */}
+            {/* Receipt upload — compact */}
             <div className={fieldClass}>
               <div className="flex items-center justify-between">
                 <label className={labelClass}>Payment Receipt</label>
-                <span className="text-[10px] text-muted-foreground uppercase tracking-wide">Optional</span>
+                <span className="text-[10px] text-muted-foreground">Encouraged but optional</span>
               </div>
-              <div className={`border rounded p-4 flex flex-col gap-3 transition-colors ${receiptUrl ? "border-primary/40 bg-primary/5" : "border-border/60 bg-muted/20"}`}>
-                <p className="text-xs text-muted-foreground leading-relaxed">
-                  <strong className="text-foreground">Strongly encouraged:</strong> A screenshot of your transaction confirmation helps the admin verify faster and builds a stronger record. Upload a photo of your bKash or Nagad receipt.
-                </p>
-                {receiptUrl ? (
-                  <div className="flex items-center gap-3">
-                    <img src={receiptUrl} alt="Receipt" className="w-16 h-16 object-cover rounded border" />
-                    <div className="flex flex-col gap-1">
-                      <p className="text-xs font-medium text-primary">Receipt uploaded</p>
-                      <button type="button" onClick={() => { setReceiptUrl(""); setReceiptFile(null) }}
-                        className="text-[10px] text-muted-foreground underline underline-offset-2 text-left">
-                        Remove and upload another
-                      </button>
-                    </div>
-                  </div>
-                ) : (
-                  <div className="flex flex-col gap-2">
-                    <Input
-                      type="file"
-                      accept="image/*"
-                      onChange={(e) => {
-                        const f = e.target.files?.[0]
-                        if (f) { setReceiptFile(f); uploadReceipt(f) }
-                      }}
-                      className="text-xs"
-                    />
-                    {receiptUploading && <p className="text-[10px] text-muted-foreground">Uploading...</p>}
-                  </div>
-                )}
-              </div>
+              {receiptUrl ? (
+                <div className="flex items-center gap-3 border border-primary/30 rounded px-3 py-2 bg-primary/5">
+                  <img src={receiptUrl} alt="Receipt" className="w-10 h-10 object-cover rounded border shrink-0" />
+                  <p className="text-xs text-primary flex-1">Receipt uploaded</p>
+                  <button type="button" onClick={() => { setReceiptUrl(""); setReceiptFile(null) }}
+                    className="text-[10px] text-muted-foreground underline underline-offset-2">Remove</button>
+                </div>
+              ) : (
+                <div className="flex items-center gap-3 border border-border/60 rounded px-3 py-2 bg-muted/20">
+                  <Input type="file" accept="image/*"
+                    onChange={(e) => { const f = e.target.files?.[0]; if (f) { setReceiptFile(f); uploadReceipt(f) } }}
+                    className="text-xs border-0 p-0 h-auto bg-transparent" />
+                  {receiptUploading && <span className="text-[10px] text-muted-foreground shrink-0">Uploading...</span>}
+                </div>
+              )}
+              <p className="text-[10px] text-muted-foreground">A screenshot of your bKash/Nagad receipt helps admins verify faster.</p>
             </div>
 
-            {/* Donor info */}
-            <div className="flex flex-col gap-2">
+            {/* Donor info — name + phone/email compact */}
+            <div className={fieldClass}>
               <label className={labelClass}>Your Name</label>
               <Input placeholder="As on your NID or passport" value={name} onChange={(e) => setName(e.target.value)} />
-              <p className="text-[10px] text-muted-foreground">Use your real name as on NID or passport for future verification.</p>
+              <p className="text-[10px] text-muted-foreground">Use your exact name as on NID or passport.</p>
             </div>
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-2 gap-3">
               <div className={fieldClass}>
                 <label className={labelClass}>Phone</label>
                 <Input type="tel" placeholder="01XXXXXXXXX" value={phone} onChange={(e) => setPhone(e.target.value)} />
               </div>
-            </div>
-            <div className={fieldClass}>
-              <label className={labelClass}>Email (for confirmation)</label>
-              <Input type="email" placeholder="you@example.com" value={email} onChange={(e) => setEmail(e.target.value)} />
+              <div className={fieldClass}>
+                <label className={labelClass}>Email</label>
+                <Input type="email" placeholder="you@example.com" value={email} onChange={(e) => setEmail(e.target.value)} />
+              </div>
             </div>
 
             {/* Anonymous */}
