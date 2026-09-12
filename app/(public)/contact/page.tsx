@@ -10,7 +10,7 @@ export default function ContactPage() {
 
       <div className="flex-1 grid md:grid-cols-[1fr_1.4fr] overflow-hidden">
         {/* Left: contact info */}
-        <div className="hidden md:flex flex-col justify-between px-10 py-12 border-r border-border/40 bg-muted/20">
+        <div className="hidden md:flex flex-col overflow-y-auto px-10 py-12 border-r border-border/40 bg-muted/20 gap-8">
           <div className="flex flex-col gap-4">
             <p className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground">Contact</p>
             <h1 className="text-3xl font-bold tracking-tight leading-tight mt-2">
@@ -21,7 +21,7 @@ export default function ContactPage() {
             </p>
           </div>
 
-          <div className="flex flex-col gap-0 overflow-y-auto">
+          <div className="flex flex-col gap-0">
             {/* Email - primary contact method */}
             <div className="border-t border-border/40 pt-5 pb-5 flex flex-col gap-1.5">
               <p className="text-xs font-semibold">Email Form</p>
