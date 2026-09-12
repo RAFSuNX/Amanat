@@ -39,15 +39,16 @@ export default async function LandingPage() {
       className="h-dvh w-dvw overflow-y-scroll overflow-x-hidden"
       style={{ scrollSnapType: "y mandatory", scrollBehavior: "smooth" }}
     >
+
       {/* ── Section 1: Hero ─────────────────────────────────────────── */}
       <section
-        className="h-dvh w-dvw flex flex-col relative"
+        className="relative h-dvh w-dvw flex flex-col"
         style={{ scrollSnapAlign: "start" }}
       >
         {/* Nav */}
-        <nav className="flex items-center justify-between px-8 py-5 shrink-0 border-b border-border/40">
+        <nav className="shrink-0 flex items-center justify-between px-10 py-5 border-b border-border/30">
           <span className="text-sm font-semibold tracking-tight">Amanat</span>
-          <div className="flex items-center gap-6">
+          <div className="flex items-center gap-8">
             <Link href="/ledger/donations" className="text-xs text-muted-foreground hover:text-foreground transition-colors uppercase tracking-widest">
               {t.nav.ledger}
             </Link>
@@ -56,85 +57,127 @@ export default async function LandingPage() {
             </Link>
             <LanguageToggle current={locale} />
             <Link href="/donate">
-              <Button size="sm" className="text-xs px-5">{t.nav.donate}</Button>
+              <Button size="sm" className="text-xs px-6">{t.nav.donate}</Button>
             </Link>
           </div>
         </nav>
 
-        {/* Hero content */}
-        <div className="flex-1 flex flex-col justify-center px-8 md:px-16 gap-8 max-w-5xl">
-          <p className="text-xs tracking-[0.2em] uppercase text-primary font-medium">
+        {/* Hero body — fills space, anchors content to bottom third */}
+        <div className="flex-1 flex flex-col justify-between px-10 py-12">
+          {/* Top: eyebrow */}
+          <p className="text-xs tracking-[0.22em] uppercase text-primary font-medium">
             {t.hero.eyebrow}
           </p>
-          <h1 className="text-5xl md:text-7xl font-bold leading-[1.04] tracking-tight max-w-3xl">
-            {t.hero.headline}
-          </h1>
-          <p className="text-base text-muted-foreground leading-relaxed max-w-lg">
-            {t.hero.body}
-          </p>
-          <div className="flex gap-3">
-            <Link href="/donate">
-              <Button size="lg" className="px-8">{t.hero.ctaDonate}</Button>
-            </Link>
-            <Link href="/ledger/donations">
-              <Button size="lg" variant="outline" className="px-8">{t.hero.ctaLedger}</Button>
-            </Link>
+
+          {/* Middle: headline + CTA */}
+          <div className="flex flex-col gap-8 max-w-4xl">
+            <h1
+              className="font-bold leading-[1.02] tracking-tight"
+              style={{ fontSize: "clamp(2.8rem, 6vw, 5.5rem)" }}
+            >
+              {t.hero.headline}
+            </h1>
+            <p className="text-base text-muted-foreground leading-relaxed max-w-md">
+              {t.hero.body}
+            </p>
+            <div className="flex gap-3">
+              <Link href="/donate">
+                <Button size="lg" className="px-8">{t.hero.ctaDonate}</Button>
+              </Link>
+              <Link href="/ledger/donations">
+                <Button size="lg" variant="outline" className="px-8">{t.hero.ctaLedger}</Button>
+              </Link>
+            </div>
+          </div>
+
+          {/* Bottom: stats strip */}
+          <div className="grid grid-cols-3 border-t border-border/30 pt-6 gap-8 max-w-lg">
+            {[
+              { label: t.stats.totalDonated, value: `${stats.totalDonated.toLocaleString()} BDT` },
+              { label: t.stats.familiesActive, value: stats.familiesHelped.toString() },
+              { label: t.stats.cyclesDone, value: stats.cyclesCompleted.toString() },
+            ].map((s) => (
+              <div key={s.label}>
+                <p className="text-2xl font-bold tabular-nums">{s.value}</p>
+                <p className="text-xs text-muted-foreground mt-1 uppercase tracking-wider">{s.label}</p>
+              </div>
+            ))}
           </div>
         </div>
 
-        {/* Stats strip */}
-        <div className="shrink-0 border-t border-border/40 grid grid-cols-3 divide-x divide-border/40">
-          {[
-            { label: t.stats.totalDonated, value: `${stats.totalDonated.toLocaleString()}` },
-            { label: t.stats.familiesActive, value: stats.familiesHelped.toString() },
-            { label: t.stats.cyclesDone, value: stats.cyclesCompleted.toString() },
-          ].map((s) => (
-            <div key={s.label} className="px-8 py-5">
-              <p className="text-xl font-bold">{s.value}</p>
-              <p className="text-xs text-muted-foreground mt-0.5 uppercase tracking-wide">{s.label}</p>
-            </div>
-          ))}
-        </div>
-
-        {/* Scroll indicator */}
-        <div className="absolute bottom-20 right-8 flex flex-col items-center gap-1.5 text-muted-foreground/40">
-          <div className="w-px h-10 bg-current animate-pulse" />
-          <span className="text-[10px] tracking-widest uppercase rotate-90 origin-center translate-y-4">Scroll</span>
+        {/* Scroll hint */}
+        <div
+          className="absolute bottom-6 right-10 flex flex-col items-center gap-2"
+          aria-hidden="true"
+        >
+          <div className="w-px h-8 bg-border/50" />
+          <span className="text-[9px] tracking-[0.2em] uppercase text-muted-foreground/40">Scroll</span>
         </div>
       </section>
 
       {/* ── Section 2: How It Works ──────────────────────────────────── */}
       <section
-        className="h-dvh w-dvw flex flex-col justify-center px-8 md:px-16 bg-muted/30"
+        className="h-dvh w-dvw flex flex-col px-10 py-12 bg-[oklch(0.96_0.012_155)]"
         style={{ scrollSnapAlign: "start" }}
       >
-        <p className="text-xs tracking-[0.2em] uppercase text-muted-foreground mb-12">
+        {/* Eyebrow anchored top */}
+        <p className="shrink-0 text-xs tracking-[0.22em] uppercase text-muted-foreground mb-0">
           {t.how.eyebrow}
         </p>
-        <div className="grid md:grid-cols-3 gap-16 max-w-5xl">
-          {t.how.steps.map((s) => (
-            <div key={s.n} className="flex flex-col gap-4">
-              <span className="text-5xl font-bold text-border/70">{s.n}</span>
-              <h3 className="font-semibold text-lg tracking-tight">{s.title}</h3>
-              <p className="text-sm text-muted-foreground leading-relaxed">{s.body}</p>
+
+        {/* Steps fill the remaining height with justify-between */}
+        <div className="flex-1 flex flex-col justify-between mt-10 pb-2">
+          {t.how.steps.map((s, i) => (
+            <div
+              key={s.n}
+              className="flex items-center gap-12 border-t border-border/40 pt-6 pb-4"
+            >
+              {/* Large structural number */}
+              <span
+                className="shrink-0 font-bold leading-none tabular-nums text-border/60 select-none"
+                style={{ fontSize: "clamp(3.5rem, 7vw, 6rem)", width: "9rem" }}
+              >
+                {s.n}
+              </span>
+
+              {/* Content */}
+              <div className="flex-1 flex flex-col md:flex-row md:items-center md:gap-16">
+                <h3
+                  className="font-bold tracking-tight shrink-0"
+                  style={{ fontSize: "clamp(1.25rem, 2.5vw, 1.75rem)" }}
+                >
+                  {s.title}
+                </h3>
+                <p className="text-sm text-muted-foreground leading-relaxed max-w-lg mt-2 md:mt-0">
+                  {s.body}
+                </p>
+              </div>
             </div>
           ))}
+          {/* Closing rule */}
+          <div className="border-t border-border/40" />
         </div>
       </section>
 
       {/* ── Section 3: Principles ────────────────────────────────────── */}
       <section
-        className="h-dvh w-dvw flex flex-col justify-center px-8 md:px-16"
+        className="h-dvh w-dvw flex flex-col px-10 py-12"
         style={{ scrollSnapAlign: "start" }}
       >
-        <p className="text-xs tracking-[0.2em] uppercase text-muted-foreground mb-10">
+        {/* Eyebrow anchored top */}
+        <p className="shrink-0 text-xs tracking-[0.22em] uppercase text-muted-foreground">
           {t.principles.eyebrow}
         </p>
-        <div className="grid md:grid-cols-3 gap-x-16 max-w-5xl">
+
+        {/* Grid fills remaining height */}
+        <div className="flex-1 grid grid-cols-3 grid-rows-2 gap-x-12 mt-10 pb-2">
           {t.principles.items.map((p) => (
-            <div key={p.title} className="flex flex-col gap-2 py-5 border-t border-border/40">
-              <h3 className="font-semibold text-sm">{p.title}</h3>
-              <p className="text-xs text-muted-foreground leading-relaxed">{p.body}</p>
+            <div
+              key={p.title}
+              className="flex flex-col gap-2 border-t border-border/40 pt-6"
+            >
+              <h3 className="font-semibold text-base leading-tight">{p.title}</h3>
+              <p className="text-sm text-muted-foreground leading-relaxed">{p.body}</p>
             </div>
           ))}
         </div>
@@ -145,46 +188,65 @@ export default async function LandingPage() {
         className="h-dvh w-dvw flex flex-col"
         style={{ scrollSnapAlign: "start" }}
       >
-        {/* CTA block */}
-        <div className="flex-1 flex flex-col justify-center bg-primary px-8 md:px-16">
-          <p className="text-xs tracking-[0.2em] uppercase text-primary-foreground/50 mb-6">
+        {/* CTA fills most of the section */}
+        <div className="flex-1 flex flex-col justify-between px-10 py-14 bg-primary">
+          {/* Top label */}
+          <p className="text-xs tracking-[0.22em] uppercase text-primary-foreground/40">
             Amanat
           </p>
-          <h2 className="text-4xl md:text-5xl font-bold text-primary-foreground tracking-tight max-w-xl mb-4">
-            {t.cta.headline}
-          </h2>
-          <p className="text-sm text-primary-foreground/70 mb-8 max-w-sm">
-            {t.cta.body}
-          </p>
-          <div className="flex gap-3">
-            <Link href="/donate">
-              <Button size="lg" variant="secondary" className="px-8">{t.cta.donate}</Button>
-            </Link>
-            <Link href="/ledger/donations">
-              <Button
-                size="lg"
-                variant="outline"
-                className="px-8 border-primary-foreground/30 text-primary-foreground hover:bg-primary-foreground/10"
-              >
-                {t.cta.ledger}
-              </Button>
-            </Link>
+
+          {/* Headline block */}
+          <div className="flex flex-col gap-6 max-w-2xl">
+            <h2
+              className="font-bold text-primary-foreground leading-[1.04] tracking-tight"
+              style={{ fontSize: "clamp(2.4rem, 5vw, 4.5rem)" }}
+            >
+              {t.cta.headline}
+            </h2>
+            <p className="text-base text-primary-foreground/65 max-w-sm">
+              {t.cta.body}
+            </p>
+            <div className="flex gap-3 pt-2">
+              <Link href="/donate">
+                <Button size="lg" variant="secondary" className="px-8">{t.cta.donate}</Button>
+              </Link>
+              <Link href="/ledger/donations">
+                <Button
+                  size="lg"
+                  variant="outline"
+                  className="px-8 border-primary-foreground/25 text-primary-foreground hover:bg-primary-foreground/10"
+                >
+                  {t.cta.ledger}
+                </Button>
+              </Link>
+            </div>
           </div>
+
+          {/* Bottom: register prompt */}
+          <p className="text-xs text-primary-foreground/40">
+            Want to help on the ground?{" "}
+            <Link href="/register" className="text-primary-foreground/70 hover:text-primary-foreground underline underline-offset-2 transition-colors">
+              Register as a volunteer
+            </Link>
+          </p>
         </div>
 
-        {/* Footer */}
-        <footer className="shrink-0 border-t px-8 py-6 flex items-center justify-between">
-          <div>
+        {/* Footer strip */}
+        <footer className="shrink-0 border-t px-10 py-5 flex items-center justify-between">
+          <div className="flex items-center gap-3">
             <span className="text-sm font-semibold">Amanat</span>
-            <span className="ml-2 text-xs text-muted-foreground">{t.footer.tagline}</span>
+            <span className="text-border/60">|</span>
+            <span className="text-xs text-muted-foreground">{t.footer.tagline}</span>
           </div>
           <nav className="flex gap-6">
-            <Link href="/ledger/donations" className="text-xs text-muted-foreground hover:text-foreground">{t.footer.donationLedger}</Link>
-            <Link href="/ledger/distributions" className="text-xs text-muted-foreground hover:text-foreground">{t.footer.distributionLedger}</Link>
-            <Link href="/login" className="text-xs text-muted-foreground hover:text-foreground">{t.footer.signIn}</Link>
+            <Link href="/ledger/donations" className="text-xs text-muted-foreground hover:text-foreground transition-colors">{t.footer.donationLedger}</Link>
+            <Link href="/ledger/distributions" className="text-xs text-muted-foreground hover:text-foreground transition-colors">{t.footer.distributionLedger}</Link>
+            <Link href="/ledger/volunteers" className="text-xs text-muted-foreground hover:text-foreground transition-colors">Volunteers</Link>
+            <Link href="/login" className="text-xs text-muted-foreground hover:text-foreground transition-colors">{t.footer.signIn}</Link>
           </nav>
         </footer>
       </section>
+
     </div>
   )
 }
