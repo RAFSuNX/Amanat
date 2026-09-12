@@ -181,35 +181,35 @@ export default function DonatePage() {
 
             </div>
 
-            {/* Txn ref + receipt side by side */}
-            <div className="grid grid-cols-2 gap-3">
-              <div className={fieldClass}>
-                <label className={labelClass}>Transaction Reference</label>
-                <Input placeholder="e.g. BKA8TJD123" value={txnRef} onChange={(e) => setTxnRef(e.target.value)} />
-                <p className="text-[10px] text-muted-foreground">Find in your bKash/Nagad history.</p>
-              </div>
-              <div className={fieldClass}>
+            {/* Txn ref */}
+            <div className={fieldClass}>
+              <label className={labelClass}>Transaction Reference</label>
+              <Input placeholder="e.g. BKA8TJD123" value={txnRef} onChange={(e) => setTxnRef(e.target.value)} />
+              <p className="text-[10px] text-muted-foreground">Find in your bKash/Nagad history.</p>
+            </div>
+
+            {/* Receipt - full width, original bordered box */}
+            <div className={fieldClass}>
               <div className="flex items-center justify-between">
                 <label className={labelClass}>Payment Receipt</label>
                 <span className="text-[10px] text-muted-foreground">Optional</span>
               </div>
               {receiptUrl ? (
-                <div className="flex items-center gap-3 border border-primary/30 rounded px-3 py-2 bg-primary/5">
+                <div className="flex items-center gap-3 border border-primary/30 rounded p-3 bg-primary/5">
                   <img src={receiptUrl} alt="Receipt" className="w-10 h-10 object-cover rounded border shrink-0" />
                   <p className="text-xs text-primary flex-1">Receipt uploaded</p>
                   <button type="button" onClick={() => { setReceiptUrl(""); setReceiptFile(null) }}
                     className="text-[10px] text-muted-foreground underline underline-offset-2">Remove</button>
                 </div>
               ) : (
-                <div className="flex items-center gap-3 border border-border/60 rounded px-3 py-2 bg-muted/20">
+                <div className="border border-border/60 rounded p-3 bg-muted/20">
                   <input type="file" accept="image/*"
                     onChange={(e) => { const f = e.target.files?.[0]; if (f) { setReceiptFile(f); uploadReceipt(f) } }}
-                    className="w-full text-xs border border-border/60 rounded bg-muted/20 px-3 cursor-pointer" style={{ minHeight: "2.75rem", paddingTop: "0.6rem" }} />
-                  {receiptUploading && <span className="text-[10px] text-muted-foreground shrink-0">Uploading...</span>}
+                    className="w-full text-xs cursor-pointer" />
+                  {receiptUploading && <p className="text-[10px] text-muted-foreground mt-1">Uploading...</p>}
                 </div>
               )}
               {receiptError && <p className="text-[10px] text-amber-600">{receiptError}</p>}
-              </div>
             </div>
 
             {/* Donor info - all three in one row */}
