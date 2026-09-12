@@ -125,7 +125,7 @@ export default function DonatePage() {
               <div className="flex gap-2">
                 {PRESETS.map((a) => (
                   <button key={a} type="button" onClick={() => setAmount(String(a))}
-                    className={`flex-1 py-2 text-sm border rounded transition-colors ${
+                    className={`flex-1 h-10 text-sm border rounded transition-colors ${
                       amount === String(a) ? "bg-primary text-primary-foreground border-primary" : "border-border hover:bg-muted"
                     }`}>
                     {a.toLocaleString()}
@@ -141,7 +141,7 @@ export default function DonatePage() {
             <div className={fieldClass}>
               <label className={labelClass}>Payment Method</label>
               <Select value={method} onValueChange={(v) => setMethod(v ?? "")}>
-                <SelectTrigger><SelectValue placeholder="Select method" /></SelectTrigger>
+                <SelectTrigger className="w-full"><SelectValue placeholder="Select payment method" /></SelectTrigger>
                 <SelectContent>
                   <SelectItem value="BKASH">bKash</SelectItem>
                   <SelectItem value="NAGAD">Nagad</SelectItem>
@@ -204,7 +204,7 @@ export default function DonatePage() {
                 <div className="flex items-center gap-3 border border-border/60 rounded px-3 py-2 bg-muted/20">
                   <Input type="file" accept="image/*"
                     onChange={(e) => { const f = e.target.files?.[0]; if (f) { setReceiptFile(f); uploadReceipt(f) } }}
-                    className="text-xs border-0 p-0 h-auto bg-transparent" />
+                    className="text-xs h-10 cursor-pointer" />
                   {receiptUploading && <span className="text-[10px] text-muted-foreground shrink-0">Uploading...</span>}
                 </div>
               )}
