@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { SignOutButton } from "@/components/sign-out-button"
 import { PhoneForm } from "./phone-form"
+import { BecomeVolunteerButton } from "./become-volunteer-button"
 
 export default async function AccountPage() {
   const session = await getSession()
@@ -109,6 +110,15 @@ export default async function AccountPage() {
           <Link href="/ledger/donations" className="text-sm text-muted-foreground hover:underline text-center">
             View public ledger
           </Link>
+        </div>
+
+        {/* Become a volunteer */}
+        <div className="border border-border/40 rounded p-5 flex flex-col gap-2">
+          <p className="text-sm font-semibold">Want to help on the ground?</p>
+          <p className="text-xs text-muted-foreground leading-relaxed">
+            Volunteers find and register families in need, assess their monthly requirements, and handle fund delivery. Your account will need KYC verification before you get access.
+          </p>
+          <BecomeVolunteerButton />
         </div>
       </main>
     </div>
