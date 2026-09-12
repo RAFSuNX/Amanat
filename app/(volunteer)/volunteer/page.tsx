@@ -79,6 +79,19 @@ export default async function VolunteerDashboard() {
         </Card>
       </div>
 
+      {/* Donation section */}
+      <div className="border border-border/40 rounded p-5 flex items-center justify-between gap-6">
+        <div className="flex flex-col gap-1">
+          <p className="text-sm font-semibold">Make a donation</p>
+          <p className="text-xs text-muted-foreground">
+            Volunteers can donate too. Your details will be pre-filled.
+          </p>
+        </div>
+        <Link href="/donate" className="shrink-0">
+          <Button variant="outline">Donate</Button>
+        </Link>
+      </div>
+
       {activeCycle?.status === "VOLUNTEER_REVIEW" && (
         <div className="rounded-lg border border-yellow-200 bg-yellow-50 p-4">
           <p className="font-medium text-sm">Review Required</p>

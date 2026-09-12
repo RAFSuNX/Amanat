@@ -1,8 +1,9 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
+import { useSession } from "@/lib/auth-client"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
@@ -61,12 +62,23 @@ const fieldClass = "flex flex-col gap-2"
 
 export default function DonatePage() {
   const router = useRouter()
+  const { data: session } = useSession()
   const [amount, setAmount] = useState("")
   const [method, setMethod] = useState("")
   const [txnRef, setTxnRef] = useState("")
   const [name, setName] = useState("")
   const [phone, setPhone] = useState("")
   const [email, setEmail] = useState("")
+
+  // Pre-fill from session when user is logged in
+  useEffect(() => {
+    if (session?.user) {
+      if (!name) setName(session.user.name ?? "")
+      if (!email) setEmail(session.user.email ?? "")
+      if (!phone) setPhone((session.user as { phone?: string }).phone ?? "")
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [session])
   const [isAnonymous, setIsAnonymous] = useState(false)
   const [receiptFile, setReceiptFile] = useState<File | null>(null)
   const [receiptUrl, setReceiptUrl] = useState("")
@@ -261,6 +273,11 @@ export default function DonatePage() {
             </div>
 
             {/* Donor info - all three in one row */}
+            {session?.user && (
+              <p className="text-[10px] text-muted-foreground border-l-2 border-primary/40 pl-2">
+                Details pre-filled from your account. Edit below if needed.
+              </p>
+            )}
             <div className="grid grid-cols-3 gap-3">
               <div className={fieldClass}>
                 <label className={labelClass}>Your Name</label>
