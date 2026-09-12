@@ -11,7 +11,7 @@ const en = {
   },
   hero: {
     eyebrow: "The Hope of All of Us",
-    headline: "Built on trust. Sustained by charity.",
+    headline: "Built on public record. Maintained by volunteers. Sustained by charity.",
     body: "Amanat connects people who want to give with volunteers who help those who genuinely cannot support themselves. Every taka in, every taka out is on public record.",
     ctaDonate: "Make a Donation",
     ctaLedger: "Public Ledger",
@@ -95,7 +95,7 @@ const bn: typeof en = {
   },
   hero: {
     eyebrow: "আমাদের সকলের আশা",
-    headline: "বিশ্বাসের উপর গড়া। দানের মাধ্যমে টিকে থাকা।",
+    headline: "পাবলিক রেকর্ডে গড়া। স্বেচ্ছাসেবীদের দ্বারা পরিচালিত। দানের মাধ্যমে টিকে থাকা।",
     body: "আমানত দাতাদের সাথে স্বেচ্ছাসেবীদের সংযুক্ত করে যারা সত্যিকারের অসহায় মানুষদের সাহায্য করে। প্রতিটি টাকার হিসাব প্রকাশ্যে থাকে।",
     ctaDonate: "অনুদান দিন",
     ctaLedger: "পাবলিক লেজার",
