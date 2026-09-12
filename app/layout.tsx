@@ -9,6 +9,10 @@ export const metadata: Metadata = {
   title: "Amanat: The Hope of All of Us",
   description:
     "A transparent welfare platform connecting donors with those in need across Bangladesh.",
+  icons: {
+    icon: "/logo.png",
+    apple: "/logo.png",
+  },
 }
 
 export default function RootLayout({
