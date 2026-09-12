@@ -7,6 +7,7 @@ import {
 import { Badge } from "@/components/ui/badge"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
+import { DonationQuickView } from "./donation-modal"
 
 function maskRef(ref: string) {
   if (ref.length <= 6) return ref
@@ -27,26 +28,20 @@ export default async function LedgerDonationsPage() {
   return (
     <div className="min-h-screen flex flex-col">
       <nav className="border-b px-6 py-4 flex items-center gap-4">
-        <Link href="/" className="font-semibold">Amanat</Link>
-        <span className="text-muted-foreground">/</span>
+        <Link href="/" className="font-semibold text-sm">Amanat</Link>
+        <span className="text-muted-foreground text-sm">/</span>
         <span className="text-sm">Public Ledger</span>
-        <div className="ml-auto flex gap-3">
-          <Link href="/ledger/donations">
-            <Button variant="default" size="sm">Donations</Button>
-          </Link>
-          <Link href="/ledger/distributions">
-            <Button variant="outline" size="sm">Distributions</Button>
-          </Link>
-          <Link href="/ledger/volunteers">
-            <Button variant="outline" size="sm">Volunteers</Button>
-          </Link>
+        <div className="ml-auto flex gap-2">
+          <Link href="/ledger/donations"><Button variant="default" size="sm">Donations</Button></Link>
+          <Link href="/ledger/distributions"><Button variant="outline" size="sm">Distributions</Button></Link>
+          <Link href="/ledger/volunteers"><Button variant="outline" size="sm">Volunteers</Button></Link>
         </div>
       </nav>
 
       <main className="flex-1 px-6 py-8 max-w-5xl mx-auto w-full">
-        <h1 className="text-2xl font-bold mb-2">Donation Ledger</h1>
+        <h1 className="text-2xl font-bold mb-1">Donation Ledger</h1>
         <p className="text-sm text-muted-foreground mb-6">
-          All confirmed donations are listed here. Donors may choose to remain anonymous.
+          All confirmed donations. Click a receipt number to view details. Anonymous donors have their name hidden only.
         </p>
 
         <Table>
@@ -64,10 +59,22 @@ export default async function LedgerDonationsPage() {
           <TableBody>
             {rows.map((d) => {
               const confirmedAt = d.confirmedAt ?? d.createdAt
+              const receipt = receiptNumber(d.id, confirmedAt)
               return (
                 <TableRow key={d.id}>
-                  <TableCell className="font-mono text-xs text-muted-foreground">
-                    {receiptNumber(d.id, confirmedAt)}
+                  <TableCell>
+                    <DonationQuickView
+                      donation={{
+                        id: d.id,
+                        donorName: d.donorName,
+                        isAnonymous: d.isAnonymous,
+                        amount: d.amount,
+                        method: d.method,
+                        transactionRef: d.transactionRef,
+                        confirmedAt: confirmedAt.toISOString(),
+                        receipt,
+                      }}
+                    />
                   </TableCell>
                   <TableCell className="text-sm text-muted-foreground">
                     {confirmedAt.toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" })}
@@ -85,6 +92,7 @@ export default async function LedgerDonationsPage() {
                   <TableCell>
                     <Link
                       href={`/ledger/donations/${d.id}/invoice`}
+                      target="_blank"
                       className="text-xs text-primary hover:underline underline-offset-2"
                     >
                       Invoice
