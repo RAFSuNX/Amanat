@@ -195,18 +195,18 @@ export default function DonatePage() {
                 <span className="text-[10px] text-muted-foreground">Optional</span>
               </div>
               {receiptUrl ? (
-                <div className="flex items-center gap-3 border border-primary/30 rounded p-3 bg-primary/5">
+                <div className="flex items-center gap-3 border border-primary/30 rounded px-3 py-2 bg-primary/5">
                   <img src={receiptUrl} alt="Receipt" className="w-10 h-10 object-cover rounded border shrink-0" />
                   <p className="text-xs text-primary flex-1">Receipt uploaded</p>
                   <button type="button" onClick={() => { setReceiptUrl(""); setReceiptFile(null) }}
                     className="text-[10px] text-muted-foreground underline underline-offset-2">Remove</button>
                 </div>
               ) : (
-                <div className="border border-border/60 rounded p-3 bg-muted/20">
-                  <input type="file" accept="image/*"
+                <div className="flex items-center gap-3 border border-border/60 rounded px-3 py-2 bg-muted/20">
+                  <Input type="file" accept="image/*"
                     onChange={(e) => { const f = e.target.files?.[0]; if (f) { setReceiptFile(f); uploadReceipt(f) } }}
-                    className="w-full text-xs cursor-pointer" />
-                  {receiptUploading && <p className="text-[10px] text-muted-foreground mt-1">Uploading...</p>}
+                    className="text-xs border-0 p-0 h-auto bg-transparent" />
+                  {receiptUploading && <span className="text-[10px] text-muted-foreground shrink-0">Uploading...</span>}
                 </div>
               )}
               {receiptError && <p className="text-[10px] text-amber-600">{receiptError}</p>}
