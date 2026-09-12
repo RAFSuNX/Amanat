@@ -84,6 +84,12 @@ export function KycForm({
 
   return (
     <form onSubmit={submit} className="flex flex-col gap-5">
+      <div className="border border-border/60 rounded p-4 bg-muted/30 flex flex-col gap-1.5">
+        <p className="text-xs font-semibold">Manual verification process</p>
+        <p className="text-xs text-muted-foreground leading-relaxed">
+          Your KYC application will be reviewed manually by our team. We may call you for a brief verification. This process can take up to 24 hours. Please keep your mobile number reachable so we can reach you.
+        </p>
+      </div>
       <div className="flex flex-col gap-2">
         <Label>Full Name as on Document *</Label>
         <Input
