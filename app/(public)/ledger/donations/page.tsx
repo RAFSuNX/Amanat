@@ -1,6 +1,6 @@
 import { db } from "@/db"
-import { donations } from "@/db/schema"
-import { eq, desc } from "drizzle-orm"
+import { donations, distributionAllotments, distributionCycles, needAssessments, beneficiaries } from "@/db/schema"
+import { eq, desc, sql, and, inArray } from "drizzle-orm"
 import {
   Table, TableBody, TableCell, TableHead, TableHeader, TableRow,
 } from "@/components/ui/table"
@@ -19,11 +19,59 @@ function receiptNumber(id: number, date: Date) {
   return `AMT-${d}-${String(id).padStart(5, "0")}`
 }
 
+async function getFundStats() {
+  // Total money in
+  const [inRow] = await db
+    .select({ total: sql<string>`coalesce(sum(amount), 0)` })
+    .from(donations)
+    .where(eq(donations.status, "CONFIRMED"))
+
+  // Total money out (allotments from completed cycles)
+  const completedCycles = await db
+    .select({ id: distributionCycles.id })
+    .from(distributionCycles)
+    .where(eq(distributionCycles.status, "COMPLETED"))
+
+  let totalOut = 0
+  if (completedCycles.length > 0) {
+    const [outRow] = await db
+      .select({ total: sql<string>`coalesce(sum(allocated_amount), 0)` })
+      .from(distributionAllotments)
+      .where(inArray(distributionAllotments.cycleId, completedCycles.map((c) => c.id)))
+    totalOut = parseFloat(outRow?.total ?? "0")
+  }
+
+  // Current monthly need: sum of latest active assessments for active beneficiaries
+  const [needRow] = await db
+    .select({ total: sql<string>`coalesce(sum(na.declared_monthly_need), 0)` })
+    .from(needAssessments)
+    .innerJoin(beneficiaries, eq(needAssessments.beneficiaryId, beneficiaries.id))
+    .where(
+      and(
+        eq(needAssessments.status, "ACTIVE"),
+        eq(beneficiaries.status, "ACTIVE")
+      )
+    )
+
+  const totalIn = parseFloat(inRow?.total ?? "0")
+  const monthlyNeeded = parseFloat(needRow?.total ?? "0")
+
+  return {
+    totalIn,
+    totalOut,
+    balance: totalIn - totalOut,
+    monthlyNeeded,
+  }
+}
+
 export default async function LedgerDonationsPage() {
-  const rows = await db.query.donations.findMany({
-    where: eq(donations.status, "CONFIRMED"),
-    orderBy: [desc(donations.confirmedAt)],
-  })
+  const [rows, stats] = await Promise.all([
+    db.query.donations.findMany({
+      where: eq(donations.status, "CONFIRMED"),
+      orderBy: [desc(donations.confirmedAt)],
+    }),
+    getFundStats(),
+  ])
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -43,6 +91,42 @@ export default async function LedgerDonationsPage() {
         <p className="text-sm text-muted-foreground mb-6">
           All confirmed donations. Click a receipt number to view details. Anonymous donors have their name hidden only.
         </p>
+
+        {/* Fund summary */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-px bg-border rounded-lg overflow-hidden border border-border mb-8">
+          {[
+            {
+              label: "Total In",
+              value: `${stats.totalIn.toLocaleString("en-BD")} BDT`,
+              sub: "Confirmed donations",
+              color: "text-primary",
+            },
+            {
+              label: "Total Out",
+              value: `${stats.totalOut.toLocaleString("en-BD")} BDT`,
+              sub: "Completed distributions",
+              color: "text-foreground",
+            },
+            {
+              label: "Current Balance",
+              value: `${stats.balance.toLocaleString("en-BD")} BDT`,
+              sub: "Available in pool",
+              color: stats.balance >= 0 ? "text-primary" : "text-destructive",
+            },
+            {
+              label: "Monthly Need",
+              value: `${stats.monthlyNeeded.toLocaleString("en-BD")} BDT`,
+              sub: "Accumulated from all families",
+              color: "text-foreground",
+            },
+          ].map((s) => (
+            <div key={s.label} className="bg-card px-5 py-4">
+              <p className="text-[10px] uppercase tracking-widest text-muted-foreground mb-1">{s.label}</p>
+              <p className={`text-lg font-bold tabular-nums ${s.color}`}>{s.value}</p>
+              <p className="text-[10px] text-muted-foreground mt-0.5">{s.sub}</p>
+            </div>
+          ))}
+        </div>
 
         <Table>
           <TableHeader>
