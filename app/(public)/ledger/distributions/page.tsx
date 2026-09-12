@@ -37,6 +37,9 @@ export default async function LedgerDistributionsPage() {
           <Link href="/ledger/distributions">
             <Button variant="default" size="sm">Distributions</Button>
           </Link>
+          <Link href="/ledger/volunteers">
+            <Button variant="outline" size="sm">Volunteers</Button>
+          </Link>
         </div>
       </nav>
 
