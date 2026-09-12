@@ -152,6 +152,11 @@ input[type="file"] {
   border-color: oklch(0.86 0.018 155) !important;
   min-height: 2.75rem !important;
   transition: border-color 0.15s;
+  display: flex;
+  align-items: center;
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+  line-height: 2.75rem;
 }
 
 textarea {

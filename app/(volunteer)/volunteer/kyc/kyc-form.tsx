@@ -152,6 +152,7 @@ export function KycForm({
           type="file"
           accept="image/*,.pdf"
           onChange={(e) => setFile(e.target.files?.[0] ?? null)}
+          
         />
         <p className="text-[10px] text-muted-foreground">
           Upload a clear photo of your NID, passport, or driving license. You can add this later if not ready.
@@ -167,6 +168,7 @@ export function KycForm({
           type="file"
           accept="image/*"
           onChange={(e) => setPassportFile(e.target.files?.[0] ?? null)}
+          
         />
         <p className="text-[10px] text-muted-foreground">
           A clear face photo of yourself. This is kept on record for identity verification.
