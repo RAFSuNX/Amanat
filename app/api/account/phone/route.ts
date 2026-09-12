@@ -6,7 +6,7 @@ import { eq } from "drizzle-orm"
 import { getSession } from "@/lib/session"
 
 const schema = z.object({
-  phone: z.string().min(11).max(14),
+  phone: z.string().min(7).max(16), // allow 01XXXXXXXXX and +8801XXXXXXXXX formats
 })
 
 export async function POST(request: NextRequest) {
