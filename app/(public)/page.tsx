@@ -169,15 +169,28 @@ export default async function LandingPage() {
           {t.principles.eyebrow}
         </p>
 
-        {/* Grid fills remaining height */}
-        <div className="flex-1 grid grid-cols-3 grid-rows-2 gap-x-12 mt-10 pb-2">
+        {/* Grid fills remaining height — two equal rows */}
+        <div
+          className="flex-1 grid grid-cols-3 mt-10 pb-2"
+          style={{ gridTemplateRows: "1fr 1fr", columnGap: "3rem" }}
+        >
           {t.principles.items.map((p) => (
             <div
               key={p.title}
-              className="flex flex-col gap-2 border-t border-border/40 pt-6"
+              className="flex flex-col gap-3 border-t border-border/40 pt-8"
             >
-              <h3 className="font-semibold text-base leading-tight">{p.title}</h3>
-              <p className="text-sm text-muted-foreground leading-relaxed">{p.body}</p>
+              <h3
+                className="font-bold tracking-tight leading-tight"
+                style={{ fontSize: "clamp(1.05rem, 1.6vw, 1.35rem)" }}
+              >
+                {p.title}
+              </h3>
+              <p
+                className="text-muted-foreground leading-relaxed"
+                style={{ fontSize: "clamp(0.8rem, 1.1vw, 0.95rem)" }}
+              >
+                {p.body}
+              </p>
             </div>
           ))}
         </div>
