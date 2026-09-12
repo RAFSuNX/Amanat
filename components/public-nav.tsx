@@ -1,4 +1,5 @@
 import Link from "next/link"
+import Image from "next/image"
 import { Button } from "@/components/ui/button"
 
 interface PublicNavProps {
@@ -15,8 +16,10 @@ export function PublicNav({ donateButton = false, activeHref }: PublicNavProps) 
   ]
 
   return (
-    <nav className="sticky top-0 z-20 bg-background border-b border-border/40 px-10 py-5 flex items-center justify-between">
-      <Link href="/" className="text-sm font-semibold tracking-tight">Amanat</Link>
+    <nav className="sticky top-0 z-20 bg-background border-b border-border/40 px-10 h-16 flex items-center justify-between">
+      <Link href="/" className="flex items-center">
+        <Image src="/logo.png" alt="Amanat" width={100} height={40} className="h-10 w-auto object-contain" priority />
+      </Link>
       <div className="flex items-center gap-6">
         {links.map((l) => (
           <Link

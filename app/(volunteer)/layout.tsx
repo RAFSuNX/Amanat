@@ -1,4 +1,5 @@
 import Link from "next/link"
+import Image from "next/image"
 import { requireVolunteer } from "@/lib/session"
 import { redirect } from "next/navigation"
 import { db } from "@/db"
@@ -30,9 +31,11 @@ export default async function VolunteerLayout({ children }: { children: React.Re
     <div className="h-dvh w-dvw flex overflow-hidden">
       {/* Sidebar */}
       <aside className="w-52 border-r border-border/40 flex flex-col shrink-0 bg-muted/20">
-        <div className="px-6 py-5 border-b border-border/40">
-          <Link href="/" className="text-sm font-semibold tracking-tight">Amanat</Link>
-          <p className="text-[10px] uppercase tracking-[0.15em] text-muted-foreground mt-1">Volunteer</p>
+        <div className="h-16 px-4 border-b border-border/40 flex items-center gap-2">
+          <Link href="/">
+            <Image src="/logo.png" alt="Amanat" width={80} height={32} className="h-8 w-auto object-contain" />
+          </Link>
+          <span className="text-[10px] uppercase tracking-[0.15em] text-muted-foreground">Volunteer</span>
         </div>
 
         <nav className="flex-1 px-3 py-5 flex flex-col gap-0.5">

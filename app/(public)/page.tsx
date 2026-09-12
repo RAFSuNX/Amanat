@@ -1,6 +1,7 @@
 export const dynamic = "force-dynamic"
 
 import Link from "next/link"
+import Image from "next/image"
 import { db } from "@/db"
 import { donations, beneficiaries, distributionCycles } from "@/db/schema"
 import { eq, sql } from "drizzle-orm"
@@ -48,8 +49,10 @@ export default async function LandingPage() {
         style={{ scrollSnapAlign: "start" }}
       >
         {/* Nav */}
-        <nav className="shrink-0 flex items-center justify-between px-10 py-5 border-b border-border/30">
-          <span className="text-sm font-semibold tracking-tight">Amanat</span>
+        <nav className="shrink-0 flex items-center justify-between px-10 h-16 border-b border-border/30">
+          <Link href="/">
+            <Image src="/logo.png" alt="Amanat" width={100} height={40} className="h-10 w-auto object-contain" priority />
+          </Link>
           <div className="flex items-center gap-8">
             <Link href="/ledger/donations" className="text-xs text-muted-foreground hover:text-foreground transition-colors uppercase tracking-widest">
               {t.nav.ledger}
@@ -255,7 +258,7 @@ export default async function LandingPage() {
         {/* Footer strip */}
         <footer className="shrink-0 border-t px-10 py-5 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <span className="text-sm font-semibold">Amanat</span>
+            <Image src="/logo.png" alt="Amanat" width={72} height={28} className="h-7 w-auto object-contain" />
             <span className="text-border/60">|</span>
             <span className="text-xs text-muted-foreground">{t.footer.tagline}</span>
           </div>
