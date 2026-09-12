@@ -1,6 +1,6 @@
 import { getSession } from "@/lib/session"
 import { db } from "@/db"
-import { volunteerProfiles } from "@/db/schema"
+import { volunteerProfiles, users } from "@/db/schema"
 import { eq } from "drizzle-orm"
 import { Badge } from "@/components/ui/badge"
 import { KycForm } from "./kyc-form"
@@ -9,9 +9,10 @@ export default async function VolunteerKycPage() {
   const session = await getSession()
   if (!session) return null
 
-  const profile = await db.query.volunteerProfiles.findFirst({
-    where: eq(volunteerProfiles.userId, session.user.id),
-  })
+  const [profile, userRow] = await Promise.all([
+    db.query.volunteerProfiles.findFirst({ where: eq(volunteerProfiles.userId, session.user.id) }),
+    db.query.users.findFirst({ where: eq(users.id, session.user.id) }),
+  ])
 
   return (
     <div className="max-w-lg flex flex-col gap-6">
@@ -48,15 +49,12 @@ export default async function VolunteerKycPage() {
       ) : (
         <KycForm
           profileId={profile?.id}
-          existing={
-            profile
-              ? {
-                  docType: profile.kycDocType ?? undefined,
-                  docNumber: profile.kycDocNumber ?? undefined,
-                  docImageUrl: profile.kycDocImageUrl ?? undefined,
-                }
-              : undefined
-          }
+          existing={{
+            legalName: userRow?.name ?? undefined,
+            docType: profile?.kycDocType ?? undefined,
+            docNumber: profile?.kycDocNumber ?? undefined,
+            docImageUrl: profile?.kycDocImageUrl ?? undefined,
+          }}
         />
       )}
     </div>

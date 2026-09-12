@@ -11,9 +11,10 @@ export function KycForm({
   existing,
 }: {
   profileId?: number
-  existing?: { docType?: string; docNumber?: string; docImageUrl?: string }
+  existing?: { legalName?: string; docType?: string; docNumber?: string; docImageUrl?: string }
 }) {
   const router = useRouter()
+  const [legalName, setLegalName] = useState(existing?.legalName ?? "")
   const [docType, setDocType] = useState(existing?.docType ?? "")
   const [docNumber, setDocNumber] = useState(existing?.docNumber ?? "")
   const [file, setFile] = useState<File | null>(null)
@@ -28,8 +29,8 @@ export function KycForm({
     setError("")
     setUploadWarning("")
 
-    if (!docType || !docNumber) {
-      setError("Please select document type and enter the document number.")
+    if (!legalName || !docType || !docNumber) {
+      setError("Please fill in your legal name, document type, and document number.")
       return
     }
 
@@ -62,6 +63,7 @@ export function KycForm({
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
+        legalName,
         docType,
         docNumber,
         docImageUrl: docImageUrl || undefined,
@@ -82,6 +84,18 @@ export function KycForm({
 
   return (
     <form onSubmit={submit} className="flex flex-col gap-5">
+      <div className="flex flex-col gap-2">
+        <Label>Full Name as on Document *</Label>
+        <Input
+          value={legalName}
+          onChange={(e) => setLegalName(e.target.value)}
+          placeholder="Exactly as written on your NID or passport"
+        />
+        <p className="text-[10px] text-muted-foreground">
+          This will become your official name on your Amanat profile.
+        </p>
+      </div>
+
       <div className="flex flex-col gap-2">
         <Label>Document Type *</Label>
         <select

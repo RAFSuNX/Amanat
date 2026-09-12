@@ -1,11 +1,12 @@
 import { NextRequest, NextResponse } from "next/server"
 import { z } from "zod"
 import { db } from "@/db"
-import { volunteerProfiles } from "@/db/schema"
+import { volunteerProfiles, users } from "@/db/schema"
 import { eq } from "drizzle-orm"
 import { requireVolunteer } from "@/lib/session"
 
 const schema = z.object({
+  legalName: z.string().min(1),
   docType: z.enum(["NID", "PASSPORT", "DRIVING_LICENSE"]),
   docNumber: z.string().min(1),
   docImageUrl: z.string().url().optional(),
@@ -22,7 +23,10 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: parsed.error.issues[0].message }, { status: 400 })
   }
 
-  const { docType, docNumber, docImageUrl, passportPhotoUrl } = parsed.data
+  const { legalName, docType, docNumber, docImageUrl, passportPhotoUrl } = parsed.data
+
+  // Update user's official name from their legal document
+  await db.update(users).set({ name: legalName }).where(eq(users.id, session.user.id))
 
   const existing = await db.query.volunteerProfiles.findFirst({
     where: eq(volunteerProfiles.userId, session.user.id),
