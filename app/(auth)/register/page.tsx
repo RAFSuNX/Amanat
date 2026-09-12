@@ -6,7 +6,6 @@ import Link from "next/link"
 import { signUp } from "@/lib/auth-client"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
 
 const DISTRICTS = [
   "Bagerhat","Bandarban","Barguna","Barishal","Bhola","Bogura","Brahmanbaria",
@@ -29,7 +28,6 @@ export default function RegisterPage() {
   const [name, setName] = useState("")
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
-  const [phone, setPhone] = useState("")
   const [district, setDistrict] = useState("")
   const [upazila, setUpazila] = useState("")
   const [error, setError] = useState("")
@@ -38,22 +36,10 @@ export default function RegisterPage() {
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
     setError("")
-
-    if (type === "volunteer" && !district) {
-      setError("Please select your district.")
-      return
-    }
-
+    if (type === "volunteer" && !district) { setError("Select your district."); return }
     setLoading(true)
 
-    const { data, error: authError } = await signUp.email({
-      email,
-      password,
-      name,
-      // @ts-expect-error -- additional field
-      phone: phone || undefined,
-    })
-
+    const { data, error: authError } = await signUp.email({ email, password, name })
     if (authError || !data) {
       setError(authError?.message ?? "Registration failed.")
       setLoading(false)
@@ -64,13 +50,9 @@ export default function RegisterPage() {
       const res = await fetch("/api/volunteer/become", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ district, upazila, phone }),
+        body: JSON.stringify({ district, upazila }),
       })
-      if (!res.ok) {
-        setError("Account created but volunteer setup failed. Contact support.")
-        setLoading(false)
-        return
-      }
+      if (!res.ok) { setError("Account created but volunteer setup failed."); setLoading(false); return }
       router.push("/volunteer/kyc")
     } else {
       router.push("/account")
@@ -78,88 +60,79 @@ export default function RegisterPage() {
     setLoading(false)
   }
 
+  const fieldClass = "flex flex-col gap-2"
+  const labelClass = "text-[10px] uppercase tracking-[0.15em] text-muted-foreground"
+  const selectClass = "flex h-10 w-full rounded border border-input bg-background px-3 py-2 text-sm"
+
   return (
-    <div className="w-full max-w-sm">
-      <div className="mb-8 text-center">
-        <Link href="/" className="font-semibold text-lg">Amanat</Link>
-        <p className="text-sm text-muted-foreground mt-1">Create an account</p>
+    <div className="flex flex-col gap-8">
+      <div className="flex flex-col gap-1">
+        <p className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground">Join Amanat</p>
+        <h1 className="text-2xl font-bold tracking-tight">Create an account</h1>
       </div>
 
-      {/* Type selector */}
-      <div className="flex rounded-md border border-border overflow-hidden mb-6">
+      {/* Type toggle */}
+      <div className="flex border border-border rounded overflow-hidden">
         {(["donor", "volunteer"] as AccountType[]).map((t) => (
-          <button
-            key={t}
-            type="button"
-            onClick={() => setType(t)}
-            className={`flex-1 py-2.5 text-sm transition-colors ${
-              type === t
-                ? "bg-primary text-primary-foreground font-medium"
-                : "bg-background text-muted-foreground hover:text-foreground"
-            }`}
-          >
+          <button key={t} type="button" onClick={() => setType(t)}
+            className={`flex-1 py-2.5 text-xs uppercase tracking-[0.1em] transition-colors ${
+              type === t ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:text-foreground"
+            }`}>
             {t === "donor" ? "I want to donate" : "I want to volunteer"}
           </button>
         ))}
       </div>
 
       {type === "volunteer" && (
-        <div className="rounded-md border border-border/60 bg-muted/30 px-4 py-3 text-xs text-muted-foreground mb-6 leading-relaxed">
-          Volunteer accounts require KYC verification (NID, passport, or driving license) before access is granted. An admin will review and approve your application.
-        </div>
+        <p className="text-xs text-muted-foreground border-l-2 border-primary/40 pl-3 leading-relaxed">
+          Volunteer accounts require KYC verification before access is granted. An admin will review your application.
+        </p>
       )}
 
-      <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-        <div className="flex flex-col gap-2">
-          <Label htmlFor="name">Full Name</Label>
-          <Input id="name" value={name} onChange={(e) => setName(e.target.value)} required />
+      <form onSubmit={handleSubmit} className="flex flex-col gap-5">
+        <div className={fieldClass}>
+          <label className={labelClass}>Full Name</label>
+          <Input value={name} onChange={(e) => setName(e.target.value)} required />
         </div>
-
-        <div className="flex flex-col gap-2">
-          <Label htmlFor="email">Email</Label>
-          <Input id="email" type="email" autoComplete="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
+        <div className={fieldClass}>
+          <label className={labelClass}>Email</label>
+          <Input type="email" autoComplete="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
         </div>
-
-        <div className="flex flex-col gap-2">
-          <Label htmlFor="password">Password</Label>
-          <Input id="password" type="password" autoComplete="new-password" value={password} onChange={(e) => setPassword(e.target.value)} required minLength={8} />
+        <div className={fieldClass}>
+          <label className={labelClass}>Password</label>
+          <Input type="password" autoComplete="new-password" value={password} onChange={(e) => setPassword(e.target.value)} required minLength={8} />
         </div>
 
         {type === "volunteer" && (
           <>
-            <div className="flex flex-col gap-2">
-              <Label htmlFor="district">District you will cover *</Label>
-              <select
-                id="district"
-                required
-                value={district}
-                onChange={(e) => setDistrict(e.target.value)}
-                className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
-              >
+            <div className={fieldClass}>
+              <label className={labelClass}>District you will cover</label>
+              <select required value={district} onChange={(e) => setDistrict(e.target.value)} className={selectClass}>
                 <option value="">Select district</option>
-                {DISTRICTS.map((d) => (
-                  <option key={d} value={d}>{d}</option>
-                ))}
+                {DISTRICTS.map((d) => <option key={d} value={d}>{d}</option>)}
               </select>
             </div>
-
-            <div className="flex flex-col gap-2">
-              <Label htmlFor="upazila">Upazila (optional)</Label>
-              <Input id="upazila" value={upazila} onChange={(e) => setUpazila(e.target.value)} placeholder="e.g. Savar" />
+            <div className={fieldClass}>
+              <label className={labelClass}>Upazila (optional)</label>
+              <Input value={upazila} onChange={(e) => setUpazila(e.target.value)} placeholder="e.g. Savar" />
             </div>
           </>
         )}
 
-        {error && <p className="text-sm text-red-500">{error}</p>}
+        {error && (
+          <p className="text-xs text-destructive border border-destructive/20 bg-destructive/5 px-3 py-2 rounded">
+            {error}
+          </p>
+        )}
 
-        <Button type="submit" disabled={loading} className="w-full">
+        <Button type="submit" disabled={loading} className="w-full mt-1">
           {loading ? "Creating account..." : "Create Account"}
         </Button>
       </form>
 
-      <p className="text-center text-sm text-muted-foreground mt-6">
+      <p className="text-xs text-muted-foreground border-t border-border/40 pt-6">
         Already have an account?{" "}
-        <Link href="/login" className="underline">Sign in</Link>
+        <Link href="/login" className="text-foreground underline underline-offset-2">Sign in</Link>
       </p>
     </div>
   )

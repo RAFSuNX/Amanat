@@ -13,43 +13,39 @@ const NAV = [
   { href: "/admin/reports", label: "Reports" },
 ]
 
-export default async function AdminLayout({
-  children,
-}: {
-  children: React.ReactNode
-}) {
+export default async function AdminLayout({ children }: { children: React.ReactNode }) {
   const session = await requireAdmin()
   if (!session) redirect("/login")
 
   return (
     <div className="min-h-screen flex">
       {/* Sidebar */}
-      <aside className="w-56 border-r flex flex-col shrink-0">
-        <div className="px-4 py-5 border-b">
-          <Link href="/" className="font-semibold">Amanat</Link>
-          <p className="text-xs text-muted-foreground mt-0.5">Admin Panel</p>
+      <aside className="w-52 border-r border-border/40 flex flex-col shrink-0 bg-muted/20">
+        <div className="px-6 py-5 border-b border-border/40">
+          <Link href="/" className="text-sm font-semibold tracking-tight">Amanat</Link>
+          <p className="text-[10px] uppercase tracking-[0.15em] text-muted-foreground mt-1">Admin</p>
         </div>
-        <nav className="flex-1 px-2 py-4 flex flex-col gap-1">
+
+        <nav className="flex-1 px-3 py-5 flex flex-col gap-0.5">
           {NAV.map((n) => (
             <Link
               key={n.href}
               href={n.href}
-              className="px-3 py-2 rounded-md text-sm hover:bg-muted transition-colors"
+              className="px-3 py-2.5 rounded text-xs hover:bg-muted hover:text-foreground text-muted-foreground transition-colors"
             >
               {n.label}
             </Link>
           ))}
         </nav>
-        <div className="px-4 py-4 border-t">
-          <p className="text-xs text-muted-foreground truncate mb-2">
-            {session.user.name}
-          </p>
+
+        <div className="px-6 py-5 border-t border-border/40 flex flex-col gap-2">
+          <p className="text-[10px] text-muted-foreground truncate">{session.user.name}</p>
           <SignOutButton />
         </div>
       </aside>
 
       {/* Main */}
-      <main className="flex-1 overflow-auto p-8">{children}</main>
+      <main className="flex-1 overflow-auto p-10">{children}</main>
     </div>
   )
 }

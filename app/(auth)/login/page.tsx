@@ -6,7 +6,6 @@ import Link from "next/link"
 import { signIn } from "@/lib/auth-client"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
 
 export default function LoginPage() {
   const router = useRouter()
@@ -19,19 +18,9 @@ export default function LoginPage() {
     e.preventDefault()
     setError("")
     setLoading(true)
-
-    const { data, error: authError } = await signIn.email({
-      email,
-      password,
-    })
-
+    const { data, error: authError } = await signIn.email({ email, password })
     setLoading(false)
-
-    if (authError || !data) {
-      setError("Invalid email or password.")
-      return
-    }
-
+    if (authError || !data) { setError("Invalid email or password."); return }
     const role = (data.user as { role?: string }).role
     if (role === "ADMIN") router.push("/admin")
     else if (role === "VOLUNTEER") router.push("/volunteer")
@@ -39,48 +28,37 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="w-full max-w-sm">
-      <div className="mb-8 text-center">
-        <Link href="/" className="font-semibold text-lg">Amanat</Link>
-        <p className="text-sm text-muted-foreground mt-1">Sign in to your account</p>
+    <div className="flex flex-col gap-8">
+      <div className="flex flex-col gap-1">
+        <p className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground">Welcome back</p>
+        <h1 className="text-2xl font-bold tracking-tight">Sign in</h1>
       </div>
 
-      <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+      <form onSubmit={handleSubmit} className="flex flex-col gap-5">
         <div className="flex flex-col gap-2">
-          <Label htmlFor="email">Email</Label>
-          <Input
-            id="email"
-            type="email"
-            autoComplete="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
+          <label className="text-[10px] uppercase tracking-[0.15em] text-muted-foreground">Email</label>
+          <Input type="email" autoComplete="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
         </div>
         <div className="flex flex-col gap-2">
-          <Label htmlFor="password">Password</Label>
-          <Input
-            id="password"
-            type="password"
-            autoComplete="current-password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
+          <label className="text-[10px] uppercase tracking-[0.15em] text-muted-foreground">Password</label>
+          <Input type="password" autoComplete="current-password" value={password} onChange={(e) => setPassword(e.target.value)} required />
         </div>
 
-        {error && <p className="text-sm text-red-500">{error}</p>}
+        {error && (
+          <p className="text-xs text-destructive border border-destructive/20 bg-destructive/5 px-3 py-2 rounded">
+            {error}
+          </p>
+        )}
 
-        <Button type="submit" disabled={loading} className="w-full">
-          {loading ? "Signing in…" : "Sign in"}
+        <Button type="submit" disabled={loading} className="w-full mt-1">
+          {loading ? "Signing in..." : "Sign in"}
         </Button>
       </form>
 
-      <p className="text-center text-sm text-muted-foreground mt-6">
-        Want to track your donations?{" "}
-        <Link href="/register" className="underline">
-          Create an account
-        </Link>
+      <p className="text-xs text-muted-foreground border-t border-border/40 pt-6">
+        No account?{" "}
+        <Link href="/register" className="text-foreground underline underline-offset-2">Create one</Link>
+        {" "}to track your donations.
       </p>
     </div>
   )

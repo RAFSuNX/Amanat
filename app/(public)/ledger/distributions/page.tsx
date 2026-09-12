@@ -5,6 +5,7 @@ import { distributionCycles, distributionAllotments, beneficiaries } from "@/db/
 import { eq, sql, desc } from "drizzle-orm"
 import { Badge } from "@/components/ui/badge"
 import Link from "next/link"
+import { PublicNav } from "@/components/public-nav"
 import { Button } from "@/components/ui/button"
 
 export default async function LedgerDistributionsPage() {
@@ -28,22 +29,7 @@ export default async function LedgerDistributionsPage() {
 
   return (
     <div className="min-h-screen flex flex-col">
-      <nav className="border-b px-6 py-4 flex items-center gap-4">
-        <Link href="/" className="font-semibold">Amanat</Link>
-        <span className="text-muted-foreground">/</span>
-        <span className="text-sm">Public Ledger</span>
-        <div className="ml-auto flex gap-3">
-          <Link href="/ledger/donations">
-            <Button variant="outline" size="sm">Donations</Button>
-          </Link>
-          <Link href="/ledger/distributions">
-            <Button variant="default" size="sm">Distributions</Button>
-          </Link>
-          <Link href="/ledger/volunteers">
-            <Button variant="outline" size="sm">Volunteers</Button>
-          </Link>
-        </div>
-      </nav>
+      <PublicNav activeHref="/ledger/distributions" donateButton />
 
       <main className="flex-1 px-6 py-8 max-w-5xl mx-auto w-full">
         <h1 className="text-2xl font-bold mb-2">Distribution Ledger</h1>

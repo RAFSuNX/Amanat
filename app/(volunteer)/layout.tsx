@@ -14,15 +14,10 @@ const NAV = [
   { href: "/volunteer/kyc", label: "My KYC" },
 ]
 
-export default async function VolunteerLayout({
-  children,
-}: {
-  children: React.ReactNode
-}) {
+export default async function VolunteerLayout({ children }: { children: React.ReactNode }) {
   const session = await requireVolunteer()
   if (!session) redirect("/login")
 
-  // Check KYC for volunteers (admins bypass)
   let kycLocked = false
   if ((session.user as { role?: string }).role === "VOLUNTEER") {
     const profile = await db.query.volunteerProfiles.findFirst({
@@ -33,45 +28,45 @@ export default async function VolunteerLayout({
 
   return (
     <div className="min-h-screen flex">
-      <aside className="w-56 border-r flex flex-col shrink-0">
-        <div className="px-4 py-5 border-b">
-          <Link href="/" className="font-semibold">Amanat</Link>
-          <p className="text-xs text-muted-foreground mt-0.5">Volunteer Portal</p>
+      {/* Sidebar */}
+      <aside className="w-52 border-r border-border/40 flex flex-col shrink-0 bg-muted/20">
+        <div className="px-6 py-5 border-b border-border/40">
+          <Link href="/" className="text-sm font-semibold tracking-tight">Amanat</Link>
+          <p className="text-[10px] uppercase tracking-[0.15em] text-muted-foreground mt-1">Volunteer</p>
         </div>
-        <nav className="flex-1 px-2 py-4 flex flex-col gap-1">
+
+        <nav className="flex-1 px-3 py-5 flex flex-col gap-0.5">
           {NAV.map((n) => (
             <Link
               key={n.href}
               href={n.href}
-              className="px-3 py-2 rounded-md text-sm hover:bg-muted transition-colors"
+              className="px-3 py-2.5 rounded text-xs hover:bg-muted hover:text-foreground text-muted-foreground transition-colors"
             >
               {n.label}
             </Link>
           ))}
         </nav>
-        <div className="px-4 py-4 border-t">
-          <p className="text-xs text-muted-foreground truncate mb-2">
-            {session.user.name}
-          </p>
+
+        <div className="px-6 py-5 border-t border-border/40 flex flex-col gap-2">
+          <p className="text-[10px] text-muted-foreground truncate">{session.user.name}</p>
           <SignOutButton />
         </div>
       </aside>
 
-      <main className="flex-1 overflow-auto p-8">
+      {/* Main */}
+      <main className="flex-1 overflow-auto p-10">
         {kycLocked ? (
-          <div className="flex flex-col items-center justify-center h-full gap-4 text-center">
-            <h2 className="text-xl font-semibold">KYC Pending</h2>
-            <p className="text-muted-foreground max-w-sm">
-              Your account is under review. Please submit your KYC documents and
-              wait for admin approval before accessing the volunteer portal.
+          <div className="flex flex-col gap-4 max-w-sm">
+            <p className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground">Access Restricted</p>
+            <h2 className="text-xl font-bold tracking-tight">KYC Pending</h2>
+            <p className="text-sm text-muted-foreground leading-relaxed">
+              Submit your KYC documents and wait for admin approval before accessing the volunteer portal.
             </p>
-            <Link href="/volunteer/kyc" className="underline text-sm">
-              Submit KYC →
+            <Link href="/volunteer/kyc" className="text-sm text-primary underline underline-offset-2">
+              Submit KYC
             </Link>
           </div>
-        ) : (
-          children
-        )}
+        ) : children}
       </main>
     </div>
   )

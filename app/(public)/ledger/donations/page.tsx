@@ -8,6 +8,7 @@ import {
 } from "@/components/ui/table"
 import { Badge } from "@/components/ui/badge"
 import Link from "next/link"
+import { PublicNav } from "@/components/public-nav"
 import { Button } from "@/components/ui/button"
 import { DonationQuickView } from "./donation-modal"
 
@@ -85,16 +86,7 @@ export default async function LedgerDonationsPage() {
 
   return (
     <div className="min-h-screen flex flex-col">
-      <nav className="border-b px-6 py-4 flex items-center gap-4">
-        <Link href="/" className="font-semibold text-sm">Amanat</Link>
-        <span className="text-muted-foreground text-sm">/</span>
-        <span className="text-sm">Public Ledger</span>
-        <div className="ml-auto flex gap-2">
-          <Link href="/ledger/donations"><Button variant="default" size="sm">Donations</Button></Link>
-          <Link href="/ledger/distributions"><Button variant="outline" size="sm">Distributions</Button></Link>
-          <Link href="/ledger/volunteers"><Button variant="outline" size="sm">Volunteers</Button></Link>
-        </div>
-      </nav>
+      <PublicNav activeHref="/ledger/donations" donateButton />
 
       <main className="flex-1 px-6 py-8 max-w-5xl mx-auto w-full">
         <h1 className="text-2xl font-bold mb-1">Donation Ledger</h1>
