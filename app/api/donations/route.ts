@@ -12,6 +12,7 @@ const schema = z.object({
   donorPhone: z.string().optional(),
   donorEmail: z.string().email().optional().or(z.literal("")),
   isAnonymous: z.boolean().default(false),
+  receiptImageUrl: z.string().url().optional(),
 })
 
 export async function POST(request: NextRequest) {
@@ -36,6 +37,7 @@ export async function POST(request: NextRequest) {
     method: data.method,
     transactionRef: data.transactionRef,
     isAnonymous: data.isAnonymous,
+    receiptImageUrl: data.receiptImageUrl ?? null,
     status: "PENDING",
   })
 

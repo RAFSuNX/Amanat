@@ -67,9 +67,15 @@ export default async function AdminDonationsPage() {
                 </Badge>
               </TableCell>
               <TableCell>
-                {d.status === "PENDING" && (
-                  <DonationActions donationId={d.id} />
-                )}
+                <div className="flex flex-col gap-2">
+                  {d.receiptImageUrl && (
+                    <a href={d.receiptImageUrl} target="_blank" rel="noopener noreferrer"
+                      className="text-xs text-primary underline underline-offset-2">
+                      View Receipt
+                    </a>
+                  )}
+                  {d.status === "PENDING" && <DonationActions donationId={d.id} />}
+                </div>
               </TableCell>
             </TableRow>
           ))}

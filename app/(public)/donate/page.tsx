@@ -21,9 +21,23 @@ export default function DonatePage() {
   const [phone, setPhone] = useState("")
   const [email, setEmail] = useState("")
   const [isAnonymous, setIsAnonymous] = useState(false)
+  const [receiptFile, setReceiptFile] = useState<File | null>(null)
+  const [receiptUrl, setReceiptUrl] = useState("")
+  const [receiptUploading, setReceiptUploading] = useState(false)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState("")
   const [done, setDone] = useState(false)
+
+  async function uploadReceipt(file: File) {
+    setReceiptUploading(true)
+    const fd = new FormData()
+    fd.append("file", file)
+    const res = await fetch("/api/upload/receipt", { method: "POST", body: fd })
+    setReceiptUploading(false)
+    if (!res.ok) { setError("Receipt upload failed. You can still submit without it."); return }
+    const { url } = await res.json()
+    setReceiptUrl(url)
+  }
 
   async function submit(e: React.FormEvent) {
     e.preventDefault()
@@ -33,7 +47,7 @@ export default function DonatePage() {
     const res = await fetch("/api/donations", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ amount, method, transactionRef: txnRef, donorName: name, donorPhone: phone, donorEmail: email, isAnonymous }),
+      body: JSON.stringify({ amount, method, transactionRef: txnRef, donorName: name, donorPhone: phone, donorEmail: email, isAnonymous, receiptImageUrl: receiptUrl || undefined }),
     })
     setLoading(false)
     if (!res.ok) { const d = await res.json(); setError(d.error ?? "Something went wrong."); return }
@@ -125,6 +139,43 @@ export default function DonatePage() {
                   <SelectItem value="OTHER">Other</SelectItem>
                 </SelectContent>
               </Select>
+
+              {/* Account details per method */}
+              {method === "BKASH" && (
+                <div className="border border-border/60 rounded p-4 flex flex-col gap-1.5 bg-muted/20 mt-1">
+                  <p className="text-[10px] uppercase tracking-[0.15em] text-muted-foreground mb-1">Send to this bKash number</p>
+                  <p className="text-lg font-bold tracking-widest">01XXXXXXXXX</p>
+                  <p className="text-xs text-muted-foreground">Use <strong>Send Money</strong>, not payment. Note the TrxID after sending.</p>
+                </div>
+              )}
+              {method === "NAGAD" && (
+                <div className="border border-border/60 rounded p-4 flex flex-col gap-1.5 bg-muted/20 mt-1">
+                  <p className="text-[10px] uppercase tracking-[0.15em] text-muted-foreground mb-1">Send to this Nagad number</p>
+                  <p className="text-lg font-bold tracking-widest">01XXXXXXXXX</p>
+                  <p className="text-xs text-muted-foreground">Use <strong>Send Money</strong>. Copy the transaction ID from the confirmation SMS.</p>
+                </div>
+              )}
+              {method === "BANK" && (
+                <div className="border border-border/60 rounded p-4 flex flex-col gap-2 bg-muted/20 mt-1">
+                  <p className="text-[10px] uppercase tracking-[0.15em] text-muted-foreground mb-1">Bank Transfer Details</p>
+                  <div className="grid grid-cols-2 gap-x-6 gap-y-1 text-xs">
+                    <span className="text-muted-foreground">Account Name</span><span className="font-medium">Amanat</span>
+                    <span className="text-muted-foreground">Bank</span><span className="font-medium">—</span>
+                    <span className="text-muted-foreground">Account No.</span><span className="font-medium">—</span>
+                    <span className="text-muted-foreground">Routing No.</span><span className="font-medium">—</span>
+                  </div>
+                  <p className="text-[10px] text-muted-foreground mt-1">Contact us for bank details before transferring.</p>
+                </div>
+              )}
+
+              {/* Gateway note */}
+              <div className="border-l-2 border-border/40 pl-3 mt-2">
+                <p className="text-[10px] text-muted-foreground leading-relaxed">
+                  We are working on integrating a payment gateway to make donating easier.{" "}
+                  If you can help us with that, please{" "}
+                  <a href="/contact" className="text-primary underline underline-offset-2">contact us</a>.
+                </p>
+              </div>
             </div>
 
             {/* Txn ref */}
@@ -132,6 +183,44 @@ export default function DonatePage() {
               <label className={labelClass}>Transaction Reference</label>
               <Input placeholder="e.g. BKA8TJD123" value={txnRef} onChange={(e) => setTxnRef(e.target.value)} />
               <p className="text-[10px] text-muted-foreground">Find this in your bKash or Nagad transaction history.</p>
+            </div>
+
+            {/* Receipt upload */}
+            <div className={fieldClass}>
+              <div className="flex items-center justify-between">
+                <label className={labelClass}>Payment Receipt</label>
+                <span className="text-[10px] text-muted-foreground uppercase tracking-wide">Optional</span>
+              </div>
+              <div className={`border rounded p-4 flex flex-col gap-3 transition-colors ${receiptUrl ? "border-primary/40 bg-primary/5" : "border-border/60 bg-muted/20"}`}>
+                <p className="text-xs text-muted-foreground leading-relaxed">
+                  <strong className="text-foreground">Strongly encouraged:</strong> A screenshot of your transaction confirmation helps the admin verify faster and builds a stronger record. Upload a photo of your bKash or Nagad receipt.
+                </p>
+                {receiptUrl ? (
+                  <div className="flex items-center gap-3">
+                    <img src={receiptUrl} alt="Receipt" className="w-16 h-16 object-cover rounded border" />
+                    <div className="flex flex-col gap-1">
+                      <p className="text-xs font-medium text-primary">Receipt uploaded</p>
+                      <button type="button" onClick={() => { setReceiptUrl(""); setReceiptFile(null) }}
+                        className="text-[10px] text-muted-foreground underline underline-offset-2 text-left">
+                        Remove and upload another
+                      </button>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="flex flex-col gap-2">
+                    <Input
+                      type="file"
+                      accept="image/*"
+                      onChange={(e) => {
+                        const f = e.target.files?.[0]
+                        if (f) { setReceiptFile(f); uploadReceipt(f) }
+                      }}
+                      className="text-xs"
+                    />
+                    {receiptUploading && <p className="text-[10px] text-muted-foreground">Uploading...</p>}
+                  </div>
+                )}
+              </div>
             </div>
 
             {/* Donor info */}

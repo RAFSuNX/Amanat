@@ -229,6 +229,7 @@ export const donations = pgTable("donations", {
   method: donationMethodEnum("method").notNull(),
   transactionRef: text("transaction_ref").notNull(),
   isAnonymous: boolean("is_anonymous").notNull().default(false),
+  receiptImageUrl: text("receipt_image_url"),
   status: donationStatusEnum("status").notNull().default("PENDING"),
   confirmedByAdminId: text("confirmed_by_admin_id").references(() => users.id),
   confirmedAt: timestamp("confirmed_at"),
