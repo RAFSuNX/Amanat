@@ -6,6 +6,7 @@ import { volunteerProfiles } from "@/db/schema"
 import { eq } from "drizzle-orm"
 import { SignOutButton } from "@/components/sign-out-button"
 import { KycGate } from "@/components/kyc-gate"
+import { SidebarNav } from "@/components/sidebar-nav"
 
 const NAV = [
   { href: "/volunteer", label: "Dashboard" },
@@ -43,17 +44,7 @@ export default async function VolunteerLayout({
           <span className="text-[10px] uppercase tracking-[0.15em] text-muted-foreground">Volunteer</span>
         </div>
 
-        <nav className="flex-1 px-3 py-5 flex flex-col gap-0.5">
-          {NAV.map((n) => (
-            <Link
-              key={n.href}
-              href={n.href}
-              className="px-3 py-2.5 rounded text-xs hover:bg-muted hover:text-foreground text-muted-foreground transition-colors"
-            >
-              {n.label}
-            </Link>
-          ))}
-        </nav>
+        <SidebarNav items={NAV} />
 
         <div className="px-6 py-5 border-t border-border/40 flex flex-col gap-2">
           <p className="text-[10px] text-muted-foreground truncate">{session.user.name}</p>

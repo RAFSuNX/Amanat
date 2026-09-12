@@ -2,6 +2,7 @@ import Link from "next/link"
 import { requireAdmin } from "@/lib/session"
 import { redirect } from "next/navigation"
 import { SignOutButton } from "@/components/sign-out-button"
+import { SidebarNav } from "@/components/sidebar-nav"
 
 const NAV = [
   { href: "/admin", label: "Dashboard" },
@@ -28,17 +29,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
           <span className="text-[10px] uppercase tracking-[0.15em] text-muted-foreground">Admin</span>
         </div>
 
-        <nav className="flex-1 px-3 py-5 flex flex-col gap-0.5">
-          {NAV.map((n) => (
-            <Link
-              key={n.href}
-              href={n.href}
-              className="px-3 py-2.5 rounded text-xs hover:bg-muted hover:text-foreground text-muted-foreground transition-colors"
-            >
-              {n.label}
-            </Link>
-          ))}
-        </nav>
+        <SidebarNav items={NAV} />
 
         <div className="px-6 py-5 border-t border-border/40 flex flex-col gap-2">
           <p className="text-[10px] text-muted-foreground truncate">{session.user.name}</p>
