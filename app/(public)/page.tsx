@@ -51,7 +51,7 @@ export default async function LandingPage() {
         {/* Nav */}
         <nav className="shrink-0 flex items-center justify-between px-10 h-16 border-b border-border/30">
           <Link href="/">
-            <Image src="/logo.png" alt="Amanat" width={100} height={40} className="h-10 w-auto object-contain" priority />
+            <Image src="/logo.png" alt="Amanat" width={100} height={40} className="h-12 w-auto object-contain" priority />
           </Link>
           <div className="flex items-center gap-8">
             <Link href="/ledger/donations" className="text-xs text-muted-foreground hover:text-foreground transition-colors uppercase tracking-widest">
