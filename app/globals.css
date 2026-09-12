@@ -140,6 +140,11 @@ select:focus {
   outline: none !important;
 }
 
+/* Select trigger matches input height */
+[role="combobox"] {
+  min-height: 2.75rem !important;
+}
+
 /* Buttons - taller, better weight */
 button[class*="inline-flex"] {
   font-weight: 500;
