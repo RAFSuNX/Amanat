@@ -105,6 +105,23 @@
   h1, h2, h3, h4 {
     letter-spacing: -0.02em;
   }
+
+  /* Smooth transitions on all interactive elements */
+  a, button, input, select, textarea, [role="button"] {
+    transition-property: color, background-color, border-color, opacity, box-shadow, transform;
+    transition-duration: 150ms;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  /* Page content fade-in */
+  main {
+    animation: fadeIn 0.18s ease-out;
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(4px); }
+  to   { opacity: 1; transform: translateY(0); }
 }
 
 /* All nav links and buttons uppercase */
