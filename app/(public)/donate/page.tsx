@@ -266,11 +266,10 @@ export default function DonatePage() {
                     className="text-[10px] text-muted-foreground underline underline-offset-2">Remove</button>
                 </div>
               ) : (
-                <div className="flex items-center gap-3 border border-border/60 rounded px-3 py-2 bg-muted/20">
+                <div className="flex flex-col gap-1">
                   <Input type="file" accept="image/*"
-                    onChange={(e) => { const f = e.target.files?.[0]; if (f) { setReceiptFile(f); uploadReceipt(f) } }}
-                    className="text-xs border-0 p-0 h-auto bg-transparent" />
-                  {receiptUploading && <span className="text-[10px] text-muted-foreground shrink-0">Uploading...</span>}
+                    onChange={(e) => { const f = e.target.files?.[0]; if (f) { setReceiptFile(f); uploadReceipt(f) } }} />
+                  {receiptUploading && <p className="text-[10px] text-muted-foreground">Uploading...</p>}
                 </div>
               )}
               {receiptError && <p className="text-[10px] text-amber-600">{receiptError}</p>}
