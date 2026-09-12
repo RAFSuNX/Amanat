@@ -35,7 +35,7 @@ export default async function AccountPage() {
     .where(eq(donations.userId, session.user.id))
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="h-dvh w-dvw flex flex-col overflow-hidden">
       <nav className="border-b px-8 py-4 flex items-center justify-between">
         <Link href="/" className="text-sm font-semibold">Amanat</Link>
         <div className="flex items-center gap-4">
@@ -44,7 +44,7 @@ export default async function AccountPage() {
         </div>
       </nav>
 
-      <main className="flex-1 px-8 py-10 max-w-2xl mx-auto w-full flex flex-col gap-8">
+      <main className="flex-1 overflow-y-auto px-8 py-10 max-w-2xl mx-auto w-full flex flex-col gap-8">
         <div>
           <h1 className="text-2xl font-bold">{session.user.name}</h1>
           <p className="text-sm text-muted-foreground mt-1">{session.user.email}</p>

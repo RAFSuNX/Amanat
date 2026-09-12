@@ -5,10 +5,10 @@ import { ContactForm } from "./contact-form"
 
 export default function ContactPage() {
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="h-dvh w-dvw flex flex-col overflow-hidden">
       <PublicNav donateButton />
 
-      <div className="flex-1 grid md:grid-cols-[1fr_1.4fr]">
+      <div className="flex-1 grid md:grid-cols-[1fr_1.4fr] overflow-hidden">
         {/* Left: contact info */}
         <div className="hidden md:flex flex-col justify-between px-10 py-12 border-r border-border/40 bg-muted/20">
           <div className="flex flex-col gap-4">
@@ -21,14 +21,22 @@ export default function ContactPage() {
             </p>
           </div>
 
-          <div className="flex flex-col gap-0">
-            {/* Phone - urgent only */}
+          <div className="flex flex-col gap-0 overflow-y-auto">
+            {/* Email - primary contact method */}
+            <div className="border-t border-border/40 pt-5 pb-5 flex flex-col gap-1.5">
+              <p className="text-xs font-semibold">Email Form</p>
+              <p className="text-xs text-muted-foreground leading-relaxed">
+                For all general questions, volunteering, partnership inquiries, or anything non-urgent. We aim to reply within 6 to 12 hours.
+              </p>
+            </div>
+
+            {/* Phone - secondary, urgent only */}
             <div className="border-t border-border/40 pt-5 pb-5 flex flex-col gap-2">
               <p className="text-xs font-semibold">Phone</p>
-              <p className="text-xl font-bold tracking-wide">+880 1X-XXXX-XXXX</p>
+              <p className="text-lg font-bold tracking-wide">+880 1X-XXXX-XXXX</p>
               <div className="flex flex-col gap-1.5 mt-1">
                 <p className="text-xs text-muted-foreground leading-relaxed">
-                  Please call only if you have an urgent issue with a fund transfer or donation that cannot wait. For everything else, use the email form.
+                  Please call only if you have an urgent issue with a fund transfer or donation that cannot wait. For everything else, use the email form above.
                 </p>
                 <p className="text-xs font-medium text-foreground">
                   Available 10am to 8pm, Saturday to Thursday.
@@ -37,14 +45,6 @@ export default function ContactPage() {
                   We are a small team. Out-of-hours calls may not be answered. Please leave a message or use the form.
                 </p>
               </div>
-            </div>
-
-            {/* Email */}
-            <div className="border-t border-border/40 pt-5 pb-5 flex flex-col gap-1.5">
-              <p className="text-xs font-semibold">Email Form</p>
-              <p className="text-xs text-muted-foreground leading-relaxed">
-                For all general questions, volunteering, partnership inquiries, or anything non-urgent. We aim to reply within 6 to 12 hours.
-              </p>
             </div>
 
             {/* Volunteer */}

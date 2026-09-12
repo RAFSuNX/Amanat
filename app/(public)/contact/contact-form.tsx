@@ -62,7 +62,7 @@ export function ContactForm() {
 
       <div className="border-l-2 border-border/40 pl-3 mb-6">
         <p className="text-xs text-muted-foreground leading-relaxed">
-          We reply to all messages within <strong className="text-foreground">6 to 12 hours</strong>. If your matter is urgent and related to a fund transfer, you can also call us during working hours.
+          We reply to all messages within <strong className="text-foreground">6 to 12 hours</strong>. For urgent fund transfer issues only, call <strong className="text-foreground">+880 1X-XXXX-XXXX</strong> between 10am and 8pm, Saturday to Thursday.
         </p>
       </div>
 

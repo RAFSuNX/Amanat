@@ -28,7 +28,7 @@ export default async function AccountDonationsPage() {
   })
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="h-dvh w-dvw flex flex-col overflow-hidden">
       <nav className="border-b px-8 py-4 flex items-center justify-between">
         <Link href="/" className="text-sm font-semibold">Amanat</Link>
         <div className="flex items-center gap-4">
@@ -40,7 +40,7 @@ export default async function AccountDonationsPage() {
         </div>
       </nav>
 
-      <main className="flex-1 px-8 py-10 max-w-4xl mx-auto w-full">
+      <main className="flex-1 overflow-y-auto px-8 py-10 max-w-4xl mx-auto w-full">
         <h1 className="text-2xl font-bold mb-1">My Donations</h1>
         <p className="text-sm text-muted-foreground mb-8">
           All donations tied to your account. Pending donations are awaiting admin confirmation.

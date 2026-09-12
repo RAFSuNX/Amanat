@@ -25,10 +25,10 @@ export default async function LedgerVolunteersPage() {
   const approved = volunteers.filter((v) => v.kycStatus === "APPROVED")
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="h-dvh w-dvw flex flex-col overflow-hidden">
       <PublicNav activeHref="/ledger/volunteers" donateButton />
 
-      <main className="flex-1 px-8 py-10 max-w-4xl mx-auto w-full">
+      <main className="flex-1 overflow-y-auto px-8 py-10 max-w-4xl mx-auto w-full">
         <h1 className="text-2xl font-bold mb-1">Volunteer Ledger</h1>
         <p className="text-sm text-muted-foreground mb-2">
           All verified volunteers are on public record. Transparency is how we build trust.

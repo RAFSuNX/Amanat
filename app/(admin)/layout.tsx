@@ -18,7 +18,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
   if (!session) redirect("/login")
 
   return (
-    <div className="min-h-screen flex">
+    <div className="h-dvh w-dvw flex overflow-hidden">
       {/* Sidebar */}
       <aside className="w-52 border-r border-border/40 flex flex-col shrink-0 bg-muted/20">
         <div className="px-6 py-5 border-b border-border/40">
@@ -45,7 +45,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
       </aside>
 
       {/* Main */}
-      <main className="flex-1 overflow-auto p-10">{children}</main>
+      <main className="flex-1 overflow-y-auto p-10">{children}</main>
     </div>
   )
 }

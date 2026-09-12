@@ -28,10 +28,10 @@ export default async function LedgerDistributionsPage() {
   )
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="h-dvh w-dvw flex flex-col overflow-hidden">
       <PublicNav activeHref="/ledger/distributions" donateButton />
 
-      <main className="flex-1 px-6 py-8 max-w-5xl mx-auto w-full">
+      <main className="flex-1 overflow-y-auto px-6 py-8 max-w-5xl mx-auto w-full">
         <h1 className="text-2xl font-bold mb-2">Distribution Ledger</h1>
         <p className="text-sm text-muted-foreground mb-6">
           All completed distribution cycles. Every taka distributed is accounted for here.
