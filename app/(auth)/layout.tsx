@@ -6,7 +6,7 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
       {/* Left: brand panel */}
       <div className="hidden md:flex flex-col justify-between bg-primary px-12 py-12">
         <Link href="/">
-          <img src="/logo.png" alt="Amanat" className="h-10 w-auto object-contain brightness-0 invert" />
+          <img src="/logo.png" alt="Amanat" className="h-12 w-auto object-contain brightness-0 invert" />
         </Link>
         <div className="flex flex-col gap-5">
           <p className="text-[10px] uppercase tracking-[0.22em] text-primary-foreground/40">
