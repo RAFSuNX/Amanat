@@ -22,11 +22,17 @@ function receiptNumber(id: number, date: Date) {
 }
 
 async function getFundStats() {
-  // Total money in
+  // Total money in (confirmed only)
   const [inRow] = await db
     .select({ total: sql<string>`coalesce(sum(amount), 0)` })
     .from(donations)
     .where(eq(donations.status, "CONFIRMED"))
+
+  // Pending total
+  const [pendingRow] = await db
+    .select({ total: sql<string>`coalesce(sum(amount), 0)`, count: sql<number>`count(*)` })
+    .from(donations)
+    .where(eq(donations.status, "PENDING"))
 
   // Total money out (allotments from completed cycles)
   const completedCycles = await db
@@ -63,14 +69,16 @@ async function getFundStats() {
     totalOut,
     balance: totalIn - totalOut,
     monthlyNeeded,
+    pendingTotal: parseFloat(pendingRow?.total ?? "0"),
+    pendingCount: Number(pendingRow?.count ?? 0),
   }
 }
 
 export default async function LedgerDonationsPage() {
   const [rows, stats] = await Promise.all([
     db.query.donations.findMany({
-      where: eq(donations.status, "CONFIRMED"),
-      orderBy: [desc(donations.confirmedAt)],
+      where: (d, { ne }) => ne(d.status, "REJECTED"),
+      orderBy: [desc(donations.createdAt)],
     }),
     getFundStats(),
   ])
@@ -91,17 +99,23 @@ export default async function LedgerDonationsPage() {
       <main className="flex-1 px-6 py-8 max-w-5xl mx-auto w-full">
         <h1 className="text-2xl font-bold mb-1">Donation Ledger</h1>
         <p className="text-sm text-muted-foreground mb-6">
-          All confirmed donations. Click a receipt number to view details. Anonymous donors have their name hidden only.
+          All donations including those pending confirmation. Pending donations are in review and will be added to the fund once verified. Click a receipt to view details.
         </p>
 
         {/* Fund summary */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-px bg-border rounded-lg overflow-hidden border border-border mb-8">
+        <div className="grid grid-cols-2 md:grid-cols-5 gap-px bg-border rounded-lg overflow-hidden border border-border mb-8">
           {[
             {
               label: "Total In",
               value: `${stats.totalIn.toLocaleString("en-BD")} BDT`,
               sub: "Confirmed donations",
               color: "text-primary",
+            },
+            {
+              label: "Pending",
+              value: `${stats.pendingTotal.toLocaleString("en-BD")} BDT`,
+              sub: `${stats.pendingCount} donation${stats.pendingCount !== 1 ? "s" : ""} in review`,
+              color: "text-amber-600",
             },
             {
               label: "Total Out",
@@ -144,26 +158,31 @@ export default async function LedgerDonationsPage() {
           </TableHeader>
           <TableBody>
             {rows.map((d) => {
-              const confirmedAt = d.confirmedAt ?? d.createdAt
-              const receipt = receiptNumber(d.id, confirmedAt)
+              const isPending = d.status === "PENDING"
+              const displayDate = (isPending ? d.createdAt : (d.confirmedAt ?? d.createdAt))
+              const receipt = isPending ? null : receiptNumber(d.id, displayDate)
               return (
-                <TableRow key={d.id}>
+                <TableRow key={d.id} className={isPending ? "opacity-70" : ""}>
                   <TableCell>
-                    <DonationQuickView
-                      donation={{
-                        id: d.id,
-                        donorName: d.donorName,
-                        isAnonymous: d.isAnonymous,
-                        amount: d.amount,
-                        method: d.method,
-                        transactionRef: d.transactionRef,
-                        confirmedAt: confirmedAt.toISOString(),
-                        receipt,
-                      }}
-                    />
+                    {receipt ? (
+                      <DonationQuickView
+                        donation={{
+                          id: d.id,
+                          donorName: d.donorName,
+                          isAnonymous: d.isAnonymous,
+                          amount: d.amount,
+                          method: d.method,
+                          transactionRef: d.transactionRef,
+                          confirmedAt: displayDate.toISOString(),
+                          receipt,
+                        }}
+                      />
+                    ) : (
+                      <span className="text-xs text-muted-foreground italic">Pending</span>
+                    )}
                   </TableCell>
                   <TableCell className="text-sm text-muted-foreground">
-                    {confirmedAt.toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" })}
+                    {displayDate.toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" })}
                   </TableCell>
                   <TableCell>{d.isAnonymous ? "Anonymous" : d.donorName}</TableCell>
                   <TableCell className="font-medium tabular-nums">
@@ -176,13 +195,20 @@ export default async function LedgerDonationsPage() {
                     {maskRef(d.transactionRef)}
                   </TableCell>
                   <TableCell>
-                    <Link
-                      href={`/ledger/donations/${d.id}/invoice`}
-                      target="_blank"
-                      className="text-xs text-primary hover:underline underline-offset-2"
-                    >
-                      Invoice
-                    </Link>
+                    {isPending ? (
+                      <span className="inline-flex items-center gap-1 text-xs text-amber-600 bg-amber-50 border border-amber-200 px-2 py-0.5 rounded-full">
+                        <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse" />
+                        In Review
+                      </span>
+                    ) : (
+                      <Link
+                        href={`/ledger/donations/${d.id}/invoice`}
+                        target="_blank"
+                        className="text-xs text-primary hover:underline underline-offset-2"
+                      >
+                        Invoice
+                      </Link>
+                    )}
                   </TableCell>
                 </TableRow>
               )
