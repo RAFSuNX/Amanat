@@ -7,6 +7,7 @@ import { requireVolunteer } from "@/lib/session"
 
 const schema = z.object({
   legalName: z.string().min(1),
+  phone: z.string().min(7).max(16).optional(),
   docType: z.enum(["NID", "PASSPORT", "DRIVING_LICENSE"]),
   docNumber: z.string().min(1),
   docImageUrl: z.string().url().optional(),
@@ -23,10 +24,12 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: parsed.error.issues[0].message }, { status: 400 })
   }
 
-  const { legalName, docType, docNumber, docImageUrl, passportPhotoUrl } = parsed.data
+  const { legalName, phone, docType, docNumber, docImageUrl, passportPhotoUrl } = parsed.data
 
-  // Update user's official name from their legal document
-  await db.update(users).set({ name: legalName }).where(eq(users.id, session.user.id))
+  // Update name and phone from KYC submission
+  await db.update(users)
+    .set({ name: legalName, ...(phone ? { phone } : {}) })
+    .where(eq(users.id, session.user.id))
 
   const existing = await db.query.volunteerProfiles.findFirst({
     where: eq(volunteerProfiles.userId, session.user.id),

@@ -11,10 +11,11 @@ export function KycForm({
   existing,
 }: {
   profileId?: number
-  existing?: { legalName?: string; docType?: string; docNumber?: string; docImageUrl?: string }
+  existing?: { legalName?: string; phone?: string; docType?: string; docNumber?: string; docImageUrl?: string }
 }) {
   const router = useRouter()
   const [legalName, setLegalName] = useState(existing?.legalName ?? "")
+  const [phone, setPhone] = useState(existing?.phone ?? "")
   const [docType, setDocType] = useState(existing?.docType ?? "")
   const [docNumber, setDocNumber] = useState(existing?.docNumber ?? "")
   const [file, setFile] = useState<File | null>(null)
@@ -64,6 +65,7 @@ export function KycForm({
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         legalName,
+        phone: phone || undefined,
         docType,
         docNumber,
         docImageUrl: docImageUrl || undefined,
@@ -99,6 +101,19 @@ export function KycForm({
         />
         <p className="text-[10px] text-muted-foreground">
           This will become your official name on your Amanat profile.
+        </p>
+      </div>
+
+      <div className="flex flex-col gap-2">
+        <Label>Mobile Number</Label>
+        <Input
+          type="tel"
+          value={phone}
+          onChange={(e) => setPhone(e.target.value)}
+          placeholder="01XXXXXXXXX"
+        />
+        <p className="text-[10px] text-muted-foreground">
+          We will use this to contact you during verification. Keep it reachable.
         </p>
       </div>
 

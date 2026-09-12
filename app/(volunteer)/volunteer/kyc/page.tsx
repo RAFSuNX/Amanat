@@ -51,6 +51,7 @@ export default async function VolunteerKycPage() {
           profileId={profile?.id}
           existing={{
             legalName: userRow?.name ?? undefined,
+            phone: userRow?.phone ?? undefined,
             docType: profile?.kycDocType ?? undefined,
             docNumber: profile?.kycDocNumber ?? undefined,
             docImageUrl: profile?.kycDocImageUrl ?? undefined,
