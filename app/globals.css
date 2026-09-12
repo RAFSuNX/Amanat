@@ -203,6 +203,16 @@ button[class*="inline-flex"] {
   min-height: 2.75rem;
 }
 
+/* Table rows match input field height */
+tbody tr {
+  height: 2.75rem;
+}
+
+tbody td {
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+}
+
 /* Premium focus ring */
 :focus-visible {
   outline: 2px solid oklch(0.40 0.11 155);
