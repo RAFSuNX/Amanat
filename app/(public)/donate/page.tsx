@@ -137,48 +137,57 @@ export default function DonatePage() {
               </div>
             </div>
 
-            {/* Method */}
+            {/* Method + account details side by side */}
             <div className={fieldClass}>
               <label className={labelClass}>Payment Method</label>
-              <Select value={method} onValueChange={(v) => setMethod(v ?? "")}>
-                <SelectTrigger className="w-full"><SelectValue placeholder="Select payment method" /></SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="BKASH">bKash</SelectItem>
-                  <SelectItem value="NAGAD">Nagad</SelectItem>
-                  <SelectItem value="BANK">Bank Transfer</SelectItem>
-                  <SelectItem value="OTHER">Other</SelectItem>
-                </SelectContent>
-              </Select>
+              <div className="grid grid-cols-2 gap-3 items-start">
+                <Select value={method} onValueChange={(v) => setMethod(v ?? "")}>
+                  <SelectTrigger className="w-full"><SelectValue placeholder="Select method" /></SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="BKASH">bKash</SelectItem>
+                    <SelectItem value="NAGAD">Nagad</SelectItem>
+                    <SelectItem value="BANK">Bank Transfer</SelectItem>
+                    <SelectItem value="OTHER">Other</SelectItem>
+                  </SelectContent>
+                </Select>
 
-              {/* Account details per method */}
-              {method === "BKASH" && (
-                <div className="border border-border/60 rounded p-4 flex flex-col gap-1.5 bg-muted/20 mt-1">
-                  <p className="text-[10px] uppercase tracking-[0.15em] text-muted-foreground mb-1">Send to this bKash number</p>
-                  <p className="text-lg font-bold tracking-widest">01XXXXXXXXX</p>
-                  <p className="text-xs text-muted-foreground">Use <strong>Send Money</strong>, not payment. Note the TrxID after sending.</p>
-                <p className="text-[10px] text-muted-foreground/60 mt-1">Working on integrating a gateway. Can help? <a href="/contact" className="underline">Contact us.</a></p>
-                </div>
-              )}
-              {method === "NAGAD" && (
-                <div className="border border-border/60 rounded p-4 flex flex-col gap-1.5 bg-muted/20 mt-1">
-                  <p className="text-[10px] uppercase tracking-[0.15em] text-muted-foreground mb-1">Send to this Nagad number</p>
-                  <p className="text-lg font-bold tracking-widest">01XXXXXXXXX</p>
-                  <p className="text-xs text-muted-foreground">Use <strong>Send Money</strong>. Copy the transaction ID from the confirmation SMS.</p>
-                </div>
-              )}
-              {method === "BANK" && (
-                <div className="border border-border/60 rounded p-4 flex flex-col gap-2 bg-muted/20 mt-1">
-                  <p className="text-[10px] uppercase tracking-[0.15em] text-muted-foreground mb-1">Bank Transfer Details</p>
-                  <div className="grid grid-cols-2 gap-x-6 gap-y-1 text-xs">
-                    <span className="text-muted-foreground">Account Name</span><span className="font-medium">Amanat</span>
-                    <span className="text-muted-foreground">Bank</span><span className="font-medium text-muted-foreground">TBC</span>
-                    <span className="text-muted-foreground">Account No.</span><span className="font-medium text-muted-foreground">TBC</span>
-                    <span className="text-muted-foreground">Routing No.</span><span className="font-medium text-muted-foreground">TBC</span>
+                {!method && (
+                  <div className="border border-border/40 rounded p-3 bg-muted/10 flex items-center h-full">
+                    <p className="text-xs text-muted-foreground">Select a method to see where to send.</p>
                   </div>
-                  <p className="text-[10px] text-muted-foreground mt-1">Contact us for bank details before transferring.</p>
-                </div>
-              )}
-
+                )}
+                {method === "BKASH" && (
+                  <div className="border border-border/60 rounded p-3 flex flex-col gap-1 bg-muted/20">
+                    <p className="text-[10px] uppercase tracking-[0.12em] text-muted-foreground">Send to bKash</p>
+                    <p className="text-base font-bold tracking-widest">01XXXXXXXXX</p>
+                    <p className="text-[10px] text-muted-foreground">Use <strong>Send Money</strong>. Note the TrxID.</p>
+                    <p className="text-[10px] text-muted-foreground/50">Can help with gateway? <a href="/contact" className="underline">Contact us.</a></p>
+                  </div>
+                )}
+                {method === "NAGAD" && (
+                  <div className="border border-border/60 rounded p-3 flex flex-col gap-1 bg-muted/20">
+                    <p className="text-[10px] uppercase tracking-[0.12em] text-muted-foreground">Send to Nagad</p>
+                    <p className="text-base font-bold tracking-widest">01XXXXXXXXX</p>
+                    <p className="text-[10px] text-muted-foreground">Use <strong>Send Money</strong>. Copy TrxID from SMS.</p>
+                  </div>
+                )}
+                {method === "BANK" && (
+                  <div className="border border-border/60 rounded p-3 flex flex-col gap-1.5 bg-muted/20">
+                    <p className="text-[10px] uppercase tracking-[0.12em] text-muted-foreground">Bank Transfer</p>
+                    <div className="grid grid-cols-2 gap-x-4 gap-y-0.5 text-xs">
+                      <span className="text-muted-foreground">Name</span><span className="font-medium">Amanat</span>
+                      <span className="text-muted-foreground">Account</span><span className="text-muted-foreground">TBC</span>
+                      <span className="text-muted-foreground">Routing</span><span className="text-muted-foreground">TBC</span>
+                    </div>
+                    <p className="text-[10px] text-muted-foreground">Contact us for full bank details.</p>
+                  </div>
+                )}
+                {method === "OTHER" && (
+                  <div className="border border-border/40 rounded p-3 bg-muted/10 flex items-center">
+                    <p className="text-xs text-muted-foreground">Please contact us to arrange your donation.</p>
+                  </div>
+                )}
+              </div>
             </div>
 
             {/* Txn ref */}
