@@ -112,7 +112,7 @@ export default function DonatePage() {
         </div>
 
         {/* Right: form */}
-        <div className="flex flex-col overflow-y-auto px-10 py-6 max-w-md">
+        <div className="flex flex-col overflow-y-auto px-12 py-6">
           <div className="flex items-baseline gap-3 mb-4">
             <h1 className="text-2xl font-bold tracking-tight">Donate to Amanat</h1>
             <p className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground">Make a donation</p>
@@ -122,17 +122,19 @@ export default function DonatePage() {
             {/* Amount */}
             <div className={fieldClass}>
               <label className={labelClass}>Amount (BDT)</label>
-              <div className="flex gap-2 flex-wrap">
+              <div className="flex gap-2">
                 {PRESETS.map((a) => (
                   <button key={a} type="button" onClick={() => setAmount(String(a))}
-                    className={`px-4 py-2 text-sm border rounded transition-colors ${
+                    className={`flex-1 py-2 text-sm border rounded transition-colors ${
                       amount === String(a) ? "bg-primary text-primary-foreground border-primary" : "border-border hover:bg-muted"
                     }`}>
                     {a.toLocaleString()}
                   </button>
                 ))}
+                <Input type="number" min="1" placeholder="Custom" value={amount}
+                  onChange={(e) => setAmount(e.target.value)}
+                  className="flex-1" />
               </div>
-              <Input type="number" min="1" placeholder="Or enter custom amount" value={amount} onChange={(e) => setAmount(e.target.value)} />
             </div>
 
             {/* Method */}
@@ -179,17 +181,17 @@ export default function DonatePage() {
 
             </div>
 
-            {/* Txn ref */}
-            <div className={fieldClass}>
-              <label className={labelClass}>Transaction Reference</label>
-              <Input placeholder="e.g. BKA8TJD123 (find in your bKash/Nagad history)" value={txnRef} onChange={(e) => setTxnRef(e.target.value)} />
-            </div>
-
-            {/* Receipt upload - compact */}
-            <div className={fieldClass}>
+            {/* Txn ref + receipt side by side */}
+            <div className="grid grid-cols-2 gap-3">
+              <div className={fieldClass}>
+                <label className={labelClass}>Transaction Reference</label>
+                <Input placeholder="e.g. BKA8TJD123" value={txnRef} onChange={(e) => setTxnRef(e.target.value)} />
+                <p className="text-[10px] text-muted-foreground">Find in your bKash/Nagad history.</p>
+              </div>
+              <div className={fieldClass}>
               <div className="flex items-center justify-between">
                 <label className={labelClass}>Payment Receipt</label>
-                <span className="text-[10px] text-muted-foreground">Encouraged but optional</span>
+                <span className="text-[10px] text-muted-foreground">Optional</span>
               </div>
               {receiptUrl ? (
                 <div className="flex items-center gap-3 border border-primary/30 rounded px-3 py-2 bg-primary/5">
@@ -207,14 +209,15 @@ export default function DonatePage() {
                 </div>
               )}
               {receiptError && <p className="text-[10px] text-amber-600">{receiptError}</p>}
+              </div>
             </div>
 
-            {/* Donor info - name + phone/email compact */}
-            <div className={fieldClass}>
-              <label className={labelClass}>Your Name</label>
-              <Input placeholder="As on your NID or passport" value={name} onChange={(e) => setName(e.target.value)} />
-            </div>
-            <div className="grid grid-cols-2 gap-3">
+            {/* Donor info - all three in one row */}
+            <div className="grid grid-cols-3 gap-3">
+              <div className={fieldClass}>
+                <label className={labelClass}>Your Name</label>
+                <Input placeholder="As on NID/passport" value={name} onChange={(e) => setName(e.target.value)} />
+              </div>
               <div className={fieldClass}>
                 <label className={labelClass}>Phone</label>
                 <Input type="tel" placeholder="01XXXXXXXXX" value={phone} onChange={(e) => setPhone(e.target.value)} />
