@@ -13,6 +13,11 @@ function maskRef(ref: string) {
   return ref.slice(0, 3) + "****" + ref.slice(-3)
 }
 
+function receiptNumber(id: number, date: Date) {
+  const d = date.toISOString().slice(0, 10).replace(/-/g, "")
+  return `AMT-${d}-${String(id).padStart(5, "0")}`
+}
+
 export default async function LedgerDonationsPage() {
   const rows = await db.query.donations.findMany({
     where: eq(donations.status, "CONFIRMED"),
@@ -47,34 +52,50 @@ export default async function LedgerDonationsPage() {
         <Table>
           <TableHeader>
             <TableRow>
+              <TableHead>Receipt No.</TableHead>
               <TableHead>Date</TableHead>
               <TableHead>Donor</TableHead>
               <TableHead>Amount</TableHead>
               <TableHead>Method</TableHead>
               <TableHead>Txn Ref</TableHead>
+              <TableHead></TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
-            {rows.map((d) => (
-              <TableRow key={d.id}>
-                <TableCell className="text-sm text-muted-foreground">
-                  {d.confirmedAt?.toLocaleDateString() ?? "—"}
-                </TableCell>
-                <TableCell>{d.isAnonymous ? "Anonymous" : d.donorName}</TableCell>
-                <TableCell className="font-medium">
-                  ৳{parseFloat(d.amount).toLocaleString()}
-                </TableCell>
-                <TableCell>
-                  <Badge variant="secondary">{d.method}</Badge>
-                </TableCell>
-                <TableCell className="font-mono text-sm text-muted-foreground">
-                  {maskRef(d.transactionRef)}
-                </TableCell>
-              </TableRow>
-            ))}
+            {rows.map((d) => {
+              const confirmedAt = d.confirmedAt ?? d.createdAt
+              return (
+                <TableRow key={d.id}>
+                  <TableCell className="font-mono text-xs text-muted-foreground">
+                    {receiptNumber(d.id, confirmedAt)}
+                  </TableCell>
+                  <TableCell className="text-sm text-muted-foreground">
+                    {confirmedAt.toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" })}
+                  </TableCell>
+                  <TableCell>{d.isAnonymous ? "Anonymous" : d.donorName}</TableCell>
+                  <TableCell className="font-medium tabular-nums">
+                    {parseFloat(d.amount).toLocaleString()} BDT
+                  </TableCell>
+                  <TableCell>
+                    <Badge variant="secondary">{d.method}</Badge>
+                  </TableCell>
+                  <TableCell className="font-mono text-sm text-muted-foreground">
+                    {maskRef(d.transactionRef)}
+                  </TableCell>
+                  <TableCell>
+                    <Link
+                      href={`/ledger/donations/${d.id}/invoice`}
+                      className="text-xs text-primary hover:underline underline-offset-2"
+                    >
+                      Invoice
+                    </Link>
+                  </TableCell>
+                </TableRow>
+              )
+            })}
             {rows.length === 0 && (
               <TableRow>
-                <TableCell colSpan={5} className="text-center text-muted-foreground py-12">
+                <TableCell colSpan={7} className="text-center text-muted-foreground py-12">
                   No confirmed donations yet.
                 </TableCell>
               </TableRow>
