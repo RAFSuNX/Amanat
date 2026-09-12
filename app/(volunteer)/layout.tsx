@@ -14,6 +14,7 @@ const NAV = [
   { href: "/volunteer/applications", label: "Special Needs" },
   { href: "/volunteer/deliveries", label: "Deliveries" },
   { href: "/volunteer/kyc", label: "My KYC" },
+  { href: "/donate", label: "Donate" },
 ]
 
 export default async function VolunteerLayout({
