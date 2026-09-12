@@ -18,14 +18,29 @@ const BANK = [
 
 function BankDetails() {
   const [copied, setCopied] = useState<string | null>(null)
+
   function copy(val: string, label: string) {
     navigator.clipboard.writeText(val)
     setCopied(label)
     setTimeout(() => setCopied(null), 1500)
   }
+
+  function copyAll() {
+    const text = BANK.map((r) => `${r.label}: ${r.value}`).join("\n")
+    navigator.clipboard.writeText(text)
+    setCopied("all")
+    setTimeout(() => setCopied(null), 1500)
+  }
+
   return (
     <div className="border border-border/60 rounded p-3 flex flex-col gap-1.5 bg-muted/20">
-      <p className="text-[10px] uppercase tracking-[0.12em] text-muted-foreground mb-1">Bank Transfer</p>
+      <div className="flex items-center justify-between mb-1">
+        <p className="text-[10px] uppercase tracking-[0.12em] text-muted-foreground">Bank Transfer</p>
+        <button type="button" onClick={copyAll}
+          className="text-[10px] text-primary hover:text-primary/70 transition-colors font-medium">
+          {copied === "all" ? "Copied all" : "Copy all"}
+        </button>
+      </div>
       {BANK.map((row) => (
         <button key={row.label} type="button" onClick={() => copy(row.value, row.label)}
           className="flex items-center justify-between text-left group hover:bg-muted/40 rounded px-1 -mx-1 transition-colors">
