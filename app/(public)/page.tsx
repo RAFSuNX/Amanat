@@ -64,11 +64,11 @@ export default async function LandingPage() {
           </div>
         </nav>
 
-        {/* Hero body — two columns: content left, hologram right */}
-        <div className="flex-1 flex items-center gap-12 px-10 py-12">
+        {/* Hero body — two columns: content left, stats right */}
+        <div className="flex-1 flex items-center justify-between gap-16 px-10 py-12 w-full">
 
           {/* Left: content */}
-          <div className="flex flex-col gap-8 flex-1 max-w-xl">
+          <div className="flex flex-col gap-8 max-w-xl">
             <p className="text-xs tracking-[0.22em] uppercase text-primary font-medium">
               {t.hero.eyebrow}
             </p>
