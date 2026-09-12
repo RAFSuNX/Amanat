@@ -5,6 +5,7 @@ import { db } from "@/db"
 import { volunteerProfiles } from "@/db/schema"
 import { eq } from "drizzle-orm"
 import { SignOutButton } from "@/components/sign-out-button"
+import { KycGate } from "@/components/kyc-gate"
 
 const NAV = [
   { href: "/volunteer", label: "Dashboard" },
@@ -14,7 +15,11 @@ const NAV = [
   { href: "/volunteer/kyc", label: "My KYC" },
 ]
 
-export default async function VolunteerLayout({ children }: { children: React.ReactNode }) {
+export default async function VolunteerLayout({
+  children,
+}: {
+  children: React.ReactNode
+}) {
   const session = await requireVolunteer()
   if (!session) redirect("/login")
 
@@ -23,6 +28,7 @@ export default async function VolunteerLayout({ children }: { children: React.Re
     const profile = await db.query.volunteerProfiles.findFirst({
       where: eq(volunteerProfiles.userId, session.user.id),
     })
+    // Lock all pages except /volunteer/kyc so the user can still submit KYC
     kycLocked = !profile || profile.kycStatus !== "APPROVED"
   }
 
@@ -55,19 +61,10 @@ export default async function VolunteerLayout({ children }: { children: React.Re
         </div>
       </aside>
 
-      {/* Main */}
+      {/* Main - KYC page always accessible even when locked */}
       <main className="flex-1 overflow-y-auto p-10">
         {kycLocked ? (
-          <div className="flex flex-col gap-4 max-w-sm">
-            <p className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground">Access Restricted</p>
-            <h2 className="text-xl font-bold tracking-tight">KYC Pending</h2>
-            <p className="text-sm text-muted-foreground leading-relaxed">
-              Submit your KYC documents and wait for admin approval before accessing the volunteer portal.
-            </p>
-            <Link href="/volunteer/kyc" className="text-sm text-primary underline underline-offset-2">
-              Submit KYC
-            </Link>
-          </div>
+          <KycGate>{children}</KycGate>
         ) : children}
       </main>
     </div>

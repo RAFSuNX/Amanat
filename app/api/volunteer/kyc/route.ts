@@ -8,7 +8,7 @@ import { requireVolunteer } from "@/lib/session"
 const schema = z.object({
   docType: z.enum(["NID", "PASSPORT", "DRIVING_LICENSE"]),
   docNumber: z.string().min(1),
-  docImageUrl: z.string().url(),
+  docImageUrl: z.string().url().optional(),
 })
 
 export async function POST(request: NextRequest) {
@@ -33,7 +33,7 @@ export async function POST(request: NextRequest) {
       .set({
         kycDocType: docType,
         kycDocNumber: docNumber,
-        kycDocImageUrl: docImageUrl,
+        kycDocImageUrl: docImageUrl ?? null,
         kycStatus: "PENDING", // reset to pending on resubmit
         kycReviewNote: null,
         kycReviewedAt: null,
@@ -45,7 +45,7 @@ export async function POST(request: NextRequest) {
       district: "Unknown", // set during account creation by admin
       kycDocType: docType,
       kycDocNumber: docNumber,
-      kycDocImageUrl: docImageUrl,
+      kycDocImageUrl: docImageUrl ?? null,
       kycStatus: "PENDING",
     })
   }
