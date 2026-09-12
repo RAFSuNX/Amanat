@@ -8,6 +8,38 @@ import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { PublicNav } from "@/components/public-nav"
 
+const BANK = [
+  { label: "A/H Name",   value: "Amanat" },
+  { label: "Bank",       value: "TBC" },
+  { label: "A/C No.",    value: "TBC" },
+  { label: "Branch",     value: "TBC" },
+  { label: "Routing",    value: "TBC" },
+]
+
+function BankDetails() {
+  const [copied, setCopied] = useState<string | null>(null)
+  function copy(val: string, label: string) {
+    navigator.clipboard.writeText(val)
+    setCopied(label)
+    setTimeout(() => setCopied(null), 1500)
+  }
+  return (
+    <div className="border border-border/60 rounded p-3 flex flex-col gap-1.5 bg-muted/20">
+      <p className="text-[10px] uppercase tracking-[0.12em] text-muted-foreground mb-1">Bank Transfer</p>
+      {BANK.map((row) => (
+        <button key={row.label} type="button" onClick={() => copy(row.value, row.label)}
+          className="flex items-center justify-between text-left group hover:bg-muted/40 rounded px-1 -mx-1 transition-colors">
+          <span className="text-[10px] text-muted-foreground w-16 shrink-0">{row.label}</span>
+          <span className="text-xs font-medium flex-1">{row.value}</span>
+          <span className="text-[10px] text-muted-foreground/50 group-hover:text-primary transition-colors ml-2 shrink-0">
+            {copied === row.label ? "Copied" : "Copy"}
+          </span>
+        </button>
+      ))}
+    </div>
+  )
+}
+
 const PRESETS = [500, 1000, 2500, 5000]
 const labelClass = "text-xs font-semibold text-foreground"
 const fieldClass = "flex flex-col gap-2"
@@ -172,15 +204,7 @@ export default function DonatePage() {
                   </div>
                 )}
                 {method === "BANK" && (
-                  <div className="border border-border/60 rounded p-3 flex flex-col gap-1.5 bg-muted/20">
-                    <p className="text-[10px] uppercase tracking-[0.12em] text-muted-foreground">Bank Transfer</p>
-                    <div className="grid grid-cols-2 gap-x-4 gap-y-0.5 text-xs">
-                      <span className="text-muted-foreground">Name</span><span className="font-medium">Amanat</span>
-                      <span className="text-muted-foreground">Account</span><span className="text-muted-foreground">TBC</span>
-                      <span className="text-muted-foreground">Routing</span><span className="text-muted-foreground">TBC</span>
-                    </div>
-                    <p className="text-[10px] text-muted-foreground">Contact us for full bank details.</p>
-                  </div>
+                  <BankDetails />
                 )}
                 {method === "OTHER" && (
                   <div className="border border-border/40 rounded p-3 bg-muted/10 flex items-center">
