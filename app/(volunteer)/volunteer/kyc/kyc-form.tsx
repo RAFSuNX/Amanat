@@ -30,8 +30,16 @@ export function KycForm({
     setError("")
     setUploadWarning("")
 
-    if (!legalName || !docType || !docNumber) {
-      setError("Please fill in your legal name, document type, and document number.")
+    if (!legalName || !phone || !docType || !docNumber) {
+      setError("Please fill in your legal name, mobile number, document type, and document number.")
+      return
+    }
+    if (!file && !existing?.docImageUrl) {
+      setError("Document photo is required.")
+      return
+    }
+    if (!passportFile && !passportPhotoUrl) {
+      setError("Your passport-size photo is required.")
       return
     }
 
@@ -105,7 +113,7 @@ export function KycForm({
       </div>
 
       <div className="flex flex-col gap-2">
-        <Label>Mobile Number</Label>
+        <Label>Mobile Number *</Label>
         <Input
           type="tel"
           value={phone}
@@ -142,8 +150,8 @@ export function KycForm({
 
       <div className="flex flex-col gap-2">
         <div className="flex items-center justify-between">
-          <Label>Document Photo</Label>
-          <span className="text-[10px] text-muted-foreground">Recommended</span>
+          <Label>Document Photo *</Label>
+          <span className="text-[10px] text-muted-foreground">Required</span>
         </div>
         {existing?.docImageUrl && (
           <p className="text-xs text-muted-foreground">Already uploaded. Select a new file to replace.</p>
@@ -155,14 +163,14 @@ export function KycForm({
           
         />
         <p className="text-[10px] text-muted-foreground">
-          Upload a clear photo of your NID, passport, or driving license. You can add this later if not ready.
+          Upload a clear photo of your NID, passport, or driving license.
         </p>
       </div>
 
       <div className="flex flex-col gap-2">
         <div className="flex items-center justify-between">
-          <Label>Your Passport-Size Photo</Label>
-          <span className="text-[10px] text-muted-foreground">For records</span>
+          <Label>Your Passport-Size Photo *</Label>
+          <span className="text-[10px] text-muted-foreground">Required</span>
         </div>
         <Input
           type="file"
