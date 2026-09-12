@@ -49,7 +49,7 @@ export default async function LandingPage() {
         style={{ scrollSnapAlign: "start" }}
       >
         {/* Nav */}
-        <nav className="shrink-0 flex items-center justify-between px-10 h-16 border-b border-border/30">
+        <nav className="shrink-0 flex items-center justify-between px-10 h-16">
           <Link href="/">
             <Image src="/logo.png" alt="Amanat" width={100} height={40} className="h-12 w-auto object-contain" priority />
           </Link>
