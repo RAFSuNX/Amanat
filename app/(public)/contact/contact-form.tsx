@@ -49,7 +49,22 @@ export function ContactForm() {
   return (
     <div className="flex flex-col px-10 py-12 max-w-md">
       <p className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground mb-2">Send a message</p>
-      <h2 className="text-2xl font-bold tracking-tight mb-8">Contact us</h2>
+      <h2 className="text-2xl font-bold tracking-tight mb-4">Contact us</h2>
+
+      {/* Phone note - shown on mobile only (left panel hidden) */}
+      <div className="md:hidden border border-border/60 rounded p-4 mb-6 flex flex-col gap-1.5 bg-muted/20">
+        <p className="text-xs font-semibold">Phone: +880 1X-XXXX-XXXX</p>
+        <p className="text-xs text-muted-foreground leading-relaxed">
+          Call only for urgent fund transfer issues. Available 10am to 8pm, Saturday to Thursday.
+          For all other matters, please use this form. We reply within 6 to 12 hours.
+        </p>
+      </div>
+
+      <div className="border-l-2 border-border/40 pl-3 mb-6">
+        <p className="text-xs text-muted-foreground leading-relaxed">
+          We reply to all messages within <strong className="text-foreground">6 to 12 hours</strong>. If your matter is urgent and related to a fund transfer, you can also call us during working hours.
+        </p>
+      </div>
 
       <form onSubmit={submit} className="flex flex-col gap-5">
         <div className="grid grid-cols-2 gap-4">
