@@ -276,26 +276,49 @@ export default function DonatePage() {
               {receiptError && <p className="text-[10px] text-amber-600">{receiptError}</p>}
             </div>
 
-            {/* Donor info - all three in one row */}
-            {session?.user && (
-              <p className="text-[10px] text-muted-foreground border-l-2 border-primary/40 pl-2">
-                Details pre-filled from your account. Edit below if needed.
-              </p>
+            {/* Donor info */}
+            {session?.user ? (
+              <div className="border border-border/40 rounded p-4 flex flex-col gap-2 bg-muted/20">
+                <div className="flex items-center justify-between">
+                  <p className="text-xs font-semibold">Donating as</p>
+                  <a
+                    href={(session.user as { role?: string }).role === "VOLUNTEER" ? "/volunteer/profile" : "/account"}
+                    className="text-[10px] text-primary underline underline-offset-2"
+                  >
+                    Edit profile
+                  </a>
+                </div>
+                <div className="grid grid-cols-3 gap-4 text-xs">
+                  <div>
+                    <p className="text-muted-foreground mb-0.5">Name</p>
+                    <p className="font-medium">{name || "Not set"}</p>
+                  </div>
+                  <div>
+                    <p className="text-muted-foreground mb-0.5">Phone</p>
+                    <p className="font-medium">{phone || "Not set"}</p>
+                  </div>
+                  <div>
+                    <p className="text-muted-foreground mb-0.5">Email</p>
+                    <p className="font-medium truncate">{email || "Not set"}</p>
+                  </div>
+                </div>
+              </div>
+            ) : (
+              <div className="grid grid-cols-3 gap-3">
+                <div className={fieldClass}>
+                  <label className={labelClass}>Your Name</label>
+                  <Input placeholder="As on NID/passport" value={name} onChange={(e) => setName(e.target.value)} />
+                </div>
+                <div className={fieldClass}>
+                  <label className={labelClass}>Phone</label>
+                  <Input type="tel" placeholder="01XXXXXXXXX" value={phone} onChange={(e) => setPhone(e.target.value)} />
+                </div>
+                <div className={fieldClass}>
+                  <label className={labelClass}>Email</label>
+                  <Input type="email" placeholder="you@example.com" value={email} onChange={(e) => setEmail(e.target.value)} />
+                </div>
+              </div>
             )}
-            <div className="grid grid-cols-3 gap-3">
-              <div className={fieldClass}>
-                <label className={labelClass}>Your Name</label>
-                <Input placeholder="As on NID/passport" value={name} onChange={(e) => setName(e.target.value)} />
-              </div>
-              <div className={fieldClass}>
-                <label className={labelClass}>Phone</label>
-                <Input type="tel" placeholder="01XXXXXXXXX" value={phone} onChange={(e) => setPhone(e.target.value)} />
-              </div>
-              <div className={fieldClass}>
-                <label className={labelClass}>Email</label>
-                <Input type="email" placeholder="you@example.com" value={email} onChange={(e) => setEmail(e.target.value)} />
-              </div>
-            </div>
 
             {/* Anonymous */}
             <label className="flex items-center gap-3 text-xs text-muted-foreground cursor-pointer select-none border-t border-border/40 pt-4">
