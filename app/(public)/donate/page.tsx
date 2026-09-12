@@ -70,13 +70,17 @@ export default function DonatePage() {
   const [phone, setPhone] = useState("")
   const [email, setEmail] = useState("")
 
-  // Pre-fill from session when user is logged in
+  // Pre-fill from API when user is logged in (includes phone which isn't in client session)
   useEffect(() => {
-    if (session?.user) {
-      if (!name) setName(session.user.name ?? "")
-      if (!email) setEmail(session.user.email ?? "")
-      if (!phone) setPhone((session.user as { phone?: string }).phone ?? "")
-    }
+    if (!session?.user) return
+    fetch("/api/account/me")
+      .then((r) => r.ok ? r.json() : null)
+      .then((data) => {
+        if (!data) return
+        if (!name) setName(data.name ?? "")
+        if (!email) setEmail(data.email ?? "")
+        if (!phone) setPhone(data.phone ?? "")
+      })
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [session])
   const [isAnonymous, setIsAnonymous] = useState(false)

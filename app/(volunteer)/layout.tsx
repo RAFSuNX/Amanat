@@ -14,6 +14,7 @@ const NAV = [
   { href: "/volunteer/applications", label: "Special Needs" },
   { href: "/volunteer/deliveries", label: "Deliveries" },
   { href: "/volunteer/kyc", label: "My KYC" },
+  { href: "/volunteer/profile", label: "My Profile" },
   { href: "/donate", label: "Donate" },
 ]
 

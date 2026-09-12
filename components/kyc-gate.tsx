@@ -6,8 +6,8 @@ import Link from "next/link"
 export function KycGate({ children }: { children: React.ReactNode }) {
   const pathname = usePathname()
 
-  // Always allow the KYC page through
-  if (pathname === "/volunteer/kyc") return <>{children}</>
+  // Always allow KYC and profile pages through
+  if (pathname === "/volunteer/kyc" || pathname === "/volunteer/profile") return <>{children}</>
 
   return (
     <div className="flex flex-col gap-6 max-w-sm">
