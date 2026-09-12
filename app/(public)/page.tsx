@@ -64,11 +64,13 @@ export default async function LandingPage() {
           </div>
         </nav>
 
-        {/* Hero body — two columns: content left, stats right */}
-        <div className="flex-1 flex items-center justify-between gap-16 px-10 py-12 w-full">
-
+        {/* Hero body — 3fr / 1fr grid */}
+        <div
+          className="flex-1 w-full grid items-center px-10 py-12"
+          style={{ gridTemplateColumns: "3fr 1fr", gap: "5vw" }}
+        >
           {/* Left: content */}
-          <div className="flex flex-col gap-8 max-w-xl">
+          <div className="flex flex-col gap-8">
             <p className="text-xs tracking-[0.22em] uppercase text-primary font-medium">
               {t.hero.eyebrow}
             </p>
@@ -91,23 +93,24 @@ export default async function LandingPage() {
             </div>
           </div>
 
-          {/* Right: stats */}
-          <div className="shrink-0 flex flex-col divide-y divide-border/40 border-l border-border/40 pl-12" style={{ width: "260px" }}>
+          {/* Right: stats — bordered left, fills its grid cell */}
+          <div className="flex flex-col divide-y divide-border/40 border-l border-border/40 pl-8 self-center">
             {[
               { label: t.stats.totalDonated, value: `${stats.totalDonated.toLocaleString()} BDT`, primary: true },
               { label: t.stats.familiesActive, value: stats.familiesHelped.toLocaleString(), primary: false },
               { label: t.stats.cyclesDone, value: stats.cyclesCompleted.toLocaleString(), primary: false },
             ].map((s) => (
-              <div key={s.label} className="py-6 flex flex-col gap-1">
-                <p className={`font-bold tabular-nums leading-none ${s.primary ? "text-primary" : ""}`}
-                  style={{ fontSize: "clamp(1.6rem, 2.8vw, 2.2rem)" }}>
+              <div key={s.label} className="py-6 flex flex-col gap-1.5">
+                <p
+                  className={`font-bold tabular-nums leading-none ${s.primary ? "text-primary" : ""}`}
+                  style={{ fontSize: "clamp(1.5rem, 2.4vw, 2rem)" }}
+                >
                   {s.value}
                 </p>
-                <p className="text-xs text-muted-foreground uppercase tracking-wider mt-1">{s.label}</p>
+                <p className="text-[10px] text-muted-foreground uppercase tracking-widest">{s.label}</p>
               </div>
             ))}
           </div>
-
         </div>
 
         {/* Scroll hint */}
