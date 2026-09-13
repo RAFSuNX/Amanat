@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server"
 import { db } from "@/db"
-import { distributionAllotments, beneficiaries } from "@/db/schema"
-import { eq, and } from "drizzle-orm"
+import { distributionAllotments, distributionCycles, beneficiaries } from "@/db/schema"
+import { eq } from "drizzle-orm"
 import { requireVolunteer } from "@/lib/session"
 import { log } from "@/lib/audit"
 
@@ -18,10 +18,18 @@ export async function POST(
   // IDOR check: only allow if this volunteer registered the beneficiary
   const allotment = await db.query.distributionAllotments.findFirst({
     where: eq(distributionAllotments.id, allotmentId),
-    columns: { beneficiaryId: true },
+    columns: { beneficiaryId: true, cycleId: true },
   })
 
   if (!allotment) return NextResponse.json({ error: "Not found" }, { status: 404 })
+
+  // Delivery is only allowed once the cycle is ACTIVE (approved & funded).
+  const cycle = await db.query.distributionCycles.findFirst({
+    where: eq(distributionCycles.id, allotment.cycleId),
+    columns: { status: true },
+  })
+  if (cycle?.status !== "ACTIVE")
+    return NextResponse.json({ error: "This cycle is not active for delivery." }, { status: 400 })
 
   const ben = await db.query.beneficiaries.findFirst({
     where: eq(beneficiaries.id, allotment.beneficiaryId),

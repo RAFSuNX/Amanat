@@ -61,6 +61,12 @@ export default async function LedgerDistributionsPage() {
               {c.notes && (
                 <p className="text-sm text-muted-foreground mt-3 border-t pt-3">{c.notes}</p>
               )}
+              <div className="mt-3 border-t pt-3">
+                <Link href={`/ledger/distributions/${c.id}`}
+                  className="text-xs text-primary hover:underline underline-offset-2">
+                  View every family and amount →
+                </Link>
+              </div>
             </div>
           ))}
           {cycleStats.length === 0 && (

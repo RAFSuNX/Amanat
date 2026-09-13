@@ -1,9 +1,18 @@
 import { NextRequest, NextResponse } from "next/server"
 import { db } from "@/db"
-import { distributionAllotments, beneficiaries } from "@/db/schema"
+import { distributionAllotments, distributionCycles, beneficiaries } from "@/db/schema"
 import { eq } from "drizzle-orm"
 import { requireVolunteer } from "@/lib/session"
 import { log } from "@/lib/audit"
+import { z } from "zod"
+
+// Volunteer requests a different amount for a family than the algorithm calculated.
+// A note (reason) is required; a receipt image is optional supporting evidence.
+const schema = z.object({
+  note: z.string().trim().min(3, "A reason is required."),
+  requestedAmount: z.coerce.number().min(0).optional(),
+  receiptUrl: z.string().url().optional(),
+})
 
 export async function POST(
   request: NextRequest,
@@ -14,33 +23,49 @@ export async function POST(
 
   const { id } = await params
   const allotmentId = Number(id)
-  const { note } = await request.json()
 
-  // IDOR check: only allow if this volunteer registered the beneficiary
+  const parsed = schema.safeParse(await request.json())
+  if (!parsed.success)
+    return NextResponse.json({ error: parsed.error.issues[0].message }, { status: 400 })
+  const { note, requestedAmount, receiptUrl } = parsed.data
+
   const allotment = await db.query.distributionAllotments.findFirst({
     where: eq(distributionAllotments.id, allotmentId),
-    columns: { beneficiaryId: true },
+    columns: { beneficiaryId: true, cycleId: true },
   })
-
   if (!allotment) return NextResponse.json({ error: "Not found" }, { status: 404 })
 
+  // Requests can only be made while the cycle is open for volunteer review.
+  const cycle = await db.query.distributionCycles.findFirst({
+    where: eq(distributionCycles.id, allotment.cycleId),
+    columns: { status: true },
+  })
+  if (cycle?.status !== "VOLUNTEER_REVIEW")
+    return NextResponse.json({ error: "This cycle is not open for volunteer review." }, { status: 400 })
+
+  // IDOR check: only the volunteer who registered the beneficiary may request.
   const ben = await db.query.beneficiaries.findFirst({
     where: eq(beneficiaries.id, allotment.beneficiaryId),
     columns: { registeredByVolunteerId: true },
   })
-
-  if (!ben || ben.registeredByVolunteerId !== session.user.id) {
+  if (!ben || ben.registeredByVolunteerId !== session.user.id)
     return NextResponse.json({ error: "Forbidden" }, { status: 403 })
-  }
 
-  await db
-    .update(distributionAllotments)
-    .set({ isFlagged: true, volunteerFlagNote: note ?? null, reviewedByVolunteerId: session.user.id })
-    .where(eq(distributionAllotments.id, allotmentId))
+  await db.update(distributionAllotments).set({
+    isFlagged: true,
+    volunteerFlagNote: note,
+    volunteerRequestedAmount: requestedAmount != null ? requestedAmount.toFixed(2) : null,
+    volunteerReceiptUrl: receiptUrl ?? null,
+    reviewedByVolunteerId: session.user.id,
+  }).where(eq(distributionAllotments.id, allotmentId))
 
-  await log({ userId: session.user.id, userName: session.user.name, userRole: "VOLUNTEER",
-    action: "ALLOTMENT_FLAGGED", resourceType: "allotment", resourceId: id,
-    details: { note, beneficiaryId: allotment.beneficiaryId }, request })
+  await log({
+    userId: session.user.id, userName: session.user.name, userRole: "VOLUNTEER",
+    action: "ALLOTMENT_REQUESTED", resourceType: "allotment", resourceId: id,
+    details: { note, requestedAmount: requestedAmount ?? null, receiptUrl: receiptUrl ?? null,
+      beneficiaryId: allotment.beneficiaryId },
+    request,
+  })
 
   return NextResponse.json({ ok: true })
 }

@@ -12,6 +12,16 @@ COPY . .
 ENV NEXT_TELEMETRY_DISABLED=1
 RUN npm run build
 
+# Migration image: standalone runner strips drizzle-kit (a devDependency) and the
+# db/ folder, so migrations run from this dedicated image instead. It reuses the
+# deps node_modules (which includes drizzle-kit) plus the configs + migration SQL.
+FROM base AS migrator
+COPY --from=deps /app/node_modules ./node_modules
+COPY package.json package-lock.json ./
+COPY drizzle.config.ts drizzle.audit.config.ts ./
+COPY db ./db
+CMD ["sh", "-c", "npm run db:migrate && npm run db:audit:migrate"]
+
 FROM base AS runner
 ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED=1

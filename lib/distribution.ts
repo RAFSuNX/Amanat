@@ -6,7 +6,7 @@ import {
   distributionAllotments,
   distributionCycles,
 } from "@/db/schema"
-import { eq, and } from "drizzle-orm"
+import { eq, inArray } from "drizzle-orm"
 
 type MemberRow = { age: number; isDisabled: boolean; isEarner: boolean }
 
@@ -39,9 +39,11 @@ export async function calculateDistribution(cycleId: number) {
   if (!cycle) throw new Error("Cycle not found")
   if (cycle.status !== "DRAFT") throw new Error("Cycle must be in DRAFT status")
 
-  // Fetch all active, approved beneficiaries
+  // Fetch all beneficiaries eligible for distribution.
+  // APPROVED = passed admin review; ACTIVE = already received in a prior cycle.
+  // Both remain eligible each month.
   const activeBeneficiaries = await db.query.beneficiaries.findMany({
-    where: eq(beneficiaries.status, "APPROVED"),
+    where: inArray(beneficiaries.status, ["APPROVED", "ACTIVE"]),
     with: { members: true, needAssessments: true },
   })
 

@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server"
 import { db } from "@/db"
 import { beneficiaries } from "@/db/schema"
-import { eq, and } from "drizzle-orm"
+import { eq, and, inArray } from "drizzle-orm"
 import { requireVolunteer } from "@/lib/session"
 
 export async function GET() {
@@ -11,7 +11,7 @@ export async function GET() {
   const rows = await db.query.beneficiaries.findMany({
     where: and(
       eq(beneficiaries.registeredByVolunteerId, session.user.id),
-      eq(beneficiaries.status, "ACTIVE")
+      inArray(beneficiaries.status, ["APPROVED", "ACTIVE"])
     ),
     columns: { id: true, name: true },
   })

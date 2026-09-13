@@ -278,9 +278,14 @@ export const distributionAllotments = pgTable("distribution_allotments", {
   }).notNull(),
   allocatedAmount: decimal("allocated_amount", { precision: 12, scale: 2 }),
   weightedScore: decimal("weighted_score", { precision: 14, scale: 4 }),
-  // Volunteer review
+  // Volunteer review / adjustment request
   isFlagged: boolean("is_flagged").notNull().default(false),
   volunteerFlagNote: text("volunteer_flag_note"),
+  volunteerRequestedAmount: decimal("volunteer_requested_amount", {
+    precision: 12,
+    scale: 2,
+  }),
+  volunteerReceiptUrl: text("volunteer_receipt_url"),
   reviewedByVolunteerId: text("reviewed_by_volunteer_id").references(
     () => users.id
   ),
