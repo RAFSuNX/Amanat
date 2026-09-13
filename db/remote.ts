@@ -11,7 +11,7 @@ let remoteDb: ReturnType<typeof drizzle<typeof schema>> | null = null
 if (process.env.REMOTE_PUBLIC_LEDGER_DATABASE_URL) {
   const client = postgres(process.env.REMOTE_PUBLIC_LEDGER_DATABASE_URL, {
     max: 5,
-    readonly: true,  // Enforce read-only — this is a replica, never write to it
+    // This is a read-only replica — never write to it directly
   })
   remoteDb = drizzle(client, { schema })
 }
