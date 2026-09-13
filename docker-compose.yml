@@ -31,6 +31,22 @@ services:
     volumes:
       - redis_data:/data
 
+  backup:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.backup
+    restart: unless-stopped
+    depends_on:
+      - postgres
+      - postgres-audit
+    environment:
+      DATABASE_URL: postgresql://amanat:${POSTGRES_PASSWORD:-amanat_dev}@postgres:5432/amanat
+      AUDIT_DATABASE_URL: postgresql://amanat_audit:${AUDIT_DB_PASSWORD:-amanat_audit_dev}@postgres-audit:5432/amanat_audit
+      R2_ENDPOINT: ${R2_ENDPOINT}
+      R2_ACCESS_KEY_ID: ${R2_ACCESS_KEY_ID}
+      R2_SECRET_ACCESS_KEY: ${R2_SECRET_ACCESS_KEY}
+      R2_BUCKET_NAME: ${R2_BUCKET_NAME}
+
   app:
     build: .
     restart: unless-stopped
