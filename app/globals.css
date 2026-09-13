@@ -96,6 +96,13 @@
   * {
     @apply border-border outline-ring/50;
   }
+  html {
+    /* Reserve scrollbar gutter on desktop only — mobile overlays scrollbars, the
+       gutter would just steal viewport width on narrow screens. */
+    @media (min-width: 768px) {
+      scrollbar-gutter: stable;
+    }
+  }
   body {
     @apply bg-background text-foreground;
     font-feature-settings: "cv11", "ss01", "ss03";
