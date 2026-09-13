@@ -46,9 +46,9 @@ export default async function LandingPage() {
       {/* ── Section 1: Hero ─────────────────────────────────────────── */}
       <section className="landing-section relative w-dvw flex flex-col">
         {/* Nav */}
-        <nav className="shrink-0 flex items-center justify-between px-[5vw] md:px-10 h-14 md:h-16">
+        <nav className="shrink-0 flex items-center justify-between px-[5vw] md:px-10 h-16">
           <Link href="/">
-            <img src="/logo.png" alt="Amanat" className="h-10 md:h-12 w-auto object-contain" />
+            <img src="/logo.png" alt="Amanat" className="h-12 w-auto object-contain" />
           </Link>
           <div className="flex items-center gap-3 md:gap-8">
             <Link href="/ledger/donations" className="hidden md:block text-xs text-muted-foreground hover:text-foreground transition-colors uppercase tracking-widest">

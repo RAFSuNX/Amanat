@@ -39,9 +39,9 @@ export default async function VolunteerLayout({
   return (
     <div className="h-dvh w-dvw flex flex-col md:flex-row overflow-hidden">
       {/* Mobile top bar */}
-      <div className="md:hidden sticky top-0 z-20 h-14 border-b border-border/40 px-4 flex items-center justify-between bg-background shrink-0">
+      <div className="md:hidden sticky top-0 z-20 h-16 border-b border-border/40 px-4 flex items-center justify-between bg-background shrink-0">
         <Link href="/">
-          <img src="/logo.png" alt="Amanat" className="h-10 w-auto object-contain" />
+          <img src="/logo.png" alt="Amanat" className="h-12 w-auto object-contain" />
         </Link>
         <MobileMenu links={NAV} signIn={false} />
       </div>

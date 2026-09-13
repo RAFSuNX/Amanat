@@ -16,9 +16,9 @@ export function PublicNav({ donateButton = false, activeHref }: PublicNavProps) 
   ]
 
   return (
-    <nav className="sticky top-0 z-20 bg-background border-b border-border/40 px-4 md:px-10 h-14 md:h-16 flex items-center justify-between">
+    <nav className="sticky top-0 z-20 bg-background border-b border-border/40 px-4 md:px-10 h-16 flex items-center justify-between">
       <Link href="/" className="flex items-center">
-        <img src="/logo.png" alt="Amanat" className="h-10 md:h-12 w-auto object-contain" />
+        <img src="/logo.png" alt="Amanat" className="h-12 w-auto object-contain" />
       </Link>
 
       {/* Desktop links */}
