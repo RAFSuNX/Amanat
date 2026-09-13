@@ -3,7 +3,7 @@
 import { useState } from "react"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
-import { signIn } from "@/lib/auth-client"
+import { signIn, authClient } from "@/lib/auth-client"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 
@@ -13,18 +13,40 @@ export default function LoginPage() {
   const [password, setPassword] = useState("")
   const [error, setError] = useState("")
   const [loading, setLoading] = useState(false)
+  const [needsVerify, setNeedsVerify] = useState(false)
+  const [resent, setResent] = useState(false)
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
     setError("")
+    setNeedsVerify(false)
+    setResent(false)
     setLoading(true)
     const { data, error: authError } = await signIn.email({ email, password })
     setLoading(false)
-    if (authError || !data) { setError("Invalid email or password."); return }
+    if (authError || !data) {
+      // Distinguish "email not verified" from bad credentials — otherwise the
+      // user thinks their (correct) password is wrong and keeps retrying.
+      const code = (authError as { code?: string } | null)?.code
+      if (code === "EMAIL_NOT_VERIFIED" || /verif/i.test(authError?.message ?? "")) {
+        setNeedsVerify(true)
+        setError("Your email isn't verified yet. Check your inbox for the verification link.")
+      } else {
+        setError("Invalid email or password.")
+      }
+      return
+    }
     const role = (data.user as { role?: string }).role
     if (role === "ADMIN") router.push("/admin")
     else if (role === "VOLUNTEER") router.push("/volunteer")
     else router.push("/account")
+  }
+
+  async function resendVerification() {
+    if (!email) { setError("Enter your email above first."); return }
+    setResent(false)
+    await authClient.sendVerificationEmail({ email, callbackURL: "/verify-email" })
+    setResent(true)
   }
 
   return (
@@ -45,9 +67,22 @@ export default function LoginPage() {
         </div>
 
         {error && (
-          <p className="text-xs text-destructive border border-destructive/20 bg-destructive/5 px-3 py-2 rounded">
-            {error}
-          </p>
+          <div className="text-xs border border-destructive/20 bg-destructive/5 px-3 py-2 rounded flex flex-col gap-2">
+            <p className="text-destructive">{error}</p>
+            {needsVerify && (
+              resent ? (
+                <p className="text-muted-foreground">Verification email sent — check your inbox (and spam).</p>
+              ) : (
+                <button
+                  type="button"
+                  onClick={resendVerification}
+                  className="self-start text-primary underline underline-offset-2"
+                >
+                  Resend verification email
+                </button>
+              )
+            )}
+          </div>
         )}
 
         <Button type="submit" disabled={loading} className="w-full mt-1">
