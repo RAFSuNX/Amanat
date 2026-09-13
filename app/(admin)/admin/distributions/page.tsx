@@ -1,6 +1,6 @@
 import { db } from "@/db"
 import { distributionCycles, distributionAllotments } from "@/db/schema"
-import { desc, eq, sql } from "drizzle-orm"
+import { desc, sql } from "drizzle-orm"
 import { Badge } from "@/components/ui/badge"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
@@ -17,6 +17,17 @@ export default async function AdminDistributionsPage() {
     orderBy: [desc(distributionCycles.createdAt)],
   })
 
+  // Actual amount distributed + family count per cycle, from the allotments.
+  const totals = await db
+    .select({
+      cycleId: distributionAllotments.cycleId,
+      distributed: sql<string>`coalesce(sum(${distributionAllotments.allocatedAmount}), 0)`,
+      families: sql<number>`count(*)`,
+    })
+    .from(distributionAllotments)
+    .groupBy(distributionAllotments.cycleId)
+  const totalsById = new Map(totals.map((t) => [t.cycleId, t]))
+
   return (
     <div className="flex flex-col gap-6">
       <div className="flex items-center justify-between">
@@ -30,24 +41,34 @@ export default async function AdminDistributionsPage() {
       </div>
 
       <div className="flex flex-col gap-3">
-        {cycles.map(c => (
-          <div key={c.id} className="border border-border/40 rounded-lg p-5 flex items-center justify-between">
-            <div className="flex flex-col gap-1">
-              <div className="flex items-center gap-3">
-                <p className="font-semibold">{c.period}</p>
-                <Badge variant={statusVariant(c.status)}>{c.status.replace(/_/g, " ")}</Badge>
+        {cycles.map((c) => {
+          const t = totalsById.get(c.id)
+          const families = Number(t?.families ?? 0)
+          return (
+            <div key={c.id} className="border border-border/40 rounded-lg p-5 flex items-center justify-between">
+              <div className="flex flex-col gap-1">
+                <div className="flex items-center gap-3">
+                  <p className="font-semibold">{c.period}</p>
+                  <Badge variant={statusVariant(c.status)}>{c.status.replace(/_/g, " ")}</Badge>
+                </div>
+                <div className="flex gap-6 text-xs text-muted-foreground mt-1">
+                  <span>Pool: {parseFloat(c.totalPool).toLocaleString()} BDT</span>
+                  {c.remainingPool && <span>Remaining: {parseFloat(c.remainingPool).toLocaleString()} BDT</span>}
+                  {families > 0 && (
+                    <>
+                      <span>Distributed: {parseFloat(t!.distributed).toLocaleString()} BDT</span>
+                      <span>{families} families</span>
+                    </>
+                  )}
+                  {c.notes && <span>{c.notes}</span>}
+                </div>
               </div>
-              <div className="flex gap-6 text-xs text-muted-foreground mt-1">
-                <span>Pool: {parseFloat(c.totalPool).toLocaleString()} BDT</span>
-                {c.remainingPool && <span>Remaining: {parseFloat(c.remainingPool).toLocaleString()} BDT</span>}
-                {c.notes && <span>{c.notes}</span>}
-              </div>
+              <Link href={`/admin/distributions/${c.id}`}>
+                <Button variant="outline" size="sm">Manage</Button>
+              </Link>
             </div>
-            <Link href={`/admin/distributions/${c.id}`}>
-              <Button variant="outline" size="sm">Manage</Button>
-            </Link>
-          </div>
-        ))}
+          )
+        })}
         {cycles.length === 0 && (
           <div className="border border-border/40 rounded-lg p-12 text-center text-muted-foreground text-sm">
             No distribution cycles yet.{" "}

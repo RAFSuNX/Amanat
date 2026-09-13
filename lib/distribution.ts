@@ -1,8 +1,6 @@
 import { db } from "@/db"
 import {
   beneficiaries,
-  beneficiaryMembers,
-  needAssessments,
   distributionAllotments,
   distributionCycles,
 } from "@/db/schema"

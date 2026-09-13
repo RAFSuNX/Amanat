@@ -26,8 +26,22 @@ export default async function AdminReportsPage() {
   const [cycleStats] = await db.select({
     completed: sql<number>`count(*) filter (where status='COMPLETED')`,
     active: sql<number>`count(*) filter (where status='ACTIVE')`,
-    totalDistributed: sql<string>`coalesce(sum(total_pool) filter (where status='COMPLETED'), 0)`,
   }).from(distributionCycles)
+
+  // Actual money distributed = sum of allotment amounts in COMPLETED cycles
+  // (the real amount given to families, NOT the cycle budget/total_pool), plus
+  // the number of distinct families that have received a distribution.
+  const [distStats] = await db.select({
+    totalDistributed: sql<string>`coalesce(sum(${distributionAllotments.allocatedAmount}), 0)`,
+    familiesServed: sql<number>`count(distinct ${distributionAllotments.beneficiaryId})`,
+  })
+    .from(distributionAllotments)
+    .innerJoin(distributionCycles, eq(distributionAllotments.cycleId, distributionCycles.id))
+    .where(eq(distributionCycles.status, "COMPLETED"))
+
+  const [userStats] = await db.select({
+    donors: sql<number>`count(*) filter (where role='DONOR')`,
+  }).from(users)
 
   const stats = [
     {
@@ -37,6 +51,7 @@ export default async function AdminReportsPage() {
         { label: "Pending Confirmation", value: `${parseFloat(donationStats?.totalPending ?? "0").toLocaleString()} BDT` },
         { label: "Confirmed Donations", value: String(donationStats?.countConfirmed ?? 0) },
         { label: "Pending Donations", value: String(donationStats?.countPending ?? 0) },
+        { label: "Registered Donors", value: String(userStats?.donors ?? 0) },
       ],
     },
     {
@@ -61,7 +76,8 @@ export default async function AdminReportsPage() {
       items: [
         { label: "Completed Cycles", value: String(cycleStats?.completed ?? 0) },
         { label: "Active Cycles", value: String(cycleStats?.active ?? 0) },
-        { label: "Total Distributed", value: `${parseFloat(cycleStats?.totalDistributed ?? "0").toLocaleString()} BDT` },
+        { label: "Total Distributed", value: `${parseFloat(distStats?.totalDistributed ?? "0").toLocaleString()} BDT` },
+        { label: "Families Served", value: String(distStats?.familiesServed ?? 0) },
       ],
     },
   ]

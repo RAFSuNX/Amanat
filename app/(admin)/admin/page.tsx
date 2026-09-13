@@ -2,7 +2,6 @@ import { db } from "@/db"
 import {
   donations,
   beneficiaries,
-  distributionCycles,
   volunteerProfiles,
   specialNeedApplications,
 } from "@/db/schema"
