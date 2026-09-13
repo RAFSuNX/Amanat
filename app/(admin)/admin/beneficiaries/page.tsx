@@ -1,8 +1,7 @@
 import { db } from "@/db"
-import { beneficiaries, users, volunteerProfiles } from "@/db/schema"
+import { beneficiaries, users } from "@/db/schema"
 import { eq, desc } from "drizzle-orm"
 import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { BeneficiaryActions } from "./beneficiary-actions"
 

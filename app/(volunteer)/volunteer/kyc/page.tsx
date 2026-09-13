@@ -55,6 +55,7 @@ export default async function VolunteerKycPage() {
             docType: profile?.kycDocType ?? undefined,
             docNumber: profile?.kycDocNumber ?? undefined,
             docImageUrl: profile?.kycDocImageUrl ?? undefined,
+            passportPhotoUrl: profile?.passportPhotoUrl ?? undefined,
           }}
         />
       )}

@@ -27,23 +27,28 @@ export async function POST(request: NextRequest) {
 
   const { legalName, phone, docType, docNumber, docImageUrl, passportPhotoUrl } = parsed.data
 
-  // Update name and phone from KYC submission
-  await db.update(users)
-    .set({ name: legalName, ...(phone ? { phone } : {}) })
-    .where(eq(users.id, session.user.id))
-
   const existing = await db.query.volunteerProfiles.findFirst({
     where: eq(volunteerProfiles.userId, session.user.id),
   })
+
+  // The submitted identity document is write-once: once a document image is on
+  // record, its image, type, number — and the legal name that must match it —
+  // cannot be changed (anti-fraud: a verified ID can't be swapped). Only the
+  // passport photo (avatar) and contact phone remain editable.
+  const docLocked = !!existing?.kycDocImageUrl
+
+  await db.update(users)
+    .set({ ...(docLocked ? {} : { name: legalName }), ...(phone ? { phone } : {}) })
+    .where(eq(users.id, session.user.id))
 
   if (existing) {
     await db
       .update(volunteerProfiles)
       .set({
-        kycDocType: docType,
-        kycDocNumber: docNumber,
-        kycDocImageUrl: docImageUrl ?? null,
-        passportPhotoUrl: passportPhotoUrl ?? null,
+        kycDocType: docLocked ? existing.kycDocType : docType,
+        kycDocNumber: docLocked ? existing.kycDocNumber : docNumber,
+        kycDocImageUrl: docLocked ? existing.kycDocImageUrl : (docImageUrl ?? null),
+        passportPhotoUrl: passportPhotoUrl ?? existing.passportPhotoUrl ?? null,
         kycStatus: "PENDING",
         kycReviewNote: null,
         kycReviewedAt: null,

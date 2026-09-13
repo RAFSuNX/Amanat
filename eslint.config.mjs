@@ -18,6 +18,13 @@ const eslintConfig = defineConfig([
     files: ["tests/**/*.ts"],
     rules: { "@typescript-eslint/no-explicit-any": "off" },
   },
+  // Images are served from Cloudflare R2 (a CDN) or are arbitrary user uploads
+  // (KYC documents, receipts, beneficiary photos). Next's server-side image
+  // optimizer adds load without benefit for already-CDN'd assets and needs
+  // per-host config for arbitrary uploads, so plain <img> is the right choice.
+  {
+    rules: { "@next/next/no-img-element": "off" },
+  },
 ]);
 
 export default eslintConfig;

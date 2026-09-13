@@ -47,12 +47,16 @@ try {
 
 // 6. Required npm scripts exist.
 const pkg = JSON.parse(readFileSync("package.json", "utf8"))
-for (const s of ["build", "test", "typecheck", "db:migrate", "db:audit:migrate"])
-  pkg.scripts?.[s] ? ok(`script "${s}" present`) : fail(`package.json script "${s}" missing`)
+for (const s of ["build", "test", "typecheck", "db:migrate", "db:audit:migrate"]) {
+  if (pkg.scripts?.[s]) ok(`script "${s}" present`)
+  else fail(`package.json script "${s}" missing`)
+}
 
 // 7. Drizzle configs exist.
-for (const f of ["drizzle.config.ts", "drizzle.audit.config.ts"])
-  existsSync(f) ? ok(`${f} present`) : fail(`${f} missing`)
+for (const f of ["drizzle.config.ts", "drizzle.audit.config.ts"]) {
+  if (existsSync(f)) ok(`${f} present`)
+  else fail(`${f} missing`)
+}
 
 if (problems.length > 0) {
   console.error(`\ndoctor failed with ${problems.length} problem(s)\n`)

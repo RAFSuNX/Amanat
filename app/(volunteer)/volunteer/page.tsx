@@ -1,6 +1,6 @@
 import { getSession } from "@/lib/session"
 import { db } from "@/db"
-import { beneficiaries, distributionAllotments, distributionCycles } from "@/db/schema"
+import { beneficiaries, distributionAllotments } from "@/db/schema"
 import { and, eq, sql } from "drizzle-orm"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import Link from "next/link"

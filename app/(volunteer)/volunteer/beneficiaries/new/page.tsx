@@ -108,7 +108,6 @@ export default function NewBeneficiaryPage() {
   }
 
   const stepLabels = STEPS
-  const availableDistricts = district && !DISTRICTS[division]?.includes(district) ? [] : (DISTRICTS[division] ?? [])
 
   return (
     <div className="max-w-xl flex flex-col gap-6">

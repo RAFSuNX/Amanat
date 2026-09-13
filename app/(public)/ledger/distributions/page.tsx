@@ -1,12 +1,11 @@
 export const dynamic = "force-dynamic"
 
 import { db } from "@/db"
-import { distributionCycles, distributionAllotments, beneficiaries } from "@/db/schema"
+import { distributionCycles, distributionAllotments } from "@/db/schema"
 import { eq, sql, desc } from "drizzle-orm"
 import { Badge } from "@/components/ui/badge"
 import Link from "next/link"
 import { PublicNav } from "@/components/public-nav"
-import { Button } from "@/components/ui/button"
 
 export default async function LedgerDistributionsPage() {
   const cycles = await db.query.distributionCycles.findMany({

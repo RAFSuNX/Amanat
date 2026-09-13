@@ -9,7 +9,6 @@ import {
 import { Badge } from "@/components/ui/badge"
 import Link from "next/link"
 import { PublicNav } from "@/components/public-nav"
-import { Button } from "@/components/ui/button"
 import { DonationQuickView } from "./donation-modal"
 
 function maskRef(ref: string) {

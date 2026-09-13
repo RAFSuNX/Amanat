@@ -4,9 +4,7 @@ import { db } from "@/db"
 import { users, volunteerProfiles } from "@/db/schema"
 import { eq } from "drizzle-orm"
 import { Badge } from "@/components/ui/badge"
-import Link from "next/link"
 import { PublicNav } from "@/components/public-nav"
-import { Button } from "@/components/ui/button"
 
 export default async function LedgerVolunteersPage() {
   const volunteers = await db

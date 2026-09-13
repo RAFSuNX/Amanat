@@ -6,7 +6,7 @@ import { requireAdmin } from "@/lib/session"
 import { log } from "@/lib/audit"
 import { calculateDistribution } from "@/lib/distribution"
 import { isCycleAction, overrideSchema } from "@/lib/contracts"
-import { finalAmount, sumFinal, poolCap, exceedsPool } from "@/lib/allotment"
+import { sumFinal, poolCap, exceedsPool } from "@/lib/allotment"
 
 export async function POST(
   req: NextRequest,

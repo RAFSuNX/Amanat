@@ -137,7 +137,7 @@ export default async function LandingPage() {
 
         {/* Steps fill the remaining height with justify-between */}
         <div className="flex-1 flex flex-col justify-between mt-10 pb-2">
-          {t.how.steps.map((s, i) => (
+          {t.how.steps.map((s) => (
             <div
               key={s.n}
               className="flex items-center gap-12 border-t border-border/40 pt-6 pb-4"

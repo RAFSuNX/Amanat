@@ -84,7 +84,6 @@ export default function DonatePage() {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [session])
   const [isAnonymous, setIsAnonymous] = useState(false)
-  const [receiptFile, setReceiptFile] = useState<File | null>(null)
   const [receiptUrl, setReceiptUrl] = useState("")
   const [receiptUploading, setReceiptUploading] = useState(false)
   const [loading, setLoading] = useState(false)
@@ -262,13 +261,13 @@ export default function DonatePage() {
                 <div className="flex items-center gap-3 border border-primary/30 rounded px-3 py-2 bg-primary/5">
                   <img src={receiptUrl} alt="Receipt" className="w-10 h-10 object-cover rounded border shrink-0" />
                   <p className="text-xs text-primary flex-1">Receipt uploaded</p>
-                  <button type="button" onClick={() => { setReceiptUrl(""); setReceiptFile(null) }}
+                  <button type="button" onClick={() => setReceiptUrl("")}
                     className="text-[10px] text-muted-foreground underline underline-offset-2">Remove</button>
                 </div>
               ) : (
                 <div className="flex flex-col gap-1">
                   <Input type="file" accept="image/*"
-                    onChange={(e) => { const f = e.target.files?.[0]; if (f) { setReceiptFile(f); uploadReceipt(f) } }} />
+                    onChange={(e) => { const f = e.target.files?.[0]; if (f) uploadReceipt(f) }} />
                   {receiptUploading && <p className="text-[10px] text-muted-foreground">Uploading...</p>}
                 </div>
               )}

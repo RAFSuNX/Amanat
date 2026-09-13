@@ -11,7 +11,7 @@ export function KycForm({
   existing,
 }: {
   profileId?: number
-  existing?: { legalName?: string; phone?: string; docType?: string; docNumber?: string; docImageUrl?: string }
+  existing?: { legalName?: string; phone?: string; docType?: string; docNumber?: string; docImageUrl?: string; passportPhotoUrl?: string }
 }) {
   const router = useRouter()
   const [legalName, setLegalName] = useState(existing?.legalName ?? "")
@@ -20,7 +20,10 @@ export function KycForm({
   const [docNumber, setDocNumber] = useState(existing?.docNumber ?? "")
   const [file, setFile] = useState<File | null>(null)
   const [passportFile, setPassportFile] = useState<File | null>(null)
-  const [passportPhotoUrl, setPassportPhotoUrl] = useState(existing?.docImageUrl ? "" : "")
+  const [passportPhotoUrl] = useState(existing?.passportPhotoUrl ?? "")
+  // The identity document (and the name that must match it) is write-once. The
+  // passport photo (avatar) stays editable.
+  const docLocked = !!existing?.docImageUrl
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState("")
   const [uploadWarning, setUploadWarning] = useState("")
@@ -107,9 +110,12 @@ export function KycForm({
           value={legalName}
           onChange={(e) => setLegalName(e.target.value)}
           placeholder="Exactly as written on your NID or passport"
+          disabled={docLocked}
         />
         <p className="text-[10px] text-muted-foreground">
-          This will become your official name on your Amanat profile.
+          {docLocked
+            ? "Locked — must match your submitted document."
+            : "This will become your official name on your Amanat profile."}
         </p>
       </div>
 
@@ -131,7 +137,8 @@ export function KycForm({
         <select
           value={docType}
           onChange={(e) => setDocType(e.target.value)}
-          className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
+          disabled={docLocked}
+          className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm disabled:opacity-60"
         >
           <option value="">Select type</option>
           <option value="NID">National ID (NID)</option>
@@ -146,41 +153,54 @@ export function KycForm({
           value={docNumber}
           onChange={(e) => setDocNumber(e.target.value)}
           placeholder="Enter your document number"
+          disabled={docLocked}
         />
       </div>
 
       <div className="flex flex-col gap-2">
         <div className="flex items-center justify-between">
           <Label>Document Photo *</Label>
-          <span className="text-[10px] text-muted-foreground">Required</span>
+          <span className="text-[10px] text-muted-foreground">{docLocked ? "Locked" : "Required"}</span>
         </div>
-        {existing?.docImageUrl && (
-          <p className="text-xs text-muted-foreground">Already uploaded. Select a new file to replace.</p>
+        {docLocked ? (
+          <div className="flex items-center gap-3 rounded border border-border/60 bg-muted/30 p-3">
+            <a href={existing!.docImageUrl} target="_blank" rel="noreferrer" className="text-xs text-primary underline">
+              View submitted document
+            </a>
+            <span className="text-[10px] text-muted-foreground">On record — cannot be changed.</span>
+          </div>
+        ) : (
+          <>
+            <Input
+              type="file"
+              accept="image/*,.pdf"
+              onChange={(e) => setFile(e.target.files?.[0] ?? null)}
+            />
+            <p className="text-[10px] text-muted-foreground">
+              Upload a clear photo of your NID, passport, or driving license.
+            </p>
+          </>
         )}
-        <Input
-          type="file"
-          accept="image/*,.pdf"
-          onChange={(e) => setFile(e.target.files?.[0] ?? null)}
-          
-        />
-        <p className="text-[10px] text-muted-foreground">
-          Upload a clear photo of your NID, passport, or driving license.
-        </p>
       </div>
 
       <div className="flex flex-col gap-2">
         <div className="flex items-center justify-between">
-          <Label>Your Passport-Size Photo *</Label>
-          <span className="text-[10px] text-muted-foreground">Required</span>
+          <Label>Your Passport-Size Photo (Avatar) *</Label>
+          <span className="text-[10px] text-muted-foreground">{passportPhotoUrl ? "Editable" : "Required"}</span>
         </div>
+        {passportPhotoUrl && (
+          <div className="flex items-center gap-3">
+            <img src={passportPhotoUrl} alt="Your photo" className="w-12 h-12 object-cover rounded border" />
+            <span className="text-xs text-muted-foreground">On record. Select a new file to replace.</span>
+          </div>
+        )}
         <Input
           type="file"
           accept="image/*"
           onChange={(e) => setPassportFile(e.target.files?.[0] ?? null)}
-          
         />
         <p className="text-[10px] text-muted-foreground">
-          A clear face photo of yourself. This is kept on record for identity verification.
+          A clear face photo of yourself. You can update this anytime.
         </p>
       </div>
 
