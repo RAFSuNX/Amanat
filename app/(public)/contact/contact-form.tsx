@@ -106,6 +106,17 @@ export function ContactForm() {
           {loading ? "Sending..." : "Send Message"}
         </Button>
       </form>
+
+      {/* Payment gateway partnership banner */}
+      <div className="mt-8 border border-primary/30 rounded-lg p-5 bg-primary/5 flex flex-col gap-2">
+        <p className="text-xs font-semibold uppercase tracking-[0.12em] text-primary">Payment Gateway Partnership</p>
+        <p className="text-sm font-medium leading-snug">
+          We are looking for help integrating bKash, Nagad, or SSLCommerz.
+        </p>
+        <p className="text-xs text-muted-foreground leading-relaxed">
+          If you can assist with payment gateway integration, please use the email form above and select <strong>Payment gateway partnership</strong> as the topic. We would love to hear from you.
+        </p>
+      </div>
     </div>
   )
 }
