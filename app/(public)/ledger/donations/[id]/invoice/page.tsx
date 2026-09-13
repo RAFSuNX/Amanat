@@ -240,7 +240,7 @@ export default async function InvoicePage({
                 {/* Signature space */}
                 <div style={{ height: "32px" }} />
                 {/* Signature line */}
-                <div style={{ width: "160px", borderTop: "1px solid #3B5E45", paddingTop: "6px" }}>
+                <div style={{ width: "160px", borderTop: "2px dotted #3B5E45", paddingTop: "6px" }}>
                   <p style={{ fontSize: "0.72rem", fontWeight: "600", color: "#1A2E20", fontFamily: "system-ui, sans-serif", textAlign: "right" }}>
                     {confirmedByName ?? "Amanat Admin"}
                   </p>
