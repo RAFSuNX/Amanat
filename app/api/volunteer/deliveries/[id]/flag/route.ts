@@ -4,15 +4,7 @@ import { distributionAllotments, distributionCycles, beneficiaries } from "@/db/
 import { eq } from "drizzle-orm"
 import { requireVolunteer } from "@/lib/session"
 import { log } from "@/lib/audit"
-import { z } from "zod"
-
-// Volunteer requests a different amount for a family than the algorithm calculated.
-// A note (reason) is required; a receipt image is optional supporting evidence.
-const schema = z.object({
-  note: z.string().trim().min(3, "A reason is required."),
-  requestedAmount: z.coerce.number().min(0).optional(),
-  receiptUrl: z.string().url().optional(),
-})
+import { volunteerRequestSchema } from "@/lib/contracts"
 
 export async function POST(
   request: NextRequest,
@@ -24,7 +16,7 @@ export async function POST(
   const { id } = await params
   const allotmentId = Number(id)
 
-  const parsed = schema.safeParse(await request.json())
+  const parsed = volunteerRequestSchema.safeParse(await request.json())
   if (!parsed.success)
     return NextResponse.json({ error: parsed.error.issues[0].message }, { status: 400 })
   const { note, requestedAmount, receiptUrl } = parsed.data

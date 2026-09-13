@@ -8,6 +8,7 @@ import { Badge } from "@/components/ui/badge"
 import {
   Table, TableBody, TableCell, TableHead, TableHeader, TableRow,
 } from "@/components/ui/table"
+import { finalAmount } from "@/lib/allotment"
 
 type Row = {
   id: number
@@ -32,7 +33,7 @@ type Cycle = {
 }
 
 const money = (n: number) => `${n.toLocaleString("en-BD", { maximumFractionDigits: 2 })} BDT`
-const finalOf = (r: Row) => parseFloat(r.manualOverrideAmount ?? r.allocatedAmount ?? "0")
+const finalOf = (r: Row) => finalAmount(r)
 
 export function CycleManage({ cycle, rows }: { cycle: Cycle; rows: Row[] }) {
   const router = useRouter()

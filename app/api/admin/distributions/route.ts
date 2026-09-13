@@ -3,20 +3,13 @@ import { db } from "@/db"
 import { distributionCycles } from "@/db/schema"
 import { requireAdmin } from "@/lib/session"
 import { log } from "@/lib/audit"
-import { z } from "zod"
-
-const schema = z.object({
-  period: z.string().regex(/^\d{4}-\d{2}$/, "Period must be YYYY-MM"),
-  totalPool: z.coerce.number().positive("Pool must be greater than zero"),
-  specialDeductionTotal: z.coerce.number().min(0).optional().default(0),
-  notes: z.string().max(500).optional(),
-})
+import { createCycleSchema } from "@/lib/contracts"
 
 export async function POST(req: NextRequest) {
   const session = await requireAdmin()
   if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
 
-  const parsed = schema.safeParse(await req.json())
+  const parsed = createCycleSchema.safeParse(await req.json())
   if (!parsed.success) {
     return NextResponse.json({ error: parsed.error.issues[0].message }, { status: 400 })
   }

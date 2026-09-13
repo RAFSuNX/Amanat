@@ -1,4 +1,4 @@
-name: Build and push Docker image to GHCR
+name: CI and build
 
 on:
   push:
@@ -13,12 +13,74 @@ env:
   IMAGE_NAME: ${{ github.repository }}
 
 jobs:
-  build-and-push:
+  # ── Stage 1: fast structural checks (the "doctor") ──────────────────────────
+  # Repo sanity (migration journals, .env not tracked, scripts present) + lint +
+  # typecheck. Nothing else runs until this passes.
+  checks:
     runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - name: Install deps
+        run: npm ci --no-audit --no-fund
+        timeout-minutes: 6
+      - name: Doctor
+        run: npm run doctor
+      - name: Lint
+        run: npm run lint
+      - name: Typecheck
+        run: npm run typecheck
+
+  # ── Stage 2: full test suite (unit + real-postgres integration) ─────────────
+  # Runs only if checks pass. A live Postgres service backs the integration tests
+  # so the actual SQL / distribution math is exercised, not mocked.
+  test:
+    needs: checks
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    services:
+      postgres:
+        image: postgres:17-alpine
+        env:
+          POSTGRES_USER: amanat
+          POSTGRES_PASSWORD: test
+          POSTGRES_DB: amanat_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U amanat"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 20
+    env:
+      TEST_DATABASE_URL: postgresql://amanat:test@localhost:5432/amanat_test
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - name: Install deps
+        run: npm ci --no-audit --no-fund
+        timeout-minutes: 6
+      - name: Run tests
+        run: npm test
+        timeout-minutes: 8
+
+  # ── Stage 3: build & push images ────────────────────────────────────────────
+  # Runs only if BOTH checks and tests pass. Per-step timeouts so a hung arm64
+  # build under QEMU fails fast instead of stalling the job for ~50 min.
+  build-and-push:
+    needs: test
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
     permissions:
       contents: read
       packages: write
-
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -49,6 +111,7 @@ jobs:
 
       - name: Build and push app
         uses: docker/build-push-action@v5
+        timeout-minutes: 40
         with:
           context: .
           platforms: linux/amd64,linux/arm64
@@ -69,6 +132,7 @@ jobs:
 
       - name: Build and push migrate image
         uses: docker/build-push-action@v5
+        timeout-minutes: 25
         with:
           context: .
           target: migrator
@@ -90,6 +154,7 @@ jobs:
 
       - name: Build and push backup image
         uses: docker/build-push-action@v5
+        timeout-minutes: 25
         with:
           context: .
           file: docker/Dockerfile.backup

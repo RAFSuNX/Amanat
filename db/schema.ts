@@ -388,3 +388,42 @@ export const distributionCyclesRelations = relations(
     specialApplications: many(specialNeedApplications),
   })
 )
+
+// Inverse ("one") relations — required for drizzle's relational queries
+// (e.g. beneficiaries.findMany({ with: { members, needAssessments } }) in
+// calculateDistribution) to infer the join keys.
+export const beneficiaryMembersRelations = relations(beneficiaryMembers, ({ one }) => ({
+  beneficiary: one(beneficiaries, {
+    fields: [beneficiaryMembers.beneficiaryId],
+    references: [beneficiaries.id],
+  }),
+}))
+
+export const needAssessmentsRelations = relations(needAssessments, ({ one }) => ({
+  beneficiary: one(beneficiaries, {
+    fields: [needAssessments.beneficiaryId],
+    references: [beneficiaries.id],
+  }),
+}))
+
+export const distributionAllotmentsRelations = relations(distributionAllotments, ({ one }) => ({
+  cycle: one(distributionCycles, {
+    fields: [distributionAllotments.cycleId],
+    references: [distributionCycles.id],
+  }),
+  beneficiary: one(beneficiaries, {
+    fields: [distributionAllotments.beneficiaryId],
+    references: [beneficiaries.id],
+  }),
+}))
+
+export const specialNeedApplicationsRelations = relations(specialNeedApplications, ({ one }) => ({
+  beneficiary: one(beneficiaries, {
+    fields: [specialNeedApplications.beneficiaryId],
+    references: [beneficiaries.id],
+  }),
+  submittedBy: one(users, {
+    fields: [specialNeedApplications.submittedByVolunteerId],
+    references: [users.id],
+  }),
+}))

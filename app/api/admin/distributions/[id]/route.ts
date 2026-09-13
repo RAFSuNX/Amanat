@@ -5,9 +5,8 @@ import { eq, and, inArray } from "drizzle-orm"
 import { requireAdmin } from "@/lib/session"
 import { log } from "@/lib/audit"
 import { calculateDistribution } from "@/lib/distribution"
-
-const final = (a: { manualOverrideAmount: string | null; allocatedAmount: string | null }) =>
-  parseFloat(a.manualOverrideAmount ?? a.allocatedAmount ?? "0")
+import { isCycleAction, overrideSchema } from "@/lib/contracts"
+import { finalAmount, sumFinal, poolCap, exceedsPool } from "@/lib/allotment"
 
 export async function POST(
   req: NextRequest,
@@ -19,7 +18,11 @@ export async function POST(
   const { id } = await params
   const cycleId = Number(id)
   const body = await req.json().catch(() => ({}))
-  const action = body.action as string
+
+  // Exact contract: only the defined actions are accepted, matched literally.
+  if (!isCycleAction(body.action))
+    return NextResponse.json({ error: "Unknown action" }, { status: 400 })
+  const action = body.action
 
   const cycle = await db.query.distributionCycles.findFirst({
     where: eq(distributionCycles.id, cycleId),
@@ -54,10 +57,10 @@ export async function POST(
     case "override": {
       if (cycle.status !== "ADMIN_REVIEW")
         return NextResponse.json({ error: "Overrides are only allowed during admin review." }, { status: 400 })
-      const allotmentId = Number(body.allotmentId)
-      const amount = Number(body.amount)
-      if (!Number.isFinite(amount) || amount < 0)
-        return NextResponse.json({ error: "Amount must be zero or more." }, { status: 400 })
+      const parsed = overrideSchema.safeParse(body)
+      if (!parsed.success)
+        return NextResponse.json({ error: parsed.error.issues[0].message }, { status: 400 })
+      const { allotmentId, amount } = parsed.data
 
       const allotment = await db.query.distributionAllotments.findFirst({
         where: and(
@@ -91,10 +94,10 @@ export async function POST(
       const allotments = await db.query.distributionAllotments.findMany({
         where: eq(distributionAllotments.cycleId, cycleId),
       })
-      const cap = parseFloat(cycle.totalPool) - parseFloat(cycle.specialDeductionTotal ?? "0")
-      const totalFinal = allotments.reduce((s, a) => s + final(a), 0)
+      const cap = poolCap(cycle.totalPool, cycle.specialDeductionTotal)
+      const totalFinal = sumFinal(allotments)
 
-      if (totalFinal > cap + 0.001) {
+      if (exceedsPool(totalFinal, cap)) {
         return NextResponse.json({
           error: `Total allocation (${totalFinal.toFixed(2)} BDT) exceeds the available pool (${cap.toFixed(2)} BDT). Reduce amounts before activating.`,
           totalFinal, cap,

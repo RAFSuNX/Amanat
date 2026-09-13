@@ -4,7 +4,9 @@ WORKDIR /app
 FROM base AS deps
 RUN apk add --no-cache libc6-compat
 COPY package.json package-lock.json ./
-RUN npm ci --ignore-scripts
+# --no-audit --no-fund avoid extra registry round-trips that frequently hang
+# under arm64 QEMU emulation.
+RUN npm ci --ignore-scripts --no-audit --no-fund
 
 FROM base AS builder
 COPY --from=deps /app/node_modules ./node_modules
