@@ -3,7 +3,8 @@
 
 export async function register() {
   if (process.env.NEXT_RUNTIME === "nodejs") {
-    const { validateEnv } = await import("./lib/env")
-    validateEnv()
+    const { validateEnv, checkConnectivity } = await import("./lib/env")
+    validateEnv()            // keys present + values real (not placeholders)
+    await checkConnectivity() // DB/Redis/R2 actually reachable
   }
 }

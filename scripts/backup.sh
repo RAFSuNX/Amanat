@@ -6,6 +6,9 @@ LOG_PREFIX="[backup ${TIMESTAMP}]"
 
 echo "${LOG_PREFIX} Starting database backup to Supabase"
 
+# Fail fast if any database is unreachable, before touching the destination.
+/backup-preflight.sh
+
 # ── Production database → Supabase backup DB ──────────────────────────────
 PROD_FILE="/tmp/amanat_prod_${TIMESTAMP}.dump"
 

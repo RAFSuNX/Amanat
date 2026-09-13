@@ -1,0 +1,18 @@
+# Never let secrets or local cruft enter the build context / image.
+.env
+.env.*
+!.env.example
+
+# Not needed in the image (and huge / slow to send as context)
+node_modules
+.next
+.git
+.gitignore
+.github
+npm-debug.log*
+*.log
+
+# Editor / docs
+.vscode
+.idea
+*.md

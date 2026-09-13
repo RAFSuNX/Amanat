@@ -20,7 +20,9 @@ COPY --from=deps /app/node_modules ./node_modules
 COPY package.json package-lock.json ./
 COPY drizzle.config.ts drizzle.audit.config.ts ./
 COPY db ./db
-CMD ["sh", "-c", "npm run db:migrate && npm run db:audit:migrate"]
+COPY scripts/preflight.mjs ./scripts/preflight.mjs
+# Preflight checks the DBs are reachable, then applies both migration sets.
+CMD ["sh", "-c", "node scripts/preflight.mjs && npm run db:migrate && npm run db:audit:migrate"]
 
 FROM base AS runner
 ENV NODE_ENV=production
