@@ -69,9 +69,9 @@ export default async function LandingPage() {
         </nav>
 
         {/* Hero body */}
-        <div className="flex-1 w-full grid items-center px-[5vw] md:px-10 py-8 md:py-12 grid-cols-1 md:grid-cols-[3fr_1fr]" style={{ gap: "5vw" }}>
+        <div className="flex-1 w-full grid items-center px-[5vw] md:px-10 py-6 md:py-12 grid-cols-1 md:grid-cols-[3fr_1fr]" style={{ gap: "5vw" }}>
           {/* Left: content */}
-          <div className="flex flex-col gap-6 md:gap-8">
+          <div className="flex flex-col gap-4 md:gap-8">
             <p className="text-xs tracking-[0.22em] uppercase text-primary font-medium">
               {t.hero.eyebrow}
             </p>
@@ -94,7 +94,7 @@ export default async function LandingPage() {
             </div>
 
             {/* Stats — shown inline below CTAs on mobile, hidden here on desktop (shown in right panel) */}
-            <div className="flex md:hidden gap-6 border-t border-border/40 pt-6 mt-2">
+            <div className="flex md:hidden gap-6 border-t border-border/40 pt-4 mt-1">
               {[
                 { label: t.stats.totalDonated, value: `${stats.totalDonated.toLocaleString()} BDT`, primary: true },
                 { label: t.stats.familiesActive, value: stats.familiesHelped.toLocaleString(), primary: false },
@@ -150,11 +150,11 @@ export default async function LandingPage() {
         </p>
 
         {/* Steps fill the remaining height with justify-between */}
-        <div className="flex-1 flex flex-col justify-between mt-8 md:mt-10 pb-2">
+        <div className="flex-1 flex flex-col justify-between mt-6 md:mt-10 pb-2">
           {t.how.steps.map((s) => (
             <div
               key={s.n}
-              className="flex flex-col md:flex-row md:items-center md:gap-12 gap-2 border-t border-border/40 pt-5 md:pt-6 pb-3 md:pb-4"
+              className="flex flex-col md:flex-row md:items-center md:gap-12 gap-1 border-t border-border/40 pt-3 md:pt-6 pb-2 md:pb-4"
             >
               {/* Large structural number */}
               <span
@@ -192,15 +192,15 @@ export default async function LandingPage() {
           {t.principles.eyebrow}
         </p>
 
-        {/* Grid — 2 cols on mobile, 3 on desktop */}
+        {/* Grid — 2 cols / 3 rows on mobile, 3 cols / 2 rows on desktop */}
         <div
-          className="flex-1 grid grid-cols-2 md:grid-cols-3 mt-8 md:mt-10 pb-2"
-          style={{ columnGap: "3rem", rowGap: 0 }}
+          className="flex-1 grid grid-cols-2 md:grid-cols-3 grid-rows-3 md:grid-rows-2 mt-6 md:mt-10 pb-2"
+          style={{ columnGap: "2rem", rowGap: 0 }}
         >
           {t.principles.items.map((p) => (
             <div
               key={p.title}
-              className="flex flex-col gap-2 md:gap-3 border-t border-border/40 pt-5 md:pt-8 pb-4 md:pb-0"
+              className="flex flex-col gap-1 md:gap-3 border-t border-border/40 pt-3 md:pt-8 pb-2 md:pb-0"
             >
               <h3
                 className="font-bold tracking-tight leading-tight"
@@ -232,7 +232,7 @@ export default async function LandingPage() {
           </p>
 
           {/* Middle: headline + body + CTAs */}
-          <div className="flex flex-col gap-5 md:gap-7 max-w-2xl">
+          <div className="flex flex-col gap-4 md:gap-7 max-w-2xl">
             <h2
               className="font-bold text-primary-foreground leading-[1.04] tracking-tight"
               style={{ fontSize: "clamp(2rem, 4vw, 3.8rem)" }}
