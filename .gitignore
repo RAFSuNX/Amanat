@@ -46,3 +46,4 @@ db/migrations/meta/
 # editor
 .vscode/
 .idea/
+.env.production
