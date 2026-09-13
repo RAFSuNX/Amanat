@@ -39,7 +39,7 @@ export default async function LandingPage() {
 
   return (
     <div
-      className="landing-scroll w-dvw overflow-y-auto overflow-x-hidden"
+      className="landing-scroll w-dvw overflow-y-auto"
       style={{ scrollBehavior: "smooth" }}
     >
 
