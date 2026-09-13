@@ -331,6 +331,25 @@ export const specialNeedApplications = pgTable("special_need_applications", {
   createdAt: timestamp("created_at").notNull().defaultNow(),
 })
 
+// ─── Audit Logs (append-only, never deleted) ──────────────────────────────────
+
+export const auditLogs = pgTable("audit_logs", {
+  id: serial("id").primaryKey(),
+  // Who
+  userId: text("user_id"),            // nullable: system actions
+  userName: text("user_name"),        // denormalized so renaming doesn't erase history
+  userRole: text("user_role"),
+  // What
+  action: text("action").notNull(),   // e.g. DONATION_CONFIRMED, KYC_APPROVED
+  resourceType: text("resource_type"), // donation | beneficiary | volunteer | distribution | application
+  resourceId: text("resource_id"),
+  details: text("details"),           // JSON string with contextual data
+  // Context
+  ipAddress: text("ip_address"),
+  userAgent: text("user_agent"),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+})
+
 // ─── Relations ─────────────────────────────────────────────────────────────────
 
 export const usersRelations = relations(users, ({ one, many }) => ({

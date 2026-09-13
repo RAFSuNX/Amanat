@@ -3,6 +3,7 @@ import { db } from "@/db"
 import { donations } from "@/db/schema"
 import { eq } from "drizzle-orm"
 import { requireAdmin } from "@/lib/session"
+import { log } from "@/lib/audit"
 
 export async function POST(
   _req: NextRequest,
@@ -12,10 +13,10 @@ export async function POST(
   if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
 
   const { id } = await params
-  await db
-    .update(donations)
-    .set({ status: "REJECTED" })
-    .where(eq(donations.id, Number(id)))
+  await db.update(donations).set({ status: "REJECTED" }).where(eq(donations.id, Number(id)))
+
+  await log({ userId: session.user.id, userName: session.user.name, userRole: "ADMIN",
+    action: "DONATION_REJECTED", resourceType: "donation", resourceId: id, request: _req })
 
   return NextResponse.json({ ok: true })
 }

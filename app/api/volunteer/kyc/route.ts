@@ -4,6 +4,7 @@ import { db } from "@/db"
 import { volunteerProfiles, users } from "@/db/schema"
 import { eq } from "drizzle-orm"
 import { requireVolunteer } from "@/lib/session"
+import { log } from "@/lib/audit"
 
 const schema = z.object({
   legalName: z.string().min(1),
@@ -59,6 +60,10 @@ export async function POST(request: NextRequest) {
       kycStatus: "PENDING",
     })
   }
+
+  await log({ userId: session.user.id, userName: session.user.name, userRole: "VOLUNTEER",
+    action: "KYC_SUBMITTED", resourceType: "volunteer", resourceId: session.user.id,
+    details: { docType }, request })
 
   return NextResponse.json({ ok: true })
 }

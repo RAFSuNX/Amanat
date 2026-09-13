@@ -3,6 +3,7 @@ import { z } from "zod"
 import { db } from "@/db"
 import { donations } from "@/db/schema"
 import { getSession } from "@/lib/session"
+import { log } from "@/lib/audit"
 
 const schema = z.object({
   amount: z.coerce.number().positive(),
@@ -40,6 +41,10 @@ export async function POST(request: NextRequest) {
     receiptImageUrl: data.receiptImageUrl ?? null,
     status: "PENDING",
   })
+
+  await log({ userId: session?.user.id, userName: data.donorName, userRole: session?.user.role as string ?? "GUEST",
+    action: "DONATION_SUBMITTED", resourceType: "donation",
+    details: { amount: data.amount, method: data.method, isAnonymous: data.isAnonymous }, request })
 
   return NextResponse.json({ ok: true }, { status: 201 })
 }
