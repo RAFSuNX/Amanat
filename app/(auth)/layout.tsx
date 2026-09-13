@@ -10,7 +10,7 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
         </Link>
         <div className="flex flex-col gap-5">
           <p className="text-[10px] uppercase tracking-[0.22em] text-primary-foreground/40">
-            The Hope of All of Us
+            The Hope for All of Us
           </p>
           <p
             className="font-bold text-primary-foreground leading-[1.05] tracking-tight"

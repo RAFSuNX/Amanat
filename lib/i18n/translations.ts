@@ -10,7 +10,7 @@ const en = {
     donate: "Donate",
   },
   hero: {
-    eyebrow: "The Hope of All of Us",
+    eyebrow: "The Hope for All of Us",
     headline: "Built on public record. Maintained by volunteers. Sustained by charity.",
     body: "Amanat connects people who want to give with volunteers who help those who genuinely cannot support themselves. Every taka in, every taka out is on public record.",
     ctaDonate: "Make a Donation",
@@ -77,7 +77,7 @@ const en = {
     ledger: "View Ledger",
   },
   footer: {
-    tagline: "The Hope of All of Us",
+    tagline: "The Hope for All of Us",
     donationLedger: "Donation Ledger",
     distributionLedger: "Distribution Ledger",
     signIn: "Sign in",

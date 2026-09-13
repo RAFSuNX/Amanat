@@ -97,7 +97,7 @@ export default async function InvoicePage({
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
               <div style={{ display: "flex", flexDirection: "column", gap: "3px" }}>
                 <p style={{ fontSize: "0.72rem", color: "#3B5E45", letterSpacing: "0.16em", textTransform: "uppercase", fontFamily: "system-ui, sans-serif", fontWeight: "500" }}>
-                  The Hope of All of Us
+                  The Hope for All of Us
                 </p>
                 <p style={{ fontSize: "0.65rem", color: "#9aaea0", letterSpacing: "0.1em", textTransform: "uppercase", fontFamily: "system-ui, sans-serif" }}>
                   Bangladesh

@@ -1,6 +1,6 @@
 # Amanat
 
-**The Hope of All of Us**
+**The Hope for All of Us**
 
 Amanat is a welfare system, not a platform. It exists to connect people who are willing to donate with volunteers who go on the ground to find and support those who genuinely cannot sustain themselves or their families.
 
