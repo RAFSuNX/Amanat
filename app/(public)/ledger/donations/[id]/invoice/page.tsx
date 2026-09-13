@@ -217,24 +217,16 @@ export default async function InvoicePage({
             style={{
               borderTop: "1px solid #d4ddd6",
               padding: "20px 56px 28px",
+              display: "flex",
+              flexDirection: "column",
+              gap: "16px",
             }}
           >
-            {/* Signatory + contact row */}
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "16px" }}>
-              {/* Authorized signatory */}
-              <div style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
-                <div style={{ width: "140px", borderTop: "1px solid #3B5E45", paddingTop: "6px" }}>
-                  <p style={{ fontSize: "0.7rem", fontWeight: "600", color: "#1A2E20", fontFamily: "system-ui, sans-serif" }}>
-                    {confirmedByName ?? "Amanat Admin"}
-                  </p>
-                  <p style={{ fontSize: "0.6rem", color: "#6B8070", fontFamily: "system-ui, sans-serif", letterSpacing: "0.06em", textTransform: "uppercase" }}>
-                    Authorized Signatory
-                  </p>
-                </div>
-              </div>
+            {/* Contact + signatory row — bottom aligned */}
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end" }}>
 
-              {/* Contact info */}
-              <div style={{ textAlign: "right", display: "flex", flexDirection: "column", gap: "2px" }}>
+              {/* Left: contact info */}
+              <div style={{ display: "flex", flexDirection: "column", gap: "2px" }}>
                 <p style={{ fontSize: "0.6rem", color: "#9aaea0", fontFamily: "system-ui, sans-serif", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: "4px" }}>
                   Contact
                 </p>
@@ -242,9 +234,24 @@ export default async function InvoicePage({
                 <p style={{ fontSize: "0.65rem", color: "#6B8070", fontFamily: "system-ui, sans-serif" }}>contact@amanat.org</p>
                 <p style={{ fontSize: "0.65rem", color: "#6B8070", fontFamily: "system-ui, sans-serif" }}>amanat.org</p>
               </div>
+
+              {/* Right: signature block — bottom aligned */}
+              <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", gap: "0px" }}>
+                {/* Signature space */}
+                <div style={{ height: "32px" }} />
+                {/* Signature line */}
+                <div style={{ width: "160px", borderTop: "1px solid #3B5E45", paddingTop: "6px" }}>
+                  <p style={{ fontSize: "0.72rem", fontWeight: "600", color: "#1A2E20", fontFamily: "system-ui, sans-serif", textAlign: "right" }}>
+                    {confirmedByName ?? "Amanat Admin"}
+                  </p>
+                  <p style={{ fontSize: "0.58rem", color: "#6B8070", fontFamily: "system-ui, sans-serif", letterSpacing: "0.08em", textTransform: "uppercase", textAlign: "right", marginTop: "2px" }}>
+                    Authorized Signatory
+                  </p>
+                </div>
+              </div>
             </div>
 
-            {/* Bottom note */}
+            {/* Bottom transparency note */}
             <p style={{ fontSize: "0.6rem", color: "#c0d4c5", fontFamily: "system-ui, sans-serif", lineHeight: "1.6", borderTop: "1px solid #edf2ee", paddingTop: "10px" }}>
               Amanat operates as a transparent welfare system. Every taka in and every taka out is publicly accounted for.
               This receipt is verifiable at amanat.org/ledger using the transaction reference above.
