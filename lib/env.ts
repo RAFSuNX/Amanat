@@ -2,23 +2,23 @@
 // ALL keys must be present. Missing any = hard crash with a clear message.
 
 const REQUIRED_KEYS = [
-  // Core
+  // Core databases
   "DATABASE_URL",
   "AUDIT_DATABASE_URL",
   "REDIS_URL",
-  // Auth
-  "BETTER_AUTH_SECRET",
-  "BETTER_AUTH_URL",
   // Remote databases (Supabase)
   "BACKUP_DATABASE_URL",
   "REMOTE_PUBLIC_LEDGER_DATABASE_URL",
+  // Auth
+  "BETTER_AUTH_SECRET",
+  "BETTER_AUTH_URL",
   // File storage (Cloudflare R2)
   "R2_ENDPOINT",
   "R2_ACCESS_KEY_ID",
   "R2_SECRET_ACCESS_KEY",
   "R2_BUCKET_NAME",
   "R2_PUBLIC_URL",
-  // Email
+  // Email (Resend)
   "RESEND_API_KEY",
   "RESEND_FROM_EMAIL",
 ] as const
