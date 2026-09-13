@@ -95,10 +95,10 @@ export default async function InvoicePage({
                 </p>
               </div>
               <div style={{ textAlign: "right", display: "flex", flexDirection: "column", gap: "3px" }}>
-                <p style={{ fontSize: "0.6rem", color: "#9aaea0", textTransform: "uppercase", letterSpacing: "0.12em", fontFamily: "system-ui, sans-serif" }}>
+                <p style={{ fontSize: "0.72rem", color: "#3B5E45", letterSpacing: "0.16em", textTransform: "uppercase", fontFamily: "system-ui, sans-serif", fontWeight: "500" }}>
                   Official Donation Receipt
                 </p>
-                <p style={{ fontSize: "1.05rem", fontWeight: "700", color: "#1A2E20", fontFamily: "system-ui, monospace", letterSpacing: "0.04em" }}>
+                <p style={{ fontSize: "0.65rem", color: "#9aaea0", letterSpacing: "0.1em", textTransform: "uppercase", fontFamily: "system-ui, sans-serif", fontWeight: "400" }}>
                   {receipt}
                 </p>
               </div>
