@@ -1,5 +1,5 @@
 import { db } from "@/db"
-import { donations } from "@/db/schema"
+import { donations, users } from "@/db/schema"
 import { eq } from "drizzle-orm"
 import { notFound } from "next/navigation"
 import { PrintButton } from "./print-button"
@@ -45,6 +45,15 @@ export default async function InvoicePage({
   if (!donation || donation.status !== "CONFIRMED") notFound()
 
   const receipt = receiptNumber(donation.id, donation.confirmedAt ?? donation.createdAt)
+
+  // Fetch confirming admin name
+  let confirmedByName: string | null = null
+  if (donation.confirmedByAdminId) {
+    const admin = await db.query.users.findFirst({
+      where: eq(users.id, donation.confirmedByAdminId),
+    })
+    confirmedByName = admin?.name ?? null
+  }
   const donorName = donation.isAnonymous ? "Anonymous Donor" : donation.donorName
   const confirmedAt = donation.confirmedAt ?? donation.createdAt
 
@@ -206,20 +215,39 @@ export default async function InvoicePage({
           {/* Footer */}
           <div
             style={{
-              marginTop: "auto",
               borderTop: "1px solid #d4ddd6",
               padding: "20px 56px 28px",
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "flex-end",
             }}
           >
-            <p style={{ fontSize: "0.65rem", color: "#b0c4b5", fontFamily: "system-ui, sans-serif", maxWidth: "260px", lineHeight: "1.6" }}>
+            {/* Signatory + contact row */}
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "16px" }}>
+              {/* Authorized signatory */}
+              <div style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
+                <div style={{ width: "140px", borderTop: "1px solid #3B5E45", paddingTop: "6px" }}>
+                  <p style={{ fontSize: "0.7rem", fontWeight: "600", color: "#1A2E20", fontFamily: "system-ui, sans-serif" }}>
+                    {confirmedByName ?? "Amanat Admin"}
+                  </p>
+                  <p style={{ fontSize: "0.6rem", color: "#6B8070", fontFamily: "system-ui, sans-serif", letterSpacing: "0.06em", textTransform: "uppercase" }}>
+                    Authorized Signatory
+                  </p>
+                </div>
+              </div>
+
+              {/* Contact info */}
+              <div style={{ textAlign: "right", display: "flex", flexDirection: "column", gap: "2px" }}>
+                <p style={{ fontSize: "0.6rem", color: "#9aaea0", fontFamily: "system-ui, sans-serif", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: "4px" }}>
+                  Contact
+                </p>
+                <p style={{ fontSize: "0.65rem", color: "#6B8070", fontFamily: "system-ui, sans-serif" }}>+880 1X-XXXX-XXXX</p>
+                <p style={{ fontSize: "0.65rem", color: "#6B8070", fontFamily: "system-ui, sans-serif" }}>contact@amanat.org</p>
+                <p style={{ fontSize: "0.65rem", color: "#6B8070", fontFamily: "system-ui, sans-serif" }}>amanat.org</p>
+              </div>
+            </div>
+
+            {/* Bottom note */}
+            <p style={{ fontSize: "0.6rem", color: "#c0d4c5", fontFamily: "system-ui, sans-serif", lineHeight: "1.6", borderTop: "1px solid #edf2ee", paddingTop: "10px" }}>
               Amanat operates as a transparent welfare system. Every taka in and every taka out is publicly accounted for.
-            </p>
-            <p style={{ fontSize: "0.65rem", color: "#b0c4b5", fontFamily: "system-ui, sans-serif", textAlign: "right" }}>
-              {receipt}<br />
-              <span style={{ color: "#d0ddd2" }}>amanat.org</span>
+              This receipt is verifiable at amanat.org/ledger using the transaction reference above.
             </p>
           </div>
 
