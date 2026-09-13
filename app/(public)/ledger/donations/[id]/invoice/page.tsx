@@ -80,15 +80,21 @@ export default async function InvoicePage({
           <div style={{ height: "5px", background: "#3B5E45" }} />
 
           {/* Header */}
-          <div className="px-14 py-8 border-b border-gray-200">
-            <div className="flex items-center justify-between">
-              <div className="flex flex-col gap-1.5">
-                <img src="/logo.png" alt="Amanat" style={{ height: "52px", width: "auto", objectFit: "contain" }} />
-                <p style={{ fontSize: "0.65rem", color: "#6B8070", letterSpacing: "0.12em", textTransform: "uppercase", fontFamily: "system-ui, sans-serif" }}>
-                  The Hope of All of Us &nbsp;·&nbsp; Bangladesh
+          <div className="px-14 pt-10 pb-8 border-b border-gray-200 flex flex-col gap-5">
+            {/* Logo — left aligned, prominent */}
+            <img src="/logo.png" alt="Amanat" style={{ height: "64px", width: "auto", objectFit: "contain", objectPosition: "left" }} />
+
+            {/* Bottom row: tagline/country left, receipt info right — same horizontal line */}
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
+              <div style={{ display: "flex", flexDirection: "column", gap: "3px" }}>
+                <p style={{ fontSize: "0.72rem", color: "#3B5E45", letterSpacing: "0.16em", textTransform: "uppercase", fontFamily: "system-ui, sans-serif", fontWeight: "500" }}>
+                  The Hope of All of Us
+                </p>
+                <p style={{ fontSize: "0.65rem", color: "#9aaea0", letterSpacing: "0.1em", textTransform: "uppercase", fontFamily: "system-ui, sans-serif" }}>
+                  Bangladesh
                 </p>
               </div>
-              <div className="text-right flex flex-col gap-1">
+              <div style={{ textAlign: "right", display: "flex", flexDirection: "column", gap: "3px" }}>
                 <p style={{ fontSize: "0.6rem", color: "#9aaea0", textTransform: "uppercase", letterSpacing: "0.12em", fontFamily: "system-ui, sans-serif" }}>
                   Official Donation Receipt
                 </p>
