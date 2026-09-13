@@ -9,6 +9,9 @@ const REQUIRED_KEYS = [
   // Auth
   "BETTER_AUTH_SECRET",
   "BETTER_AUTH_URL",
+  // Remote databases (Supabase)
+  "BACKUP_DATABASE_URL",
+  "REMOTE_PUBLIC_LEDGER_DATABASE_URL",
   // File storage (Cloudflare R2)
   "R2_ENDPOINT",
   "R2_ACCESS_KEY_ID",

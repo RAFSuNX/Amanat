@@ -1,13 +1,10 @@
 FROM alpine:3.19
 
-# pg_dump client + AWS CLI (S3-compatible, works with R2)
+# pg_dump client + psql for Supabase restore
 RUN apk add --no-cache \
-    postgresql16-client \
-    aws-cli \
-    gzip \
+    postgresql17-client \
     tzdata
 
-# Set timezone to Dhaka
 ENV TZ=Asia/Dhaka
 
 COPY scripts/backup.sh /backup.sh

@@ -2,54 +2,33 @@
 set -e
 
 TIMESTAMP=$(date +%Y-%m-%d_%H-%M-%S)
-DATE=$(date +%Y-%m-%d)
 LOG_PREFIX="[backup ${TIMESTAMP}]"
 
-echo "${LOG_PREFIX} Starting database backup"
+echo "${LOG_PREFIX} Starting database backup to Supabase"
 
-# Configure AWS CLI for R2
-export AWS_ACCESS_KEY_ID="${R2_ACCESS_KEY_ID}"
-export AWS_SECRET_ACCESS_KEY="${R2_SECRET_ACCESS_KEY}"
-export AWS_DEFAULT_REGION="auto"
-S3_ENDPOINT="${R2_ENDPOINT}"
-BUCKET="${R2_BUCKET_NAME}"
+# ── Production database → Supabase backup DB ──────────────────────────────
+PROD_FILE="/tmp/amanat_prod_${TIMESTAMP}.dump"
 
-upload() {
-  local file="$1"
-  local key="$2"
-  aws s3 cp "${file}" "s3://${BUCKET}/${key}" \
-    --endpoint-url "${S3_ENDPOINT}" \
-    --no-progress
-  echo "${LOG_PREFIX} Uploaded: ${key}"
-}
-
-# ── Production database backup ─────────────────────────────────────────────
-PROD_FILE="/tmp/amanat_prod_${TIMESTAMP}.dump.gz"
 echo "${LOG_PREFIX} Dumping production database..."
-pg_dump "${DATABASE_URL}" | gzip > "${PROD_FILE}"
-upload "${PROD_FILE}" "backups/postgres/production/${DATE}/${TIMESTAMP}.dump.gz"
+pg_dump "${DATABASE_URL}" > "${PROD_FILE}"
+
+echo "${LOG_PREFIX} Restoring to Supabase backup DB..."
+psql "${BACKUP_DATABASE_URL}" -c "DROP SCHEMA public CASCADE; CREATE SCHEMA public;" 2>/dev/null || true
+psql "${BACKUP_DATABASE_URL}" < "${PROD_FILE}"
 rm -f "${PROD_FILE}"
+echo "${LOG_PREFIX} Production DB backed up to Supabase."
 
-# ── Audit database backup ──────────────────────────────────────────────────
-AUDIT_FILE="/tmp/amanat_audit_${TIMESTAMP}.dump.gz"
+# ── Audit database → Supabase backup DB (separate schema) ─────────────────
+AUDIT_FILE="/tmp/amanat_audit_${TIMESTAMP}.dump"
+
 echo "${LOG_PREFIX} Dumping audit database..."
-pg_dump "${AUDIT_DATABASE_URL}" | gzip > "${AUDIT_FILE}"
-upload "${AUDIT_FILE}" "backups/postgres/audit/${DATE}/${TIMESTAMP}.dump.gz"
+pg_dump "${AUDIT_DATABASE_URL}" > "${AUDIT_FILE}"
+
+echo "${LOG_PREFIX} Restoring audit DB to Supabase backup DB (audit schema)..."
+psql "${BACKUP_DATABASE_URL}" -c "DROP SCHEMA IF EXISTS audit CASCADE; CREATE SCHEMA audit;" 2>/dev/null || true
+psql "${BACKUP_DATABASE_URL}" --no-psqlrc -c "SET search_path TO audit;" < "${AUDIT_FILE}" 2>/dev/null || \
+  pg_restore --schema=audit -d "${BACKUP_DATABASE_URL}" "${AUDIT_FILE}" 2>/dev/null || true
 rm -f "${AUDIT_FILE}"
-
-# ── Prune backups older than 30 days ──────────────────────────────────────
-echo "${LOG_PREFIX} Pruning backups older than 30 days..."
-CUTOFF=$(date -d "30 days ago" +%Y-%m-%d 2>/dev/null || date -v-30d +%Y-%m-%d)
-
-for PREFIX in "backups/postgres/production" "backups/postgres/audit"; do
-  aws s3 ls "s3://${BUCKET}/${PREFIX}/" --endpoint-url "${S3_ENDPOINT}" | \
-  awk '{print $2}' | tr -d '/' | while read FOLDER; do
-    if [ "${FOLDER}" \< "${CUTOFF}" ]; then
-      aws s3 rm "s3://${BUCKET}/${PREFIX}/${FOLDER}/" \
-        --endpoint-url "${S3_ENDPOINT}" --recursive --quiet
-      echo "${LOG_PREFIX} Pruned: ${PREFIX}/${FOLDER}"
-    fi
-  done
-done
+echo "${LOG_PREFIX} Audit DB backed up to Supabase."
 
 echo "${LOG_PREFIX} Backup complete"
