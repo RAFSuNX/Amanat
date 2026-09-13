@@ -80,19 +80,19 @@ export default async function InvoicePage({
           <div style={{ height: "5px", background: "#3B5E45" }} />
 
           {/* Header */}
-          <div className="px-14 pt-12 pb-8 border-b border-gray-200">
-            <div className="flex items-start justify-between">
-              <div>
-                <img src="/logo.png" alt="Amanat" style={{ height: "60px", width: "auto", objectFit: "contain" }} />
-                <p style={{ fontSize: "0.7rem", color: "#6B8070", letterSpacing: "0.12em", textTransform: "uppercase", marginTop: "4px", fontFamily: "system-ui, sans-serif" }}>
+          <div className="px-14 py-8 border-b border-gray-200">
+            <div className="flex items-center justify-between">
+              <div className="flex flex-col gap-1.5">
+                <img src="/logo.png" alt="Amanat" style={{ height: "52px", width: "auto", objectFit: "contain" }} />
+                <p style={{ fontSize: "0.65rem", color: "#6B8070", letterSpacing: "0.12em", textTransform: "uppercase", fontFamily: "system-ui, sans-serif" }}>
                   The Hope of All of Us &nbsp;·&nbsp; Bangladesh
                 </p>
               </div>
-              <div className="text-right">
-                <p style={{ fontSize: "0.65rem", color: "#9aaea0", textTransform: "uppercase", letterSpacing: "0.1em", fontFamily: "system-ui, sans-serif" }}>
+              <div className="text-right flex flex-col gap-1">
+                <p style={{ fontSize: "0.6rem", color: "#9aaea0", textTransform: "uppercase", letterSpacing: "0.12em", fontFamily: "system-ui, sans-serif" }}>
                   Official Donation Receipt
                 </p>
-                <p style={{ fontSize: "1rem", fontWeight: "600", color: "#1A2E20", marginTop: "4px", fontFamily: "system-ui, monospace", letterSpacing: "0.04em" }}>
+                <p style={{ fontSize: "1.05rem", fontWeight: "700", color: "#1A2E20", fontFamily: "system-ui, monospace", letterSpacing: "0.04em" }}>
                   {receipt}
                 </p>
               </div>
@@ -100,10 +100,10 @@ export default async function InvoicePage({
           </div>
 
           {/* Body */}
-          <div className="px-14 py-10">
+          <div className="px-14 py-8">
 
             {/* Section label */}
-            <p style={{ fontSize: "0.6rem", textTransform: "uppercase", letterSpacing: "0.18em", color: "#9aaea0", fontFamily: "system-ui, sans-serif", marginBottom: "20px" }}>
+            <p style={{ fontSize: "0.6rem", textTransform: "uppercase", letterSpacing: "0.18em", color: "#9aaea0", fontFamily: "system-ui, sans-serif", marginBottom: "16px" }}>
               Donation Details
             </p>
 
@@ -128,24 +128,24 @@ export default async function InvoicePage({
                   <tr key={row.label} style={{ borderBottom: "1px solid #edf2ee" }}>
                     <td
                       style={{
-                        padding: "12px 0",
-                        width: "38%",
-                        fontSize: "0.72rem",
+                        padding: "13px 0",
+                        width: "36%",
+                        fontSize: "0.7rem",
                         textTransform: "uppercase",
                         letterSpacing: "0.1em",
                         color: "#7a9480",
-                        verticalAlign: "top",
-                        paddingTop: "16px",
+                        verticalAlign: "middle",
                       }}
                     >
                       {row.label}
                     </td>
                     <td
                       style={{
-                        padding: "14px 0",
+                        padding: "13px 0",
                         fontSize: "0.88rem",
                         color: "#1A2E20",
                         fontWeight: "500",
+                        verticalAlign: "middle",
                       }}
                     >
                       {row.value}
