@@ -48,9 +48,10 @@ export function KycForm({
     let docImageUrl = existing?.docImageUrl ?? ""
     let finalPassportPhotoUrl = passportPhotoUrl
 
-    async function uploadFile(f: File, folder: string): Promise<string | null> {
+    async function uploadFile(f: File, type: "document" | "portrait"): Promise<string | null> {
       const fd = new FormData()
       fd.append("file", f)
+      fd.append("type", type)
       const res = await fetch("/api/upload/kyc", { method: "POST", body: fd })
       if (!res.ok) return null
       const { url } = await res.json()
@@ -58,13 +59,13 @@ export function KycForm({
     }
 
     if (file) {
-      const url = await uploadFile(file, "kyc")
+      const url = await uploadFile(file, "document")
       if (url) docImageUrl = url
       else setUploadWarning("Document photo could not be uploaded. You can resubmit with a photo later.")
     }
 
     if (passportFile) {
-      const url = await uploadFile(passportFile, "kyc")
+      const url = await uploadFile(passportFile, "portrait")
       if (url) finalPassportPhotoUrl = url
     }
 

@@ -16,7 +16,8 @@ export async function POST(request: NextRequest) {
   }
 
   const ext = file.name.split(".").pop() ?? "jpg"
-  const key = `receipts/receipt_${Date.now()}_${randomUUID().slice(0, 8)}.${ext}`
+  // donations/receipts/{timestamp}-{uuid}.{ext}
+  const key = `donations/receipts/${Date.now()}-${randomUUID().slice(0, 8)}.${ext}`
 
   const buffer = Buffer.from(await file.arrayBuffer())
   const url = await uploadToR2(buffer, key, file.type)
