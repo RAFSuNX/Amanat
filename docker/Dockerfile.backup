@@ -1,9 +1,7 @@
-FROM alpine:3.19
+FROM postgres:17-alpine
 
-# pg_dump client + psql for Supabase restore
-RUN apk add --no-cache \
-    postgresql17-client \
-    tzdata
+# postgres:17-alpine already has pg_dump, psql, and pg_restore
+RUN apk add --no-cache tzdata
 
 ENV TZ=Asia/Dhaka
 

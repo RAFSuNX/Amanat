@@ -6,7 +6,14 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "db:generate": "drizzle-kit generate",
+    "db:migrate": "drizzle-kit migrate",
+    "db:push": "drizzle-kit push",
+    "db:audit:generate": "drizzle-kit generate --config drizzle.audit.config.ts",
+    "db:audit:migrate": "drizzle-kit migrate --config drizzle.audit.config.ts",
+    "db:remote:push": "drizzle-kit push --config drizzle.remote.config.ts",
+    "db:replication:setup": "sh scripts/setup-replication.sh"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.1131.0",
