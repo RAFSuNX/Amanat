@@ -83,17 +83,9 @@ export default async function InvoicePage({
           <div className="px-14 pt-12 pb-8 border-b border-gray-200">
             <div className="flex items-start justify-between">
               <div>
-                <p
-                  className="font-bold tracking-tight"
-                  style={{ fontSize: "1.6rem", color: "#1A2E20", fontFamily: "Georgia, serif", letterSpacing: "-0.02em" }}
-                >
-                  Amanat
-                </p>
-                <p style={{ fontSize: "0.7rem", color: "#6B8070", letterSpacing: "0.12em", textTransform: "uppercase", marginTop: "3px", fontFamily: "system-ui, sans-serif" }}>
-                  The Hope of All of Us
-                </p>
-                <p style={{ fontSize: "0.7rem", color: "#9aaea0", marginTop: "2px", fontFamily: "system-ui, sans-serif" }}>
-                  Bangladesh
+                <img src="/logo.png" alt="Amanat" style={{ height: "60px", width: "auto", objectFit: "contain" }} />
+                <p style={{ fontSize: "0.7rem", color: "#6B8070", letterSpacing: "0.12em", textTransform: "uppercase", marginTop: "4px", fontFamily: "system-ui, sans-serif" }}>
+                  The Hope of All of Us &nbsp;·&nbsp; Bangladesh
                 </p>
               </div>
               <div className="text-right">
