@@ -18,64 +18,92 @@ export function MobileMenu({
 
   useEffect(() => { setMounted(true) }, [])
 
-  // Close when clicking outside
+  // Lock body scroll when menu is open
   useEffect(() => {
-    if (!open) return
-    function handle(e: MouseEvent | TouchEvent) {
-      if (!(e.target as HTMLElement).closest("[data-mobile-menu]")) setOpen(false)
+    if (open) {
+      document.body.style.overflow = "hidden"
+    } else {
+      document.body.style.overflow = ""
     }
-    document.addEventListener("mousedown", handle)
-    document.addEventListener("touchstart", handle)
-    return () => {
-      document.removeEventListener("mousedown", handle)
-      document.removeEventListener("touchstart", handle)
-    }
+    return () => { document.body.style.overflow = "" }
   }, [open])
 
-  const dropdown = (
-    <div
-      data-mobile-menu
-      className="fixed right-4 top-16 w-52 bg-background border border-border rounded shadow-lg z-[9999] flex flex-col py-2"
-    >
-      {links.map((l) => (
-        <Link
-          key={l.href}
-          href={l.href}
-          onClick={() => setOpen(false)}
-          className="px-4 py-3 text-xs hover:bg-muted transition-colors"
-        >
-          {l.label}
-        </Link>
-      ))}
-      {signIn && (
-        <Link href="/login" onClick={() => setOpen(false)}
-          className="px-4 py-3 text-xs hover:bg-muted transition-colors border-t border-border/40 mt-1">
-          Sign in
-        </Link>
-      )}
-      {donateButton && (
-        <Link href="/donate" onClick={() => setOpen(false)}
-          className="mx-3 mt-2 mb-1 px-4 py-2 text-xs bg-primary text-primary-foreground rounded text-center font-medium">
-          Donate
-        </Link>
-      )}
-    </div>
+  const drawer = (
+    <>
+      {/* Full-screen backdrop */}
+      <div
+        className="fixed inset-0 bg-black/40 z-[9998]"
+        onClick={() => setOpen(false)}
+      />
+      {/* Slide-in panel from right */}
+      <div className="fixed top-0 right-0 h-dvh w-72 bg-background border-l border-border/40 z-[9999] flex flex-col shadow-2xl">
+        {/* Header row */}
+        <div className="h-16 px-5 flex items-center justify-between border-b border-border/40 shrink-0">
+          <span className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground">Menu</span>
+          <button
+            type="button"
+            onClick={() => setOpen(false)}
+            aria-label="Close menu"
+            className="p-2 -mr-2"
+          >
+            <span className="block w-5 h-0.5 bg-foreground rotate-45 translate-y-[1px]" />
+            <span className="block w-5 h-0.5 bg-foreground -rotate-45 -translate-y-[1px]" />
+          </button>
+        </div>
+
+        {/* Nav links */}
+        <nav className="flex-1 flex flex-col overflow-y-auto py-2">
+          {links.map((l) => (
+            <Link
+              key={l.href}
+              href={l.href}
+              onClick={() => setOpen(false)}
+              className="px-6 py-4 text-sm text-foreground hover:bg-muted transition-colors border-b border-border/20"
+            >
+              {l.label}
+            </Link>
+          ))}
+          {signIn && (
+            <Link
+              href="/login"
+              onClick={() => setOpen(false)}
+              className="px-6 py-4 text-sm text-muted-foreground hover:bg-muted transition-colors border-b border-border/20"
+            >
+              Sign in
+            </Link>
+          )}
+        </nav>
+
+        {/* Donate CTA at bottom */}
+        {donateButton && (
+          <div className="p-5 border-t border-border/40 shrink-0">
+            <Link
+              href="/donate"
+              onClick={() => setOpen(false)}
+              className="block w-full py-3 bg-primary text-primary-foreground text-sm font-medium rounded text-center"
+            >
+              Donate
+            </Link>
+          </div>
+        )}
+      </div>
+    </>
   )
 
   return (
-    <div data-mobile-menu className="md:hidden">
+    <div className="md:hidden">
       <button
         type="button"
-        onClick={() => setOpen(!open)}
-        aria-label="Menu"
-        className="flex flex-col gap-1.5 p-2"
+        onClick={() => setOpen(true)}
+        aria-label="Open menu"
+        className="flex flex-col justify-center gap-1.5 p-2"
       >
-        <span className={`block w-5 h-0.5 bg-foreground transition-transform ${open ? "rotate-45 translate-y-2" : ""}`} />
-        <span className={`block w-5 h-0.5 bg-foreground transition-opacity ${open ? "opacity-0" : ""}`} />
-        <span className={`block w-5 h-0.5 bg-foreground transition-transform ${open ? "-rotate-45 -translate-y-2" : ""}`} />
+        <span className="block w-5 h-0.5 bg-foreground" />
+        <span className="block w-5 h-0.5 bg-foreground" />
+        <span className="block w-5 h-0.5 bg-foreground" />
       </button>
 
-      {mounted && open && createPortal(dropdown, document.body)}
+      {mounted && open && createPortal(drawer, document.body)}
     </div>
   )
 }
