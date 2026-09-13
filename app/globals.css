@@ -213,6 +213,31 @@ tbody td {
   padding-bottom: 0 !important;
 }
 
+/* Thin custom scrollbar */
+::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: oklch(0.40 0.11 155);
+  border-radius: 999px;
+  opacity: 0.6;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: oklch(0.35 0.11 155);
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: oklch(0.40 0.11 155) transparent;
+}
+
 /* Premium focus ring */
 :focus-visible {
   outline: 2px solid oklch(0.40 0.11 155);
