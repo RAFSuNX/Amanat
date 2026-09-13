@@ -3,6 +3,7 @@ import { z } from "zod"
 import { db } from "@/db"
 import { beneficiaries, beneficiaryMembers, needAssessments } from "@/db/schema"
 import { requireVolunteer } from "@/lib/session"
+import { log } from "@/lib/audit"
 
 const memberSchema = z.object({
   name: z.string().min(1),
@@ -86,6 +87,10 @@ export async function POST(request: NextRequest) {
       status: "ACTIVE",
     })
   })
+
+  await log({ userId: session.user.id, userName: session.user.name, userRole: "VOLUNTEER",
+    action: "BENEFICIARY_REGISTERED", resourceType: "beneficiary",
+    details: { name: d.name, district: d.district, type: d.type }, request })
 
   return NextResponse.json({ ok: true }, { status: 201 })
 }

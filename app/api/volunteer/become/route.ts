@@ -4,6 +4,7 @@ import { db } from "@/db"
 import { users, volunteerProfiles } from "@/db/schema"
 import { eq } from "drizzle-orm"
 import { getSession } from "@/lib/session"
+import { log } from "@/lib/audit"
 
 const schema = z.object({
   district: z.string().min(1),
@@ -36,6 +37,10 @@ export async function POST(request: NextRequest) {
       kycStatus: "PENDING",
     })
   })
+
+  await log({ userId: session.user.id, userName: session.user.name, userRole: "VOLUNTEER",
+    action: "VOLUNTEER_BECAME", resourceType: "volunteer", resourceId: session.user.id,
+    details: { district, upazila }, request })
 
   return NextResponse.json({ ok: true })
 }

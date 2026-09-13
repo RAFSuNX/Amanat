@@ -3,6 +3,7 @@ import { z } from "zod"
 import { db } from "@/db"
 import { users, accounts, volunteerProfiles } from "@/db/schema"
 import { requireAdmin } from "@/lib/session"
+import { log } from "@/lib/audit"
 import { hash } from "bcryptjs"
 import { randomUUID } from "crypto"
 
@@ -63,6 +64,10 @@ export async function POST(request: NextRequest) {
     }
     return NextResponse.json({ error: "Failed to create volunteer." }, { status: 500 })
   }
+
+  await log({ userId: session.user.id, userName: session.user.name, userRole: "ADMIN",
+    action: "VOLUNTEER_CREATED", resourceType: "volunteer", resourceId: userId,
+    details: { name, email, district } })
 
   return NextResponse.json({ ok: true }, { status: 201 })
 }
