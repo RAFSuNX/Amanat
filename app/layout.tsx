@@ -2,6 +2,9 @@ import type { Metadata } from "next"
 import { Geist } from "next/font/google"
 import "./globals.css"
 import { ProgressBar } from "@/components/progress-bar"
+import { validateEnv } from "@/lib/env"
+
+validateEnv()
 
 const geist = Geist({ subsets: ["latin"], variable: "--font-geist" })
 

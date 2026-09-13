@@ -11,6 +11,18 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
 
+  postgres-audit:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: amanat_audit
+      POSTGRES_USER: amanat_audit
+      POSTGRES_PASSWORD: ${AUDIT_DB_PASSWORD:-amanat_audit_dev}
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres_audit_data:/var/lib/postgresql/data
+
   redis:
     image: redis:7-alpine
     restart: unless-stopped
@@ -39,4 +51,5 @@ services:
 
 volumes:
   postgres_data:
+  postgres_audit_data:
   redis_data:
