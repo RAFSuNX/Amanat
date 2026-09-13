@@ -3,8 +3,12 @@ import { requireVolunteer } from "@/lib/session"
 import { uploadToR2 } from "@/lib/storage"
 import { randomUUID } from "crypto"
 
-// type=document → volunteers/kyc-documents/{userId}/
-// type=portrait → volunteers/kyc-portraits/{userId}/
+function slug(name: string) {
+  return name.toLowerCase().replace(/[^a-z0-9]/g, "-").replace(/-+/g, "-").slice(0, 40)
+}
+
+// type=document → volunteers/kyc-documents/{name}-{userId}/
+// type=portrait → volunteers/kyc-portraits/{name}-{userId}/
 export async function POST(request: NextRequest) {
   const session = await requireVolunteer()
   if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
@@ -25,7 +29,8 @@ export async function POST(request: NextRequest) {
 
   const ext = file.name.split(".").pop() ?? "jpg"
   const folder = type === "portrait" ? "kyc-portraits" : "kyc-documents"
-  const key = `volunteers/${folder}/${session.user.id}/${Date.now()}-${randomUUID().slice(0, 8)}.${ext}`
+  const volunteerSlug = `${slug(session.user.name)}-${session.user.id.slice(0, 8)}`
+  const key = `volunteers/${folder}/${volunteerSlug}/${Date.now()}-${randomUUID().slice(0, 8)}.${ext}`
 
   const buffer = Buffer.from(await file.arrayBuffer())
   const url = await uploadToR2(buffer, key, file.type)

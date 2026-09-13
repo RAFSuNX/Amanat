@@ -20,8 +20,10 @@ export async function POST(request: NextRequest) {
   }
 
   const ext = file.name.split(".").pop() ?? "jpg"
-  // beneficiaries/photos/{volunteerId}/{timestamp}-{uuid}.{ext}
-  const key = `beneficiaries/photos/${session.user.id}/${Date.now()}-${randomUUID().slice(0, 8)}.${ext}`
+  const volunteerSlug = session.user.name.toLowerCase().replace(/[^a-z0-9]/g, "-").replace(/-+/g, "-").slice(0, 40)
+    + "-" + session.user.id.slice(0, 8)
+  // beneficiaries/photos/{volunteer-name-id}/{timestamp}-{uuid}.{ext}
+  const key = `beneficiaries/photos/${volunteerSlug}/${Date.now()}-${randomUUID().slice(0, 8)}.${ext}`
 
   const buffer = Buffer.from(await file.arrayBuffer())
   const url = await uploadToR2(buffer, key, file.type)
