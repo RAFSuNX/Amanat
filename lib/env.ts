@@ -9,10 +9,12 @@ const REQUIRED_KEYS = [
   // Auth
   "BETTER_AUTH_SECRET",
   "BETTER_AUTH_URL",
-  // File storage
-  "CLOUDINARY_CLOUD_NAME",
-  "CLOUDINARY_API_KEY",
-  "CLOUDINARY_API_SECRET",
+  // File storage (Cloudflare R2)
+  "R2_ENDPOINT",
+  "R2_ACCESS_KEY_ID",
+  "R2_SECRET_ACCESS_KEY",
+  "R2_BUCKET_NAME",
+  "R2_PUBLIC_URL",
   // Email
   "RESEND_API_KEY",
   "RESEND_FROM_EMAIL",
