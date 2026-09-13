@@ -126,7 +126,7 @@ export default function DonatePage() {
     return (
       <div className="h-dvh flex flex-col overflow-hidden">
         <PublicNav />
-        <div className="flex-1 flex flex-col items-center justify-center gap-6 px-10 text-center">
+        <div className="flex-1 flex flex-col items-center justify-center gap-6 px-[5vw] text-center">
           <p className="text-[10px] uppercase tracking-[0.2em] text-primary">Submitted</p>
           <h1 className="text-3xl font-bold tracking-tight">Thank you for your donation.</h1>
           <p className="text-sm text-muted-foreground max-w-sm leading-relaxed">
@@ -174,7 +174,7 @@ export default function DonatePage() {
         </div>
 
         {/* Right: form */}
-        <div className="flex flex-col overflow-y-auto px-12 py-10">
+        <div className="flex flex-col overflow-y-auto px-[5vw] py-8 md:px-12 md:py-10">
           <div className="flex items-baseline gap-3 mb-8">
             <h1 className="text-2xl font-bold tracking-tight">Donate to Amanat</h1>
             <p className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground">Make a donation</p>
@@ -184,7 +184,7 @@ export default function DonatePage() {
             {/* Amount */}
             <div className={fieldClass}>
               <label className={labelClass}>Amount (BDT)</label>
-              <div className="flex gap-2">
+              <div className="flex flex-wrap gap-2">
                 {PRESETS.map((a) => (
                   <button key={a} type="button" onClick={() => setAmount(String(a))}
                     className={`flex-1 text-sm border rounded transition-colors ${
@@ -202,7 +202,7 @@ export default function DonatePage() {
             {/* Method + account details side by side */}
             <div className={fieldClass}>
               <label className={labelClass}>Payment Method</label>
-              <div className="grid grid-cols-2 gap-3 items-start">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3 items-start">
                 <Select value={method} onValueChange={(v) => setMethod(v ?? "")}>
                   <SelectTrigger className="w-full"><SelectValue placeholder="Select method" /></SelectTrigger>
                   <SelectContent>
@@ -286,7 +286,7 @@ export default function DonatePage() {
                     Edit profile
                   </a>
                 </div>
-                <div className="grid grid-cols-3 gap-4 text-xs">
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
                   <div>
                     <p className="text-muted-foreground mb-0.5">Name</p>
                     <p className="font-medium">{name || "Not set"}</p>
@@ -302,7 +302,7 @@ export default function DonatePage() {
                 </div>
               </div>
             ) : (
-              <div className="grid grid-cols-3 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                 <div className={fieldClass}>
                   <label className={labelClass}>Your Name</label>
                   <Input placeholder="As on NID/passport" value={name} onChange={(e) => setName(e.target.value)} />

@@ -135,6 +135,7 @@ export default async function LedgerDonationsPage() {
           ))}
         </div>
 
+        <div className="overflow-x-auto">
         <Table>
           <TableHeader>
             <TableRow>
@@ -213,6 +214,7 @@ export default async function LedgerDonationsPage() {
             )}
           </TableBody>
         </Table>
+        </div>
       </main>
     </div>
   )

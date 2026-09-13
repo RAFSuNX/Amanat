@@ -49,6 +49,7 @@ export default async function ApplicationsPage() {
         </Link>
       </div>
 
+      <div className="overflow-x-auto">
       <Table>
         <TableHeader>
           <TableRow>
@@ -93,6 +94,7 @@ export default async function ApplicationsPage() {
           )}
         </TableBody>
       </Table>
+      </div>
     </div>
   )
 }

@@ -27,6 +27,7 @@ export default async function MyBeneficiariesPage() {
         </Link>
       </div>
 
+      <div className="overflow-x-auto">
       <Table>
         <TableHeader>
           <TableRow>
@@ -74,6 +75,7 @@ export default async function MyBeneficiariesPage() {
           )}
         </TableBody>
       </Table>
+      </div>
     </div>
   )
 }

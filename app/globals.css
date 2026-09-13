@@ -220,6 +220,18 @@ tbody td {
   padding-bottom: 0 !important;
 }
 
+/* Landing page scroll-snap — desktop only, mobile gets normal scroll */
+@media (min-width: 768px) {
+  .landing-scroll {
+    scroll-snap-type: y mandatory;
+    height: 100dvh;
+  }
+  .landing-section {
+    scroll-snap-align: start;
+    height: 100dvh;
+  }
+}
+
 /* Thin custom scrollbar */
 ::-webkit-scrollbar {
   width: 4px;

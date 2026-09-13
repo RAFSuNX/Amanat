@@ -21,6 +21,7 @@ export default async function AdminDonationsPage() {
     <div className="flex flex-col gap-6">
       <h1 className="text-2xl font-bold">Donations</h1>
 
+      <div className="overflow-x-auto">
       <Table>
         <TableHeader>
           <TableRow>
@@ -88,6 +89,7 @@ export default async function AdminDonationsPage() {
           )}
         </TableBody>
       </Table>
+      </div>
     </div>
   )
 }

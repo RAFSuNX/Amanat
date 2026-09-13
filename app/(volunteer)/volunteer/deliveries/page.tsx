@@ -78,6 +78,7 @@ export default async function DeliveriesPage() {
       )}
 
       {rows.length > 0 && (
+        <div className="overflow-x-auto">
         <Table>
           <TableHeader>
             <TableRow>
@@ -130,6 +131,7 @@ export default async function DeliveriesPage() {
             ))}
           </TableBody>
         </Table>
+        </div>
       )}
     </div>
   )

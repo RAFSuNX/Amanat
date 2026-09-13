@@ -36,6 +36,7 @@ export default async function AdminBeneficiariesPage() {
       {pending.length > 0 && (
         <div className="flex flex-col gap-2">
           <p className="text-xs uppercase tracking-[0.15em] text-muted-foreground font-medium">Pending Review</p>
+          <div className="overflow-x-auto">
           <Table>
             <TableHeader>
               <TableRow>
@@ -60,11 +61,13 @@ export default async function AdminBeneficiariesPage() {
               ))}
             </TableBody>
           </Table>
+          </div>
         </div>
       )}
 
       <div className="flex flex-col gap-2">
         <p className="text-xs uppercase tracking-[0.15em] text-muted-foreground font-medium">All Records</p>
+        <div className="overflow-x-auto">
         <Table>
           <TableHeader>
             <TableRow>
@@ -93,6 +96,7 @@ export default async function AdminBeneficiariesPage() {
             ))}
           </TableBody>
         </Table>
+        </div>
       </div>
     </div>
   )
