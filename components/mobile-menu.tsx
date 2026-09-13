@@ -27,7 +27,7 @@ export function MobileMenu({
       </button>
 
       {open && (
-        <div className="absolute right-0 top-full mt-2 w-52 bg-background border border-border rounded shadow-lg z-50 flex flex-col py-2">
+        <div className="fixed right-4 top-16 w-52 bg-background border border-border rounded shadow-lg z-50 flex flex-col py-2">
           {links.map((l) => (
             <Link
               key={l.href}
