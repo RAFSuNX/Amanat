@@ -82,7 +82,7 @@ export default async function InvoicePage({
           {/* Header */}
           <div className="px-14 pt-10 pb-8 border-b border-gray-200 flex flex-col gap-5">
             {/* Logo — left aligned, prominent */}
-            <img src="/logo.png" alt="Amanat" style={{ height: "64px", width: "auto", objectFit: "contain", objectPosition: "left" }} />
+            <img src="/logo.png" alt="Amanat" style={{ height: "64px", width: "auto" }} />
 
             {/* Bottom row: tagline/country left, receipt info right — same horizontal line */}
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
