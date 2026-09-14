@@ -90,10 +90,10 @@ export default async function InvoicePage({
 
           {/* Header */}
           <div className="px-14 pt-10 pb-8 border-b border-gray-200 flex flex-col gap-5">
-            {/* Logo — left aligned, prominent */}
+            {/* Logo - left aligned, prominent */}
             <img src="/logo.png" alt="Amanat" style={{ height: "64px", width: "auto", alignSelf: "flex-start" }} />
 
-            {/* Bottom row: tagline/country left, receipt info right — same horizontal line */}
+            {/* Bottom row: tagline/country left, receipt info right - same horizontal line */}
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
               <div style={{ display: "flex", flexDirection: "column", gap: "3px" }}>
                 <p style={{ fontSize: "0.72rem", color: "#3B5E45", letterSpacing: "0.16em", textTransform: "uppercase", fontFamily: "system-ui, sans-serif", fontWeight: "500" }}>
@@ -222,7 +222,7 @@ export default async function InvoicePage({
               gap: "16px",
             }}
           >
-            {/* Contact + signatory row — bottom aligned */}
+            {/* Contact + signatory row - bottom aligned */}
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end" }}>
 
               {/* Left: contact info */}
@@ -235,7 +235,7 @@ export default async function InvoicePage({
                 <p style={{ fontSize: "0.65rem", color: "#6B8070", fontFamily: "system-ui, sans-serif" }}>amanat.org</p>
               </div>
 
-              {/* Right: signature block — bottom aligned */}
+              {/* Right: signature block - bottom aligned */}
               <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", gap: "0px" }}>
                 {/* Signature space */}
                 <div style={{ height: "32px" }} />

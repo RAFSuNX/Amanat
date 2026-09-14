@@ -59,15 +59,15 @@ export default async function AdminApplicationsPage() {
         <TableBody>
           {rows.map((r) => (
             <TableRow key={r.id} className={r.status === "PENDING" ? "bg-amber-50/30" : ""}>
-              <TableCell className="font-medium">{r.beneficiaryName ?? "—"}</TableCell>
-              <TableCell className="text-sm text-muted-foreground">{r.volunteerName ?? "—"}</TableCell>
+              <TableCell className="font-medium">{r.beneficiaryName ?? "-"}</TableCell>
+              <TableCell className="text-sm text-muted-foreground">{r.volunteerName ?? "-"}</TableCell>
               <TableCell className="max-w-xs">
                 <p className="font-medium text-sm truncate">{r.title}</p>
                 <p className="text-xs text-muted-foreground truncate">{r.description}</p>
               </TableCell>
               <TableCell className="tabular-nums">{parseFloat(r.amountRequested).toLocaleString()} BDT</TableCell>
               <TableCell className="tabular-nums text-muted-foreground">
-                {r.approvedAmount ? `${parseFloat(r.approvedAmount).toLocaleString()} BDT` : "—"}
+                {r.approvedAmount ? `${parseFloat(r.approvedAmount).toLocaleString()} BDT` : "-"}
               </TableCell>
               <TableCell>
                 <Badge variant={statusVariant(r.status)}>{r.status}</Badge>

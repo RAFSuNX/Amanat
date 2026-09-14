@@ -46,7 +46,7 @@ export default async function VolunteerLayout({
         <MobileMenu links={NAV} signIn={false} />
       </div>
 
-      {/* Sidebar — desktop only */}
+      {/* Sidebar - desktop only */}
       <aside className="hidden md:flex flex-col w-52 border-r border-border/40 shrink-0 bg-muted/20">
         <div className="h-16 px-4 border-b border-border/40 flex items-center gap-2">
           <Link href="/">

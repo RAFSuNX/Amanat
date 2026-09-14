@@ -32,7 +32,7 @@ export async function POST(request: NextRequest) {
   })
 
   // The submitted identity document is write-once: once a document image is on
-  // record, its image, type, number — and the legal name that must match it —
+  // record, its image, type, number - and the legal name that must match it -
   // cannot be changed (anti-fraud: a verified ID can't be swapped). Only the
   // passport photo (avatar) and contact phone remain editable.
   const docLocked = !!existing?.kycDocImageUrl

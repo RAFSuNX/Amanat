@@ -54,7 +54,7 @@ export default async function AdminBeneficiariesPage() {
                   <TableCell className="font-medium">{r.name}</TableCell>
                   <TableCell>{r.type}</TableCell>
                   <TableCell>{r.district}</TableCell>
-                  <TableCell className="text-sm text-muted-foreground">{r.volunteerName ?? "—"}</TableCell>
+                  <TableCell className="text-sm text-muted-foreground">{r.volunteerName ?? "-"}</TableCell>
                   <TableCell className="text-sm text-muted-foreground">{r.createdAt.toLocaleDateString()}</TableCell>
                   <TableCell><BeneficiaryActions id={r.id} /></TableCell>
                 </TableRow>
@@ -85,7 +85,7 @@ export default async function AdminBeneficiariesPage() {
                 <TableCell className="font-medium">{r.name}</TableCell>
                 <TableCell>{r.type}</TableCell>
                 <TableCell>{r.district}</TableCell>
-                <TableCell className="text-sm text-muted-foreground">{r.volunteerName ?? "—"}</TableCell>
+                <TableCell className="text-sm text-muted-foreground">{r.volunteerName ?? "-"}</TableCell>
                 <TableCell>
                   <Badge variant={r.status === "ACTIVE" ? "default" : r.status === "REJECTED" ? "destructive" : "secondary"}>
                     {r.status}

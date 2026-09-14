@@ -3,7 +3,7 @@ import Link from "next/link"
 export default function AuthLayout({ children }: { children: React.ReactNode }) {
   return (
     <div className="min-h-dvh grid md:grid-cols-[5fr_7fr]">
-      {/* Left: brand panel — pinned to the viewport so it never stretches or
+      {/* Left: brand panel - pinned to the viewport so it never stretches or
           redistributes when the form on the right grows (e.g. volunteer fields). */}
       <div className="hidden md:flex flex-col justify-between bg-primary px-12 py-12 md:self-start md:sticky md:top-0 md:h-dvh">
         <Link href="/">

@@ -93,7 +93,7 @@ export default async function LandingPage() {
               </Link>
             </div>
 
-            {/* Stats — shown inline below CTAs on mobile, hidden here on desktop (shown in right panel) */}
+            {/* Stats - shown inline below CTAs on mobile, hidden here on desktop (shown in right panel) */}
             <div className="flex md:hidden gap-6 border-t border-border/40 pt-4 mt-1">
               {[
                 { label: t.stats.totalDonated, value: `${stats.totalDonated.toLocaleString()} BDT`, primary: true },
@@ -110,7 +110,7 @@ export default async function LandingPage() {
             </div>
           </div>
 
-          {/* Right: stats — desktop only */}
+          {/* Right: stats - desktop only */}
           <div className="hidden md:flex flex-col divide-y divide-border/40 border-l border-border/40 pl-8 self-center">
             {[
               { label: t.stats.totalDonated, value: `${stats.totalDonated.toLocaleString()} BDT`, primary: true },
@@ -130,7 +130,7 @@ export default async function LandingPage() {
           </div>
         </div>
 
-        {/* Scroll hint — desktop only */}
+        {/* Scroll hint - desktop only */}
         <div
           className="hidden md:flex absolute bottom-6 right-10 flex-col items-center gap-2"
           aria-hidden="true"
@@ -192,7 +192,7 @@ export default async function LandingPage() {
           {t.principles.eyebrow}
         </p>
 
-        {/* Grid — 2 cols / 3 rows on mobile, 3 cols / 2 rows on desktop */}
+        {/* Grid - 2 cols / 3 rows on mobile, 3 cols / 2 rows on desktop */}
         <div
           className="flex-1 grid grid-cols-2 md:grid-cols-3 grid-rows-3 md:grid-rows-2 mt-6 md:mt-10 pb-2"
           style={{ columnGap: "2rem", rowGap: 0 }}

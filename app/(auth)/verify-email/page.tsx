@@ -10,7 +10,7 @@ export default async function VerifyEmailPage({
   const sp = await searchParams
   const invalid = !!sp.error // Better Auth appends ?error=INVALID_TOKEN on a bad/expired link
 
-  // A successful verification auto-signs the user in and redirects back here —
+  // A successful verification auto-signs the user in and redirects back here -
   // send them on to their area instead of showing "check your email".
   if (!invalid) {
     const session = await getSession()

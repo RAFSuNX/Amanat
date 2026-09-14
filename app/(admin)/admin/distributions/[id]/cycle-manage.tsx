@@ -192,7 +192,7 @@ export function CycleManage({ cycle, rows }: { cycle: Cycle; rows: Row[] }) {
                   {parseFloat(r.requestedAmount).toLocaleString()}
                 </TableCell>
                 <TableCell className="text-right tabular-nums text-sm">
-                  {r.allocatedAmount ? parseFloat(r.allocatedAmount).toLocaleString() : "—"}
+                  {r.allocatedAmount ? parseFloat(r.allocatedAmount).toLocaleString() : "-"}
                 </TableCell>
                 <TableCell className="max-w-[16rem]">
                   {r.isFlagged ? (
@@ -211,7 +211,7 @@ export function CycleManage({ cycle, rows }: { cycle: Cycle; rows: Row[] }) {
                       )}
                     </div>
                   ) : (
-                    <span className="text-xs text-muted-foreground">—</span>
+                    <span className="text-xs text-muted-foreground">-</span>
                   )}
                 </TableCell>
                 <TableCell className="text-right">

@@ -68,7 +68,7 @@ export default function NewCyclePage() {
         <div className="flex flex-col gap-2">
           <Label>Notes</Label>
           <Input value={form.notes} onChange={(e) => set("notes", e.target.value)}
-            placeholder="Optional — shown on the public ledger" />
+            placeholder="Optional, shown on the public ledger" />
         </div>
 
         {error && <p className="text-sm text-red-500">{error}</p>}

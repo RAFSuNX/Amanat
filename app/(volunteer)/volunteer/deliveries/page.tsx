@@ -22,7 +22,7 @@ export default async function DeliveriesPage() {
   })
 
   // Allotments for families THIS volunteer registered (not "delivered by",
-  // which is only set after delivery — that was the original bug).
+  // which is only set after delivery - that was the original bug).
   const rows = activeCycle
     ? await db
         .select({
@@ -54,7 +54,7 @@ export default async function DeliveriesPage() {
         <h1 className="text-2xl font-bold tracking-tight">Deliveries</h1>
         <p className="text-sm text-muted-foreground mt-1">
           {activeCycle
-            ? `Current cycle: ${activeCycle.period} — ${activeCycle.status.replace(/_/g, " ")}`
+            ? `Current cycle: ${activeCycle.period}: ${activeCycle.status.replace(/_/g, " ")}`
             : "No active distribution cycle at the moment."}
         </p>
         {activeCycle?.status === "VOLUNTEER_REVIEW" && (
@@ -96,7 +96,7 @@ export default async function DeliveriesPage() {
                 <TableCell className="font-medium">{r.beneficiaryName}</TableCell>
                 <TableCell className="text-sm text-muted-foreground">{r.beneficiaryDistrict}</TableCell>
                 <TableCell className="text-right tabular-nums font-medium">
-                  {r.allocatedAmount ? `${parseFloat(r.allocatedAmount).toLocaleString()} BDT` : "—"}
+                  {r.allocatedAmount ? `${parseFloat(r.allocatedAmount).toLocaleString()} BDT` : "-"}
                 </TableCell>
                 <TableCell>
                   <Badge variant={r.deliveryStatus === "DELIVERED" ? "default" : "secondary"}>
