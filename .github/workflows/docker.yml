@@ -1,7 +1,7 @@
 name: CI and build
 
 on:
-  # Manual only — no auto-build on push. Trigger from the Actions tab or
+  # Manual only - no auto-build on push. Trigger from the Actions tab or
   # `gh workflow run "CI and build"`. Releases still build.
   workflow_dispatch:
   release:

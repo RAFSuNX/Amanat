@@ -16,7 +16,7 @@ spec:
       containers:
         - name: app
           image: ghcr.io/rafsunx/amanat:main
-          # :main is mutable — always re-pull so a rollout can't reuse a stale image.
+          # :main is mutable - always re-pull so a rollout can't reuse a stale image.
           imagePullPolicy: Always
           ports:
             - containerPort: 3000

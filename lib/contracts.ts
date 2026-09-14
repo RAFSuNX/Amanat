@@ -1,6 +1,6 @@
 import { z } from "zod"
 
-// ── API contracts — single source of truth ────────────────────────────────────
+// ── API contracts - single source of truth ────────────────────────────────────
 // These define EXACTLY what the API accepts. Values are matched literally:
 // "activate" is accepted, "ACTIVATE" is not. No case-folding, no aliases, no
 // fallback. Both the route handlers and the tests import from here, so the

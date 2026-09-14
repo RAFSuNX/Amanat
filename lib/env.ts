@@ -1,9 +1,9 @@
 // Startup environment validation.
 //
 // Two layers:
-//   1. validateEnv()      — every key is present AND its value is real
+//   1. validateEnv()      - every key is present AND its value is real
 //                           (not a placeholder). Sync, fails fast.
-//   2. checkConnectivity() — the thing each var points at is actually reachable
+//   2. checkConnectivity() - the thing each var points at is actually reachable
 //                           (DB accepts a query, Redis answers PING, R2 bucket
 //                           responds). Async. This is the difference between
 //                           "DATABASE_URL is set" and "the database is up".
@@ -31,7 +31,7 @@ const REQUIRED_KEYS = [
 
 function die(title: string, problems: string[]): never {
   console.error("\n================================================================")
-  console.error(`  STARTUP FAILED — ${title}`)
+  console.error(`  STARTUP FAILED - ${title}`)
   console.error("================================================================")
   problems.forEach((p) => console.error(`  x  ${p}`))
   console.error("================================================================\n")
@@ -70,7 +70,7 @@ export async function checkConnectivity() {
   const failures: string[] = []
   const warnings: string[] = []
 
-  // Databases the app serves from — hard requirement.
+  // Databases the app serves from - hard requirement.
   for (const [key, label] of [
     ["DATABASE_URL", "main database"],
     ["AUDIT_DATABASE_URL", "audit database"],
@@ -80,21 +80,21 @@ export async function checkConnectivity() {
     else console.log(`  ok  ${label} reachable`)
   }
 
-  // Redis — hard requirement.
+  // Redis - hard requirement.
   {
     const err = await pingRedis(process.env.REDIS_URL!)
     if (err) failures.push(`Redis (REDIS_URL) unreachable: ${err}`)
     else console.log("  ok  redis reachable")
   }
 
-  // R2 bucket — hard requirement (uploads break without it).
+  // R2 bucket - hard requirement (uploads break without it).
   {
     const err = await pingR2()
     if (err) failures.push(`R2 bucket (R2_*) unreachable: ${err}`)
     else console.log("  ok  R2 bucket reachable")
   }
 
-  // Backup / replica DBs — the app never serves from these, so unreachable is a
+  // Backup / replica DBs - the app never serves from these, so unreachable is a
   // warning, not a boot blocker (the backup image is what truly depends on them).
   for (const [key, label] of [
     ["BACKUP_DATABASE_URL", "backup database"],

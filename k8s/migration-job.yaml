@@ -16,7 +16,7 @@ spec:
           # Dedicated migrate image (has drizzle-kit + migration SQL); the app
           # image is a pruned standalone build and cannot run migrations.
           image: ghcr.io/rafsunx/amanat-migrate:main
-          # :main is a mutable tag — always re-pull so nodes never reuse a stale
+          # :main is a mutable tag - always re-pull so nodes never reuse a stale
           # (e.g. pre-fix) cached image.
           imagePullPolicy: Always
           # Migrate command is baked into the image CMD (main DB + audit DB).

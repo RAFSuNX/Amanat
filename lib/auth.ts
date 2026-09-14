@@ -93,7 +93,7 @@ export const auth = betterAuth({
     },
     autoSignInAfterVerification: true,
   },
-  // Only our own origin is a valid redirect/callback target — blocks open-redirect
+  // Only our own origin is a valid redirect/callback target - blocks open-redirect
   // phishing through the verification link's callbackURL.
   trustedOrigins: [process.env.BETTER_AUTH_URL || "https://amanat.rafsunx.com"],
   // Throttle abuse: email-bombing a victim, enumeration, and burning Resend quota

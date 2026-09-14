@@ -97,7 +97,7 @@
     @apply border-border outline-ring/50;
   }
   html {
-    /* Reserve scrollbar gutter on desktop only — mobile overlays scrollbars, the
+    /* Reserve scrollbar gutter on desktop only - mobile overlays scrollbars, the
        gutter would just steal viewport width on narrow screens. */
     @media (min-width: 768px) {
       scrollbar-gutter: stable;
@@ -220,7 +220,7 @@ tbody td {
   padding-bottom: 0 !important;
 }
 
-/* Landing page scroll-snap — full viewport sections on all screen sizes */
+/* Landing page scroll-snap - full viewport sections on all screen sizes */
 .landing-scroll {
   scroll-snap-type: y mandatory;
   height: 100dvh;

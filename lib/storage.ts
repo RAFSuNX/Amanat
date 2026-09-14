@@ -1,6 +1,6 @@
 import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3"
 
-// Cloudflare R2 — S3-compatible, zero egress fees
+// Cloudflare R2 - S3-compatible, zero egress fees
 // Endpoint format: https://<ACCOUNT_ID>.r2.cloudflarestorage.com
 const r2 = new S3Client({
   region: "auto",

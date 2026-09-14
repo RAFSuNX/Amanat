@@ -1,4 +1,4 @@
-// Pure money helpers for distribution allotments. No DB, no I/O — so they are
+// Pure money helpers for distribution allotments. No DB, no I/O - so they are
 // unit-testable and used identically by the API and the admin UI.
 
 export type AllotmentAmounts = {
@@ -7,7 +7,7 @@ export type AllotmentAmounts = {
 }
 
 // The authoritative amount for an allotment: an admin override wins over the
-// calculated allocation. That is the ONLY precedence — nothing else is inferred.
+// calculated allocation. That is the ONLY precedence - nothing else is inferred.
 export function finalAmount(a: AllotmentAmounts): number {
   const v = a.manualOverrideAmount ?? a.allocatedAmount
   return v == null ? 0 : parseFloat(v)

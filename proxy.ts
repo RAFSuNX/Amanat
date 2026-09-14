@@ -23,7 +23,7 @@ export async function proxy(request: NextRequest) {
 
   const session = await getSessionFromRequest(request)
 
-  // Already signed in? Don't show login/register — send them to their area.
+  // Already signed in? Don't show login/register - send them to their area.
   if (isAuthPath) {
     if (session) return NextResponse.redirect(new URL(homeFor(session.user.role), request.url))
     return NextResponse.next()

@@ -1,6 +1,6 @@
 // Migrate-image startup checker.
 // Verifies the databases are actually reachable (accept a query) BEFORE
-// drizzle-kit runs — so a bad/unreachable DB fails fast with a clear message
+// drizzle-kit runs - so a bad/unreachable DB fails fast with a clear message
 // instead of the migrator hanging on "applying migrations".
 import postgres from "postgres"
 
@@ -31,7 +31,7 @@ for (const [key, label] of targets) {
 }
 
 if (failed) {
-  console.error("preflight failed — not running migrations")
+  console.error("preflight failed - not running migrations")
   process.exit(1)
 }
-console.log("preflight ok — running migrations")
+console.log("preflight ok - running migrations")

@@ -388,7 +388,7 @@ export const distributionCyclesRelations = relations(
   })
 )
 
-// Inverse ("one") relations — required for drizzle's relational queries
+// Inverse ("one") relations - required for drizzle's relational queries
 // (e.g. beneficiaries.findMany({ with: { members, needAssessments } }) in
 // calculateDistribution) to infer the join keys.
 export const beneficiaryMembersRelations = relations(beneficiaryMembers, ({ one }) => ({
