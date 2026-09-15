@@ -1,22 +1,26 @@
 import { NextRequest, NextResponse } from "next/server"
 import { db } from "@/db"
 import { specialNeedApplications } from "@/db/schema"
-import { eq } from "drizzle-orm"
+import { and, eq } from "drizzle-orm"
 import { requireAdmin } from "@/lib/session"
 import { log } from "@/lib/audit"
+import { badRequest, conflict, parseId, unauthorized } from "@/lib/http"
 
 export async function POST(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const session = await requireAdmin()
-  if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
-  const { id } = await params
+  if (!session) return unauthorized()
+  const id = parseId((await params).id)
+  if (id === null) return badRequest("Invalid application id")
   const { note } = await req.json()
 
-  await db.update(specialNeedApplications).set({
+  const [row] = await db.update(specialNeedApplications).set({
     status: "REJECTED",
     adminNote: note ?? null,
     reviewedByAdminId: session.user.id,
     reviewedAt: new Date(),
-  }).where(eq(specialNeedApplications.id, Number(id)))
+  }).where(and(eq(specialNeedApplications.id, id), eq(specialNeedApplications.status, "PENDING")))
+    .returning({ id: specialNeedApplications.id })
+  if (!row) return conflict("Application is not pending")
 
   await log({ userId: session.user.id, userName: session.user.name, userRole: "ADMIN",
     action: "APPLICATION_REJECTED", resourceType: "application", resourceId: id,

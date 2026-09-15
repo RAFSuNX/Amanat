@@ -109,6 +109,27 @@ cp .env.example .env
 docker compose up -d
 ```
 
+### Migrations and rollback
+
+Migrations run from a dedicated `amanat-migrate` image before the app deploys
+(`k8s/migration-job.yaml`), so the schema is in place before new pods start.
+
+Migrations are **forward-only** (drizzle does not generate down-migrations). To
+roll back:
+
+1. **App code** - redeploy the previous image by digest, not the mutable `:main`
+   tag: `kubectl set image deploy/amanat app=ghcr.io/rafsunx/amanat@sha256:<prev>`.
+   Record the digest of each release before rolling forward.
+2. **Schema** - a forward-only migration cannot be auto-reverted. Additive
+   changes (new nullable column, new index) are backward-compatible, so rolling
+   the app back is safe on its own. For a destructive change, restore from the
+   most recent backup (`scripts/backup.sh`) or write a follow-up migration; never
+   hand-edit the live schema.
+
+Because schema changes ship as a separate job, keep them backward-compatible
+with the currently-running app image (expand-then-contract) so a bad app deploy
+can roll back without touching the database.
+
 ---
 
 ## Principles

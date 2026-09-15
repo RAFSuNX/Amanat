@@ -1,6 +1,6 @@
 export const dynamic = "force-dynamic"
 
-import { db } from "@/db"
+import { ledgerDb as db } from "@/db/remote"
 import { distributionCycles, distributionAllotments, beneficiaries } from "@/db/schema"
 import { eq } from "drizzle-orm"
 import { notFound } from "next/navigation"

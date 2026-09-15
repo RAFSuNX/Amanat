@@ -1,0 +1,1 @@
+CREATE UNIQUE INDEX "donations_method_txn_ref_uq" ON "donations" USING btree ("method","transaction_ref");

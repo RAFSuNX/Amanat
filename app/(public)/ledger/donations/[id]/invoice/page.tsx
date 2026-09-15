@@ -1,4 +1,4 @@
-import { db } from "@/db"
+import { ledgerDb as db } from "@/db/remote"
 import { donations, users } from "@/db/schema"
 import { eq } from "drizzle-orm"
 import { notFound } from "next/navigation"

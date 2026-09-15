@@ -4,6 +4,12 @@ import { db } from "@/db"
 import { donations } from "@/db/schema"
 import { getSession } from "@/lib/session"
 import { log } from "@/lib/audit"
+import { rateLimitOk } from "@/lib/redis"
+
+// A postgres unique-violation (duplicate transaction_ref for a method).
+function isUniqueViolation(e: unknown): boolean {
+  return typeof e === "object" && e !== null && "code" in e && (e as { code: string }).code === "23505"
+}
 
 const schema = z.object({
   amount: z.coerce.number().positive(),
@@ -17,6 +23,12 @@ const schema = z.object({
 })
 
 export async function POST(request: NextRequest) {
+  // Public unauthenticated write - throttle per IP so it can't be flooded.
+  const ip = request.headers.get("x-forwarded-for")?.split(",")[0].trim() ??
+    request.headers.get("x-real-ip") ?? "unknown"
+  if (!(await rateLimitOk(`donate:${ip}`, 10, 60)))
+    return NextResponse.json({ error: "Too many submissions. Please wait a minute." }, { status: 429 })
+
   const body = await request.json()
   const parsed = schema.safeParse(body)
   if (!parsed.success) {
@@ -29,18 +41,27 @@ export async function POST(request: NextRequest) {
   const session = await getSession()
   const data = parsed.data
 
-  await db.insert(donations).values({
-    userId: session?.user.id ?? null,
-    donorName: data.donorName,
-    donorPhone: data.donorPhone ?? null,
-    donorEmail: data.donorEmail || null,
-    amount: data.amount.toFixed(2),
-    method: data.method,
-    transactionRef: data.transactionRef,
-    isAnonymous: data.isAnonymous,
-    receiptImageUrl: data.receiptImageUrl ?? null,
-    status: "PENDING",
-  })
+  try {
+    await db.insert(donations).values({
+      userId: session?.user.id ?? null,
+      donorName: data.donorName,
+      donorPhone: data.donorPhone ?? null,
+      donorEmail: data.donorEmail || null,
+      amount: data.amount.toFixed(2),
+      method: data.method,
+      transactionRef: data.transactionRef,
+      isAnonymous: data.isAnonymous,
+      receiptImageUrl: data.receiptImageUrl ?? null,
+      status: "PENDING",
+    })
+  } catch (e) {
+    if (isUniqueViolation(e))
+      return NextResponse.json(
+        { error: "This transaction has already been submitted." },
+        { status: 409 }
+      )
+    throw e
+  }
 
   await log({ userId: session?.user.id, userName: data.donorName, userRole: session?.user.role as string ?? "GUEST",
     action: "DONATION_SUBMITTED", resourceType: "donation",

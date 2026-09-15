@@ -1,22 +1,30 @@
 import { NextRequest, NextResponse } from "next/server"
 import { db } from "@/db"
 import { donations } from "@/db/schema"
-import { eq } from "drizzle-orm"
+import { and, eq } from "drizzle-orm"
 import { requireAdmin } from "@/lib/session"
 import { log } from "@/lib/audit"
+import { badRequest, conflict, parseId, unauthorized } from "@/lib/http"
 
 export async function POST(
-  _req: NextRequest,
+  req: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
   const session = await requireAdmin()
-  if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+  if (!session) return unauthorized()
 
-  const { id } = await params
-  await db.update(donations).set({ status: "REJECTED" }).where(eq(donations.id, Number(id)))
+  const id = parseId((await params).id)
+  if (id === null) return badRequest("Invalid donation id")
+
+  const [row] = await db
+    .update(donations)
+    .set({ status: "REJECTED" })
+    .where(and(eq(donations.id, id), eq(donations.status, "PENDING")))
+    .returning({ id: donations.id })
+  if (!row) return conflict("Donation is not pending")
 
   await log({ userId: session.user.id, userName: session.user.name, userRole: "ADMIN",
-    action: "DONATION_REJECTED", resourceType: "donation", resourceId: id, request: _req })
+    action: "DONATION_REJECTED", resourceType: "donation", resourceId: id, request: req })
 
   return NextResponse.json({ ok: true })
 }
