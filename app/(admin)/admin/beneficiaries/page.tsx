@@ -36,6 +36,7 @@ export default async function AdminBeneficiariesPage() {
       {pending.length > 0 && (
         <div className="flex flex-col gap-2">
           <p className="text-xs uppercase tracking-[0.15em] text-muted-foreground font-medium">Pending Review</p>
+          <div className="overflow-x-auto">
           <Table>
             <TableHeader>
               <TableRow>
@@ -53,18 +54,20 @@ export default async function AdminBeneficiariesPage() {
                   <TableCell className="font-medium">{r.name}</TableCell>
                   <TableCell>{r.type}</TableCell>
                   <TableCell>{r.district}</TableCell>
-                  <TableCell className="text-sm text-muted-foreground">{r.volunteerName ?? "—"}</TableCell>
+                  <TableCell className="text-sm text-muted-foreground">{r.volunteerName ?? "-"}</TableCell>
                   <TableCell className="text-sm text-muted-foreground">{r.createdAt.toLocaleDateString()}</TableCell>
                   <TableCell><BeneficiaryActions id={r.id} /></TableCell>
                 </TableRow>
               ))}
             </TableBody>
           </Table>
+          </div>
         </div>
       )}
 
       <div className="flex flex-col gap-2">
         <p className="text-xs uppercase tracking-[0.15em] text-muted-foreground font-medium">All Records</p>
+        <div className="overflow-x-auto">
         <Table>
           <TableHeader>
             <TableRow>
@@ -82,7 +85,7 @@ export default async function AdminBeneficiariesPage() {
                 <TableCell className="font-medium">{r.name}</TableCell>
                 <TableCell>{r.type}</TableCell>
                 <TableCell>{r.district}</TableCell>
-                <TableCell className="text-sm text-muted-foreground">{r.volunteerName ?? "—"}</TableCell>
+                <TableCell className="text-sm text-muted-foreground">{r.volunteerName ?? "-"}</TableCell>
                 <TableCell>
                   <Badge variant={r.status === "ACTIVE" ? "default" : r.status === "REJECTED" ? "destructive" : "secondary"}>
                     {r.status}
@@ -93,6 +96,7 @@ export default async function AdminBeneficiariesPage() {
             ))}
           </TableBody>
         </Table>
+        </div>
       </div>
     </div>
   )

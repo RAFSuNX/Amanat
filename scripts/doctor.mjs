@@ -1,4 +1,4 @@
-// Preflight "doctor" for the repo itself — runs first in CI, before tests/build.
+// Preflight "doctor" for the repo itself - runs first in CI, before tests/build.
 // Catches structural problems that would otherwise blow up much later (e.g. the
 // missing migration journal that made the migrate job hang).
 import { readFileSync, existsSync, readdirSync } from "node:fs"
@@ -11,7 +11,7 @@ const fail = (m) => { problems.push(m); console.error(`  x   ${m}`) }
 // 1. Node version (image targets node 20+).
 const major = Number(process.versions.node.split(".")[0])
 if (major >= 20) ok(`node ${process.versions.node}`)
-else fail(`node ${process.versions.node} — need >= 20`)
+else fail(`node ${process.versions.node} - need >= 20`)
 
 // 2 + 3. Migration sets are complete and consistent: every .sql has a journal
 // entry and the journal has no dangling tags. A missing meta/ is the failure
@@ -43,7 +43,7 @@ try {
     .split("\n").map((s) => s.trim()).filter(Boolean).filter((f) => f !== ".env.example")
   if (tracked.length === 0) ok("no secret .env files tracked in git")
   else fail(`secret env file(s) tracked in git: ${tracked.join(", ")}`)
-} catch { ok("git not available — skipped .env tracking check") }
+} catch { ok("git not available - skipped .env tracking check") }
 
 // 6. Required npm scripts exist.
 const pkg = JSON.parse(readFileSync("package.json", "utf8"))

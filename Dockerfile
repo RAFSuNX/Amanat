@@ -11,7 +11,7 @@ RUN npm ci --ignore-scripts --no-audit --no-fund
 FROM base AS builder
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
-# NEXT_PUBLIC_* must be present at build time — they are compiled into the client
+# NEXT_PUBLIC_* must be present at build time - they are compiled into the client
 # bundle. Passed in from CI (build-arg) sourced from a GitHub secret. Empty is
 # fine: the client falls back to window.location.origin.
 ARG NEXT_PUBLIC_APP_URL

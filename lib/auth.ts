@@ -2,6 +2,7 @@ import { betterAuth } from "better-auth"
 import { drizzleAdapter } from "better-auth/adapters/drizzle"
 import { db } from "@/db"
 import * as schema from "@/db/schema"
+import { redisSecondaryStorage } from "@/lib/redis"
 
 const hasResend = Boolean(process.env.RESEND_API_KEY)
 
@@ -74,6 +75,9 @@ async function sendVerificationEmail(user: { email: string }, url: string) {
 }
 
 export const auth = betterAuth({
+  // Shared across replicas so rate-limit counters and verification lookups are
+  // consistent no matter which pod serves the request.
+  secondaryStorage: redisSecondaryStorage,
   database: drizzleAdapter(db, {
     provider: "pg",
     schema: {
@@ -93,13 +97,16 @@ export const auth = betterAuth({
     },
     autoSignInAfterVerification: true,
   },
-  // Only our own origin is a valid redirect/callback target — blocks open-redirect
+  // Only our own origin is a valid redirect/callback target - blocks open-redirect
   // phishing through the verification link's callbackURL.
   trustedOrigins: [process.env.BETTER_AUTH_URL || "https://amanat.rafsunx.com"],
   // Throttle abuse: email-bombing a victim, enumeration, and burning Resend quota
-  // by hammering the verification-email / sign-up endpoints.
+  // by hammering the verification-email / sign-up endpoints. Counters live in
+  // Redis ("secondary-storage") so the limit holds across all replicas instead
+  // of being per-pod.
   rateLimit: {
     enabled: true,
+    storage: "secondary-storage",
     window: 60,
     max: 60,
     customRules: {
@@ -111,6 +118,10 @@ export const auth = betterAuth({
   },
   session: {
     expiresIn: 60 * 60 * 24 * 7,
+    // Postgres stays the source of truth for sessions (durable across a Redis
+    // restart); Redis only accelerates reads and shares state between pods.
+    storeSessionInDatabase: true,
+    preserveSessionInDatabase: true,
   },
   user: {
     additionalFields: {

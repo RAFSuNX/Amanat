@@ -57,7 +57,7 @@ export default async function AuditLogPage() {
                 <TableCell className="text-sm font-medium">{entry.userName ?? "System"}</TableCell>
                 <TableCell>
                   <span className="text-[10px] uppercase tracking-wide text-muted-foreground">
-                    {entry.userRole ?? "—"}
+                    {entry.userRole ?? "-"}
                   </span>
                 </TableCell>
                 <TableCell>
@@ -71,10 +71,10 @@ export default async function AuditLogPage() {
                   )}
                 </TableCell>
                 <TableCell className="text-xs text-muted-foreground max-w-xs truncate">
-                  {entry.details ?? "—"}
+                  {entry.details ?? "-"}
                 </TableCell>
                 <TableCell className="text-xs text-muted-foreground font-mono">
-                  {entry.ipAddress ?? "—"}
+                  {entry.ipAddress ?? "-"}
                 </TableCell>
               </TableRow>
             ))}

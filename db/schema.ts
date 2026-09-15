@@ -7,6 +7,7 @@ import {
   timestamp,
   pgEnum,
   serial,
+  uniqueIndex,
 } from "drizzle-orm/pg-core"
 import { relations } from "drizzle-orm"
 
@@ -235,7 +236,11 @@ export const donations = pgTable("donations", {
   confirmedAt: timestamp("confirmed_at"),
   rejectionNote: text("rejection_note"),
   createdAt: timestamp("created_at").notNull().defaultNow(),
-})
+}, (t) => [
+  // A provider transaction reference is unique per method - the same bKash/Nagad
+  // txn can't be banked twice. Stops double-submits from inflating the ledger.
+  uniqueIndex("donations_method_txn_ref_uq").on(t.method, t.transactionRef),
+])
 
 // ─── Distribution Cycles ────────────────────────────────────────────────────────
 
@@ -388,7 +393,7 @@ export const distributionCyclesRelations = relations(
   })
 )
 
-// Inverse ("one") relations — required for drizzle's relational queries
+// Inverse ("one") relations - required for drizzle's relational queries
 // (e.g. beneficiaries.findMany({ with: { members, needAssessments } }) in
 // calculateDistribution) to infer the join keys.
 export const beneficiaryMembersRelations = relations(beneficiaryMembers, ({ one }) => ({

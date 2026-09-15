@@ -11,7 +11,7 @@ export async function POST(request: NextRequest) {
   const file = formData.get("file") as File | null
   if (!file) return NextResponse.json({ error: "No file" }, { status: 400 })
 
-  // Strict image-only — no PDF, no other types
+  // Strict image-only - no PDF, no other types
   const ALLOWED = ["image/jpeg", "image/png", "image/webp", "image/gif"]
   if (!ALLOWED.includes(file.type)) {
     return NextResponse.json({ error: "Only JPEG, PNG, WebP or GIF images accepted." }, { status: 400 })

@@ -49,6 +49,7 @@ export default async function ApplicationsPage() {
         </Link>
       </div>
 
+      <div className="overflow-x-auto">
       <Table>
         <TableHeader>
           <TableRow>
@@ -68,7 +69,7 @@ export default async function ApplicationsPage() {
               <TableCell>{r.title}</TableCell>
               <TableCell className="tabular-nums">{parseFloat(r.amountRequested).toLocaleString()} BDT</TableCell>
               <TableCell className="tabular-nums text-muted-foreground">
-                {r.approvedAmount ? `${parseFloat(r.approvedAmount).toLocaleString()} BDT` : "—"}
+                {r.approvedAmount ? `${parseFloat(r.approvedAmount).toLocaleString()} BDT` : "-"}
               </TableCell>
               <TableCell>
                 <Badge variant={statusVariant(r.status)}>{r.status}</Badge>
@@ -93,6 +94,7 @@ export default async function ApplicationsPage() {
           )}
         </TableBody>
       </Table>
+      </div>
     </div>
   )
 }

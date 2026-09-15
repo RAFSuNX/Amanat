@@ -41,6 +41,7 @@ export default async function AdminVolunteersPage() {
         </Link>
       </div>
 
+      <div className="overflow-x-auto">
       <Table>
         <TableHeader>
           <TableRow>
@@ -101,6 +102,7 @@ export default async function AdminVolunteersPage() {
           )}
         </TableBody>
       </Table>
+      </div>
     </div>
   )
 }

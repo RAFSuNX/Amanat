@@ -43,7 +43,7 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json({ id: cycle.id })
   } catch {
-    // period is unique — duplicate month is the likely cause
+    // period is unique - duplicate month is the likely cause
     return NextResponse.json(
       { error: `A cycle for ${period} already exists.` },
       { status: 409 }

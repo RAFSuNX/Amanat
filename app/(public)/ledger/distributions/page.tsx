@@ -1,6 +1,6 @@
 export const dynamic = "force-dynamic"
 
-import { db } from "@/db"
+import { ledgerDb as db } from "@/db/remote"
 import { distributionCycles, distributionAllotments } from "@/db/schema"
 import { eq, sql, desc } from "drizzle-orm"
 import { Badge } from "@/components/ui/badge"
@@ -43,7 +43,7 @@ export default async function LedgerDistributionsPage() {
                 <h2 className="font-semibold">{c.period}</h2>
                 <Badge>COMPLETED</Badge>
               </div>
-              <div className="grid grid-cols-3 gap-4 text-sm">
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-4 text-sm">
                 <div>
                   <p className="text-muted-foreground">Pool</p>
                   <p className="font-medium">৳{parseFloat(c.totalPool).toLocaleString()}</p>

@@ -7,6 +7,7 @@ import { eq } from "drizzle-orm"
 import { SignOutButton } from "@/components/sign-out-button"
 import { KycGate } from "@/components/kyc-gate"
 import { SidebarNav } from "@/components/sidebar-nav"
+import { MobileMenu } from "@/components/mobile-menu"
 
 const NAV = [
   { href: "/volunteer", label: "Dashboard" },
@@ -36,9 +37,17 @@ export default async function VolunteerLayout({
   }
 
   return (
-    <div className="h-dvh w-dvw flex overflow-hidden">
-      {/* Sidebar */}
-      <aside className="w-52 border-r border-border/40 flex flex-col shrink-0 bg-muted/20">
+    <div className="h-dvh w-dvw flex flex-col md:flex-row overflow-hidden">
+      {/* Mobile top bar */}
+      <div className="md:hidden sticky top-0 z-20 h-16 border-b border-border/40 px-4 flex items-center justify-between bg-background shrink-0">
+        <Link href="/">
+          <img src="/logo.png" alt="Amanat" className="h-12 w-auto object-contain" />
+        </Link>
+        <MobileMenu links={NAV} signIn={false} />
+      </div>
+
+      {/* Sidebar - desktop only */}
+      <aside className="hidden md:flex flex-col w-52 border-r border-border/40 shrink-0 bg-muted/20">
         <div className="h-16 px-4 border-b border-border/40 flex items-center gap-2">
           <Link href="/">
             <img src="/logo.png" alt="Amanat" className="h-12 w-auto object-contain" />
@@ -55,7 +64,7 @@ export default async function VolunteerLayout({
       </aside>
 
       {/* Main - KYC page always accessible even when locked */}
-      <main className="flex-1 overflow-y-auto p-10">
+      <main className="flex-1 overflow-y-auto p-4 md:p-10">
         {kycLocked ? (
           <KycGate>{children}</KycGate>
         ) : children}

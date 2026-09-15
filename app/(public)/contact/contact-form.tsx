@@ -36,7 +36,7 @@ export function ContactForm() {
 
   if (sent) {
     return (
-      <div className="flex flex-col justify-center px-10 py-12 gap-4">
+      <div className="flex flex-col justify-center px-[5vw] md:px-10 py-8 md:py-12 gap-4">
         <p className="text-[10px] uppercase tracking-[0.2em] text-primary">Sent</p>
         <h2 className="text-2xl font-bold tracking-tight">Thank you.</h2>
         <p className="text-sm text-muted-foreground leading-relaxed max-w-sm">
@@ -47,7 +47,7 @@ export function ContactForm() {
   }
 
   return (
-    <div className="flex flex-col overflow-y-auto px-10 py-12">
+    <div className="flex flex-col overflow-y-auto px-[5vw] md:px-10 py-8 md:py-12">
       <p className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground mb-2">Send a message</p>
       <h2 className="text-2xl font-bold tracking-tight mb-4">Contact us</h2>
 
@@ -67,7 +67,7 @@ export function ContactForm() {
       </div>
 
       <form onSubmit={submit} className="flex flex-col gap-5">
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div className={fieldClass}>
             <label className={labelClass}>Your Name</label>
             <Input value={name} onChange={(e) => setName(e.target.value)} required placeholder="Full name" />

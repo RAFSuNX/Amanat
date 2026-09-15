@@ -65,7 +65,7 @@ export default function NewApplicationPage() {
 
         <div className={fieldClass}>
           <Label className={labelClass}>Title</Label>
-          <Input value={title} onChange={e => setTitle(e.target.value)} placeholder="e.g. Medical emergency — surgery needed" required />
+          <Input value={title} onChange={e => setTitle(e.target.value)} placeholder="e.g. Medical emergency, surgery needed" required />
         </div>
 
         <div className={fieldClass}>

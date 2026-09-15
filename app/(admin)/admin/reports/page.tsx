@@ -89,7 +89,7 @@ export default async function AdminReportsPage() {
         <p className="text-sm text-muted-foreground mt-1">System-wide summary statistics</p>
       </div>
 
-      <div className="grid grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {stats.map(section => (
           <div key={section.section} className="border border-border/40 rounded-lg overflow-hidden">
             <div className="px-5 py-3 border-b border-border/40 bg-muted/20">

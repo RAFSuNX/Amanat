@@ -1,6 +1,6 @@
 export const dynamic = "force-dynamic"
 
-import { db } from "@/db"
+import { ledgerDb as db } from "@/db/remote"
 import { distributionCycles, distributionAllotments, beneficiaries } from "@/db/schema"
 import { eq } from "drizzle-orm"
 import { notFound } from "next/navigation"
@@ -20,7 +20,7 @@ export default async function PublicCycleDetailPage({
   const cycle = await db.query.distributionCycles.findFirst({
     where: eq(distributionCycles.id, Number(id)),
   })
-  // Only completed cycles are public — in-progress cycles are not exposed.
+  // Only completed cycles are public - in-progress cycles are not exposed.
   if (!cycle || cycle.status !== "COMPLETED") notFound()
 
   const rows = await db

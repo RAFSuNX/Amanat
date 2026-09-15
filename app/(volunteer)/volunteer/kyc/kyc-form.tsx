@@ -114,7 +114,7 @@ export function KycForm({
         />
         <p className="text-[10px] text-muted-foreground">
           {docLocked
-            ? "Locked — must match your submitted document."
+            ? "Locked. Must match your submitted document."
             : "This will become your official name on your Amanat profile."}
         </p>
       </div>
@@ -167,7 +167,7 @@ export function KycForm({
             <a href={existing!.docImageUrl} target="_blank" rel="noreferrer" className="text-xs text-primary underline">
               View submitted document
             </a>
-            <span className="text-[10px] text-muted-foreground">On record — cannot be changed.</span>
+            <span className="text-[10px] text-muted-foreground">On record. Cannot be changed.</span>
           </div>
         ) : (
           <>

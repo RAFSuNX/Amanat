@@ -25,7 +25,7 @@ export default function LoginPage() {
     const { data, error: authError } = await signIn.email({ email, password })
     setLoading(false)
     if (authError || !data) {
-      // Distinguish "email not verified" from bad credentials — otherwise the
+      // Distinguish "email not verified" from bad credentials - otherwise the
       // user thinks their (correct) password is wrong and keeps retrying.
       const code = (authError as { code?: string } | null)?.code
       if (code === "EMAIL_NOT_VERIFIED" || /verif/i.test(authError?.message ?? "")) {
@@ -71,7 +71,7 @@ export default function LoginPage() {
             <p className="text-destructive">{error}</p>
             {needsVerify && (
               resent ? (
-                <p className="text-muted-foreground">Verification email sent — check your inbox (and spam).</p>
+                <p className="text-muted-foreground">Verification email sent. Check your inbox (and spam).</p>
               ) : (
                 <button
                   type="button"

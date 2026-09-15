@@ -16,7 +16,7 @@ spec:
       containers:
         - name: app
           image: ghcr.io/rafsunx/amanat:main
-          # :main is mutable — always re-pull so a rollout can't reuse a stale image.
+          # :main is mutable - always re-pull so a rollout can't reuse a stale image.
           imagePullPolicy: Always
           ports:
             - containerPort: 3000
@@ -30,12 +30,16 @@ spec:
               value: "3000"
             - name: HOSTNAME
               value: "0.0.0.0"
+          # Readiness gates traffic: /api/health returns 503 when the DB or Redis
+          # is unreachable, so a pod that can only 500 is pulled from the Service.
           readinessProbe:
             httpGet:
-              path: /
+              path: /api/health
               port: 3000
             initialDelaySeconds: 10
             periodSeconds: 10
+          # Liveness stays on "/" on purpose: only restart a genuinely wedged
+          # process. Restarting on a transient DB/Redis blip would loop every pod.
           livenessProbe:
             httpGet:
               path: /
