@@ -66,7 +66,7 @@ export function MobileMenu({
     <>
       <button
         type="button"
-        onPointerDown={handleOpen}
+        onClick={handleOpen}
         aria-label="Open menu"
         aria-expanded={open}
         className="md:hidden flex flex-col justify-center gap-1.5 p-2"
