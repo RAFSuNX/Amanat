@@ -6,9 +6,11 @@ import { getSession } from "@/lib/session"
 import { log } from "@/lib/audit"
 import { rateLimitOk } from "@/lib/redis"
 
-// A postgres unique-violation (duplicate transaction_ref for a method).
+// A postgres unique-violation (duplicate transaction_ref for a method). Drizzle
+// wraps the driver error, so the SQLSTATE lands on .cause, not the top level.
 function isUniqueViolation(e: unknown): boolean {
-  return typeof e === "object" && e !== null && "code" in e && (e as { code: string }).code === "23505"
+  const err = e as { code?: string; cause?: { code?: string } } | null
+  return err?.code === "23505" || err?.cause?.code === "23505"
 }
 
 const schema = z.object({
