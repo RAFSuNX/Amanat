@@ -40,18 +40,23 @@ export default function NewVolunteerPage() {
     e.preventDefault()
     setError("")
     setLoading(true)
-    const res = await fetch("/api/admin/volunteers", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(form),
-    })
-    setLoading(false)
-    if (!res.ok) {
-      const d = await res.json()
-      setError(d.error ?? "Failed to create volunteer.")
-      return
+    try {
+      const res = await fetch("/api/admin/volunteers", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(form),
+      })
+      if (!res.ok) {
+        const d = await res.json().catch(() => ({}))
+        setError(d.error ?? "Failed to create volunteer.")
+        return
+      }
+      router.push("/admin/volunteers")
+    } catch {
+      setError("Network error. Please try again.")
+    } finally {
+      setLoading(false)
     }
-    router.push("/admin/volunteers")
   }
 
   return (

@@ -95,16 +95,21 @@ export default function DonatePage() {
   async function uploadReceipt(file: File) {
     setReceiptUploading(true)
     setReceiptError("")
-    const fd = new FormData()
-    fd.append("file", file)
-    const res = await fetch("/api/upload/receipt", { method: "POST", body: fd })
-    setReceiptUploading(false)
-    const data = await res.json()
-    if (!res.ok) {
-      setReceiptError(data.error ?? "Upload failed. You can still submit without a receipt.")
-      return
+    try {
+      const fd = new FormData()
+      fd.append("file", file)
+      const res = await fetch("/api/upload/receipt", { method: "POST", body: fd })
+      const data = await res.json().catch(() => ({}))
+      if (!res.ok) {
+        setReceiptError(data.error ?? "Upload failed. You can still submit without a receipt.")
+        return
+      }
+      setReceiptUrl(data.url)
+    } catch {
+      setReceiptError("Upload failed (network). You can still submit without a receipt.")
+    } finally {
+      setReceiptUploading(false)
     }
-    setReceiptUrl(data.url)
   }
 
   async function submit(e: React.FormEvent) {
@@ -112,14 +117,19 @@ export default function DonatePage() {
     setError("")
     if (!amount || !method || !txnRef || !name) { setError("Please fill in all required fields."); return }
     setLoading(true)
-    const res = await fetch("/api/donations", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ amount, method, transactionRef: txnRef, donorName: name, donorPhone: phone, donorEmail: email, isAnonymous, receiptImageUrl: receiptUrl || undefined }),
-    })
-    setLoading(false)
-    if (!res.ok) { const d = await res.json(); setError(d.error ?? "Something went wrong."); return }
-    setDone(true)
+    try {
+      const res = await fetch("/api/donations", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ amount, method, transactionRef: txnRef, donorName: name, donorPhone: phone, donorEmail: email, isAnonymous, receiptImageUrl: receiptUrl || undefined }),
+      })
+      if (!res.ok) { const d = await res.json().catch(() => ({})); setError(d.error ?? "Something went wrong."); return }
+      setDone(true)
+    } catch {
+      setError("Network error. Please try again.")
+    } finally {
+      setLoading(false)
+    }
   }
 
   if (done) {

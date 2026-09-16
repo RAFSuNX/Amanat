@@ -13,6 +13,12 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ id:
   if (id === null) return badRequest("Invalid application id")
   const { approvedAmount, note } = ((await readJson(req)) ?? {}) as { approvedAmount?: number; note?: string }
 
+  // Server-side guard: an approved amount, if given, must be a real non-negative
+  // number - never trust the client to have validated the money field.
+  if (approvedAmount != null &&
+      (typeof approvedAmount !== "number" || !Number.isFinite(approvedAmount) || approvedAmount < 0))
+    return badRequest("Approved amount must be a non-negative number")
+
   const [row] = await db.update(specialNeedApplications).set({
     status: "APPROVED",
     approvedAmount: approvedAmount ? approvedAmount.toFixed(2) : null,

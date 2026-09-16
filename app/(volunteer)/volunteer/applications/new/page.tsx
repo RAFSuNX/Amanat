@@ -26,19 +26,30 @@ export default function NewApplicationPage() {
 
   async function submit(e: React.FormEvent) {
     e.preventDefault()
+    setError("")
     if (!beneficiaryId || !title || !description || !amount) {
       setError("Please fill in all fields.")
       return
     }
+    const amt = Number(amount)
+    if (!Number.isFinite(amt) || amt <= 0) {
+      setError("Enter a valid amount greater than 0.")
+      return
+    }
     setLoading(true)
-    const res = await fetch("/api/volunteer/applications", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ beneficiaryId: Number(beneficiaryId), title, description, amountRequested: Number(amount) }),
-    })
-    setLoading(false)
-    if (!res.ok) { const d = await res.json(); setError(d.error ?? "Failed."); return }
-    router.push("/volunteer/applications")
+    try {
+      const res = await fetch("/api/volunteer/applications", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ beneficiaryId: Number(beneficiaryId), title, description, amountRequested: amt }),
+      })
+      if (!res.ok) { const d = await res.json().catch(() => ({})); setError(d.error ?? "Failed."); return }
+      router.push("/volunteer/applications")
+    } catch {
+      setError("Network error. Please try again.")
+    } finally {
+      setLoading(false)
+    }
   }
 
   const labelClass = "text-xs font-semibold text-foreground"

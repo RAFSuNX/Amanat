@@ -16,19 +16,24 @@ export function PhoneForm({ current }: { current: string | null }) {
   async function save() {
     setError("")
     setLoading(true)
-    const res = await fetch("/api/account/phone", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ phone }),
-    })
-    setLoading(false)
-    if (!res.ok) {
-      const d = await res.json()
-      setError(d.error ?? "Failed to save.")
-      return
+    try {
+      const res = await fetch("/api/account/phone", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ phone }),
+      })
+      if (!res.ok) {
+        const d = await res.json().catch(() => ({}))
+        setError(d.error ?? "Failed to save.")
+        return
+      }
+      setEditing(false)
+      router.refresh()
+    } catch {
+      setError("Network error. Please try again.")
+    } finally {
+      setLoading(false)
     }
-    setEditing(false)
-    router.refresh()
   }
 
   if (!editing) {

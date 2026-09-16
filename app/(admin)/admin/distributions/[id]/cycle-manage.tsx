@@ -58,19 +58,25 @@ export function CycleManage({ cycle, rows }: { cycle: Cycle; rows: Row[] }) {
   async function post(body: Record<string, unknown>) {
     setError("")
     setBusy(true)
-    const res = await fetch(`/api/admin/distributions/${cycle.id}`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(body),
-    })
-    setBusy(false)
-    if (!res.ok) {
-      const d = await res.json().catch(() => ({}))
-      setError(d.error ?? "Action failed.")
+    try {
+      const res = await fetch(`/api/admin/distributions/${cycle.id}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body),
+      })
+      if (!res.ok) {
+        const d = await res.json().catch(() => ({}))
+        setError(d.error ?? "Action failed.")
+        return false
+      }
+      router.refresh()
+      return true
+    } catch {
+      setError("Network error. Please try again.")
       return false
+    } finally {
+      setBusy(false)
     }
-    router.refresh()
-    return true
   }
 
   const delivered = rows.filter((r) => r.deliveryStatus === "DELIVERED").length

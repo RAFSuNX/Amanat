@@ -1,9 +1,9 @@
 "use client"
 
 import { useState } from "react"
-import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
+import { useAction } from "@/lib/use-action"
 import {
   Dialog,
   DialogContent,
@@ -21,21 +21,14 @@ export function KycActions({
   docImageUrl?: string
   docType?: string
 }) {
-  const router = useRouter()
+  const { loading, error, run } = useAction()
   const [note, setNote] = useState("")
-  const [loading, setLoading] = useState<"approve" | "reject" | null>(null)
   const [open, setOpen] = useState(false)
 
   async function act(action: "approve" | "reject") {
-    setLoading(action)
-    await fetch(`/api/admin/volunteers/${profileId}/kyc`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ action, note }),
-    })
-    setLoading(null)
-    setOpen(false)
-    router.refresh()
+    // Keep the dialog open on failure so the admin sees the error and can retry.
+    const ok = await run(action, `/api/admin/volunteers/${profileId}/kyc`, { action, note })
+    if (ok) setOpen(false)
   }
 
   return (
@@ -61,6 +54,7 @@ export function KycActions({
           value={note}
           onChange={(e) => setNote(e.target.value)}
         />
+        {error && <p className="text-sm text-destructive">{error}</p>}
         <div className="flex gap-2 justify-end">
           <Button
             variant="outline"

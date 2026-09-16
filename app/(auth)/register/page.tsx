@@ -39,29 +39,33 @@ export default function RegisterPage() {
     if (type === "volunteer" && !district) { setError("Select your district."); return }
     setLoading(true)
 
-    if (type === "volunteer") {
-      // One server call creates the account AND the volunteer profile. Email
-      // verification means there is no session immediately after sign-up, so the
-      // old client-side signUp + authenticated /become call always failed here.
-      const res = await fetch("/api/volunteer/register", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, email, password, district, upazila }),
-      })
-      const d = await res.json().catch(() => ({}))
-      setLoading(false)
-      if (!res.ok) { setError(d.error ?? "Registration failed."); return }
-      router.push(`/verify-email?email=${encodeURIComponent(email)}`)
-      return
-    }
+    try {
+      if (type === "volunteer") {
+        // One server call creates the account AND the volunteer profile. Email
+        // verification means there is no session immediately after sign-up, so the
+        // old client-side signUp + authenticated /become call always failed here.
+        const res = await fetch("/api/volunteer/register", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ name, email, password, district, upazila }),
+        })
+        const d = await res.json().catch(() => ({}))
+        if (!res.ok) { setError(d.error ?? "Registration failed."); return }
+        router.push(`/verify-email?email=${encodeURIComponent(email)}`)
+        return
+      }
 
-    const { data, error: authError } = await signUp.email({ email, password, name })
-    setLoading(false)
-    if (authError || !data) {
-      setError(authError?.message ?? "Registration failed.")
-      return
+      const { data, error: authError } = await signUp.email({ email, password, name })
+      if (authError || !data) {
+        setError(authError?.message ?? "Registration failed.")
+        return
+      }
+      router.push("/verify-email")
+    } catch {
+      setError("Network error. Please try again.")
+    } finally {
+      setLoading(false)
     }
-    router.push("/verify-email")
   }
 
   const fieldClass = "flex flex-col gap-2"

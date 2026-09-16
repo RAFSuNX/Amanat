@@ -26,16 +26,26 @@ export function BecomeVolunteerButton() {
   const [error, setError] = useState("")
 
   async function submit() {
+    setError("")
     if (!district) { setError("Please select your district."); return }
     setLoading(true)
-    const res = await fetch("/api/volunteer/become", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ district, upazila }),
-    })
-    setLoading(false)
-    if (!res.ok) { setError("Something went wrong. Try again."); return }
-    router.push("/volunteer/kyc")
+    try {
+      const res = await fetch("/api/volunteer/become", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ district, upazila }),
+      })
+      if (!res.ok) {
+        const d = await res.json().catch(() => ({}))
+        setError(d.error ?? "Something went wrong. Try again.")
+        return
+      }
+      router.push("/volunteer/kyc")
+    } catch {
+      setError("Network error. Please try again.")
+    } finally {
+      setLoading(false)
+    }
   }
 
   if (!open) {

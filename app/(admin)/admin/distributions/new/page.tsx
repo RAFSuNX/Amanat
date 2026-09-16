@@ -25,18 +25,23 @@ export default function NewCyclePage() {
     e.preventDefault()
     setError("")
     setLoading(true)
-    const res = await fetch("/api/admin/distributions", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(form),
-    })
-    setLoading(false)
-    const d = await res.json()
-    if (!res.ok) {
-      setError(d.error ?? "Failed to create cycle.")
-      return
+    try {
+      const res = await fetch("/api/admin/distributions", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(form),
+      })
+      const d = await res.json().catch(() => ({}))
+      if (!res.ok) {
+        setError(d.error ?? "Failed to create cycle.")
+        return
+      }
+      router.push(`/admin/distributions/${d.id}`)
+    } catch {
+      setError("Network error. Please try again.")
+    } finally {
+      setLoading(false)
     }
-    router.push(`/admin/distributions/${d.id}`)
   }
 
   return (

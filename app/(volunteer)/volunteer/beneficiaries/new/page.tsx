@@ -57,13 +57,19 @@ export default function NewBeneficiaryPage() {
 
   async function uploadPhoto(file: File) {
     setPhotoUploading(true)
-    const fd = new FormData()
-    fd.append("file", file)
-    const res = await fetch("/api/upload/beneficiary", { method: "POST", body: fd })
-    setPhotoUploading(false)
-    if (!res.ok) { setError("Photo upload failed."); return }
-    const { url } = await res.json()
-    setPhotoUrl(url)
+    setError("")
+    try {
+      const fd = new FormData()
+      fd.append("file", file)
+      const res = await fetch("/api/upload/beneficiary", { method: "POST", body: fd })
+      if (!res.ok) { setError("Photo upload failed."); return }
+      const { url } = await res.json()
+      setPhotoUrl(url)
+    } catch {
+      setError("Photo upload failed (network).")
+    } finally {
+      setPhotoUploading(false)
+    }
   }
 
   function addMember() { setMembers((m) => [...m, blankMember()]) }
@@ -90,21 +96,26 @@ export default function NewBeneficiaryPage() {
   async function submit() {
     setLoading(true)
     setError("")
-    const res = await fetch("/api/volunteer/beneficiaries", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        name, phone: phone || undefined, nidNumber: nidNumber || undefined,
-        photoUrl: photoUrl || undefined, type, division, district,
-        upazila: upazila || undefined, union: union || undefined, village: village || undefined,
-        members: members.map((m) => ({ ...m, age: Number(m.age) })),
-        declaredMonthlyNeed: Number(monthlyNeed),
-        assessmentNotes: notes || undefined,
-      }),
-    })
-    setLoading(false)
-    if (!res.ok) { const d = await res.json(); setError(d.error ?? "Failed."); return }
-    router.push("/volunteer/beneficiaries")
+    try {
+      const res = await fetch("/api/volunteer/beneficiaries", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name, phone: phone || undefined, nidNumber: nidNumber || undefined,
+          photoUrl: photoUrl || undefined, type, division, district,
+          upazila: upazila || undefined, union: union || undefined, village: village || undefined,
+          members: members.map((m) => ({ ...m, age: Number(m.age) })),
+          declaredMonthlyNeed: Number(monthlyNeed),
+          assessmentNotes: notes || undefined,
+        }),
+      })
+      if (!res.ok) { const d = await res.json().catch(() => ({})); setError(d.error ?? "Failed."); return }
+      router.push("/volunteer/beneficiaries")
+    } catch {
+      setError("Network error. Please try again.")
+    } finally {
+      setLoading(false)
+    }
   }
 
   const stepLabels = STEPS

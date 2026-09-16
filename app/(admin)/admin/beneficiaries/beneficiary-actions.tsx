@@ -1,26 +1,17 @@
 "use client"
 
 import { useState } from "react"
-import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
+import { useAction } from "@/lib/use-action"
 
 export function BeneficiaryActions({ id }: { id: number }) {
-  const router = useRouter()
-  const [loading, setLoading] = useState<string | null>(null)
+  const { loading, error, run } = useAction()
   const [note, setNote] = useState("")
   const [showNote, setShowNote] = useState(false)
 
-  async function act(action: "approve" | "reject") {
-    setLoading(action)
-    await fetch(`/api/admin/beneficiaries/${id}/${action}`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ note }),
-    })
-    setLoading(null)
-    router.refresh()
-  }
+  const act = (action: "approve" | "reject") =>
+    run(action, `/api/admin/beneficiaries/${id}/${action}`, { note })
 
   return (
     <div className="flex flex-col gap-2">
@@ -40,6 +31,7 @@ export function BeneficiaryActions({ id }: { id: number }) {
           </Button>
         </div>
       )}
+      {error && <p className="text-xs text-destructive">{error}</p>}
     </div>
   )
 }

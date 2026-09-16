@@ -31,15 +31,21 @@ export function DeliveryActions({
   const [error, setError] = useState("")
 
   async function deliver() {
+    setError("")
     setLoading("deliver")
-    const res = await fetch(`/api/volunteer/deliveries/${allotmentId}/deliver`, { method: "POST" })
-    setLoading(null)
-    if (!res.ok) {
-      const d = await res.json().catch(() => ({}))
-      setError(d.error ?? "Failed.")
-      return
+    try {
+      const res = await fetch(`/api/volunteer/deliveries/${allotmentId}/deliver`, { method: "POST" })
+      if (!res.ok) {
+        const d = await res.json().catch(() => ({}))
+        setError(d.error ?? "Failed.")
+        return
+      }
+      router.refresh()
+    } catch {
+      setError("Network error. Please try again.")
+    } finally {
+      setLoading(null)
     }
-    router.refresh()
   }
 
   async function submitRequest() {
@@ -49,38 +55,41 @@ export function DeliveryActions({
       return
     }
     setLoading("request")
+    try {
+      let receiptUrl: string | undefined
+      if (file) {
+        const fd = new FormData()
+        fd.append("file", file)
+        const up = await fetch("/api/upload/receipt", { method: "POST", body: fd })
+        if (!up.ok) {
+          const d = await up.json().catch(() => ({}))
+          setError(d.error ?? "Receipt upload failed.")
+          return
+        }
+        receiptUrl = ((await up.json().catch(() => ({}))) as { url?: string }).url
+      }
 
-    let receiptUrl: string | undefined
-    if (file) {
-      const fd = new FormData()
-      fd.append("file", file)
-      const up = await fetch("/api/upload/receipt", { method: "POST", body: fd })
-      if (!up.ok) {
-        const d = await up.json().catch(() => ({}))
-        setLoading(null)
-        setError(d.error ?? "Receipt upload failed.")
+      const res = await fetch(`/api/volunteer/deliveries/${allotmentId}/flag`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          note,
+          requestedAmount: amount === "" ? undefined : Number(amount),
+          receiptUrl,
+        }),
+      })
+      if (!res.ok) {
+        const d = await res.json().catch(() => ({}))
+        setError(d.error ?? "Request failed.")
         return
       }
-      receiptUrl = (await up.json()).url
+      setShowForm(false)
+      router.refresh()
+    } catch {
+      setError("Network error. Please try again.")
+    } finally {
+      setLoading(null)
     }
-
-    const res = await fetch(`/api/volunteer/deliveries/${allotmentId}/flag`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        note,
-        requestedAmount: amount === "" ? undefined : Number(amount),
-        receiptUrl,
-      }),
-    })
-    setLoading(null)
-    if (!res.ok) {
-      const d = await res.json().catch(() => ({}))
-      setError(d.error ?? "Request failed.")
-      return
-    }
-    setShowForm(false)
-    router.refresh()
   }
 
   if (deliveryStatus === "DELIVERED") {
