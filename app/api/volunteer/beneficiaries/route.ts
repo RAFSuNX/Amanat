@@ -4,6 +4,7 @@ import { db } from "@/db"
 import { beneficiaries, beneficiaryMembers, needAssessments } from "@/db/schema"
 import { requireVolunteer } from "@/lib/session"
 import { log } from "@/lib/audit"
+import { conflict, isUniqueViolation, unauthorized } from "@/lib/http"
 
 const memberSchema = z.object({
   name: z.string().min(1),
@@ -35,7 +36,7 @@ const schema = z.object({
 
 export async function POST(request: NextRequest) {
   const session = await requireVolunteer()
-  if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+  if (!session) return unauthorized()
 
   const body = await request.json()
   const parsed = schema.safeParse(body)
@@ -46,7 +47,8 @@ export async function POST(request: NextRequest) {
   const d = parsed.data
   const period = new Date().toISOString().slice(0, 7) // YYYY-MM
 
-  await db.transaction(async (tx) => {
+  try {
+    await db.transaction(async (tx) => {
     const [ben] = await tx
       .insert(beneficiaries)
       .values({
@@ -86,7 +88,12 @@ export async function POST(request: NextRequest) {
       notes: d.assessmentNotes ?? null,
       status: "ACTIVE",
     })
-  })
+    })
+  } catch (e) {
+    if (isUniqueViolation(e))
+      return conflict("A beneficiary with this NID is already registered.")
+    throw e
+  }
 
   await log({ userId: session.user.id, userName: session.user.name, userRole: "VOLUNTEER",
     action: "BENEFICIARY_REGISTERED", resourceType: "beneficiary",

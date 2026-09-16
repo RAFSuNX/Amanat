@@ -8,8 +8,9 @@ import {
   pgEnum,
   serial,
   uniqueIndex,
+  check,
 } from "drizzle-orm/pg-core"
-import { relations } from "drizzle-orm"
+import { relations, sql } from "drizzle-orm"
 
 // ─── Enums ────────────────────────────────────────────────────────────────────
 
@@ -182,7 +183,11 @@ export const beneficiaries = pgTable("beneficiaries", {
   reviewedAt: timestamp("reviewed_at"),
   createdAt: timestamp("created_at").notNull().defaultNow(),
   updatedAt: timestamp("updated_at").notNull().defaultNow(),
-})
+}, (t) => [
+  // One national ID = one beneficiary. Partial (NID is optional) so many rows may
+  // have no NID, but a given NID can't be registered twice.
+  uniqueIndex("beneficiaries_nid_uq").on(t.nidNumber).where(sql`${t.nidNumber} IS NOT NULL`),
+])
 
 export const beneficiaryMembers = pgTable("beneficiary_members", {
   id: serial("id").primaryKey(),
@@ -264,7 +269,14 @@ export const distributionCycles = pgTable("distribution_cycles", {
   createdAt: timestamp("created_at").notNull().defaultNow(),
   activatedAt: timestamp("activated_at"),
   completedAt: timestamp("completed_at"),
-})
+}, (t) => [
+  // Money can't drift into impossible states even via a direct DB edit: the pool
+  // is positive, the special-needs reserve never exceeds it, and remaining is
+  // never negative. App logic derives these; these constraints are the backstop.
+  check("cycle_total_pool_positive", sql`${t.totalPool} > 0`),
+  check("cycle_deduction_within_pool", sql`${t.specialDeductionTotal} <= ${t.totalPool}`),
+  check("cycle_remaining_nonneg", sql`${t.remainingPool} IS NULL OR ${t.remainingPool} >= 0`),
+])
 
 // ─── Distribution Allotments ───────────────────────────────────────────────────
 
@@ -338,7 +350,11 @@ export const specialNeedApplications = pgTable("special_need_applications", {
   deliveryNote: text("delivery_note"),
   deliveredAt: timestamp("delivered_at"),
   createdAt: timestamp("created_at").notNull().defaultNow(),
-})
+}, (t) => [
+  // Stops an accidental double-submit creating two identical open requests for the
+  // same beneficiary. Partial on PENDING, so a resubmit after review is allowed.
+  uniqueIndex("app_pending_dup_uq").on(t.beneficiaryId, t.title).where(sql`${t.status} = 'PENDING'`),
+])
 
 // ─── Audit Logs (append-only, never deleted) ──────────────────────────────────
 

@@ -7,16 +7,20 @@ import { log } from "@/lib/audit"
 import { calculateDistribution } from "@/lib/distribution"
 import { isCycleAction, overrideSchema } from "@/lib/contracts"
 import { sumFinal, poolCap, exceedsPool } from "@/lib/allotment"
+import { badRequest, conflict, parseId, unauthorized } from "@/lib/http"
 
+// Cycle status transitions are done atomically: the required current status is in
+// the UPDATE's WHERE, so two concurrent callers can't both pass a check-then-act
+// race - exactly one row updates, the loser gets a 409.
 export async function POST(
   req: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
   const session = await requireAdmin()
-  if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+  if (!session) return unauthorized()
 
-  const { id } = await params
-  const cycleId = Number(id)
+  const cycleId = parseId((await params).id)
+  if (cycleId === null) return badRequest("Invalid cycle id")
   const body = await req.json().catch(() => ({}))
 
   // Exact contract: only the defined actions are accepted, matched literally.
@@ -35,19 +39,19 @@ export async function POST(
     // ── DRAFT → VOLUNTEER_REVIEW ──────────────────────────────────────────────
     case "calculate": {
       if (cycle.status !== "DRAFT")
-        return NextResponse.json({ error: "Cycle must be in DRAFT to calculate." }, { status: 400 })
-      await calculateDistribution(cycleId)
+        return badRequest("Cycle must be in DRAFT to calculate.")
+      const summary = await calculateDistribution(cycleId)
       await log({ ...actor, action: "DISTRIBUTION_CALCULATED", resourceType: "distribution",
-        resourceId: cycleId, details: { period: cycle.period }, request: req })
+        resourceId: cycleId, details: { period: cycle.period, ...summary }, request: req })
       return NextResponse.json({ ok: true })
     }
 
     // ── VOLUNTEER_REVIEW → ADMIN_REVIEW ───────────────────────────────────────
     case "close-review": {
-      if (cycle.status !== "VOLUNTEER_REVIEW")
-        return NextResponse.json({ error: "Cycle is not in volunteer review." }, { status: 400 })
-      await db.update(distributionCycles).set({ status: "ADMIN_REVIEW" })
-        .where(eq(distributionCycles.id, cycleId))
+      const [row] = await db.update(distributionCycles).set({ status: "ADMIN_REVIEW" })
+        .where(and(eq(distributionCycles.id, cycleId), eq(distributionCycles.status, "VOLUNTEER_REVIEW")))
+        .returning({ id: distributionCycles.id })
+      if (!row) return conflict("Cycle is not in volunteer review.")
       await log({ ...actor, action: "DISTRIBUTION_REVIEW_CLOSED", resourceType: "distribution",
         resourceId: cycleId, details: { period: cycle.period }, request: req })
       return NextResponse.json({ ok: true })
@@ -88,21 +92,29 @@ export async function POST(
 
     // ── ADMIN_REVIEW → ACTIVE (hard-block over pool) ──────────────────────────
     case "activate": {
-      if (cycle.status !== "ADMIN_REVIEW")
-        return NextResponse.json({ error: "Cycle must be in admin review to activate." }, { status: 400 })
-
       const allotments = await db.query.distributionAllotments.findMany({
         where: eq(distributionAllotments.cycleId, cycleId),
       })
       const cap = poolCap(cycle.totalPool, cycle.specialDeductionTotal)
       const totalFinal = sumFinal(allotments)
 
+      // Conservation guard: never activate a cycle whose allotments exceed the pool.
       if (exceedsPool(totalFinal, cap)) {
         return NextResponse.json({
           error: `Total allocation (${totalFinal.toFixed(2)} BDT) exceeds the available pool (${cap.toFixed(2)} BDT). Reduce amounts before activating.`,
           totalFinal, cap,
         }, { status: 400 })
       }
+
+      // Atomically claim the transition; remainingPool is DERIVED here (cap - spent).
+      // If another request already activated, exactly one row updates - loser 409s.
+      const [row] = await db.update(distributionCycles).set({
+        status: "ACTIVE",
+        activatedAt: new Date(),
+        remainingPool: (cap - totalFinal).toFixed(2),
+      }).where(and(eq(distributionCycles.id, cycleId), eq(distributionCycles.status, "ADMIN_REVIEW")))
+        .returning({ id: distributionCycles.id })
+      if (!row) return conflict("Cycle must be in admin review to activate.")
 
       // Lock in final amounts: overrides become the authoritative allocated_amount
       // (this is the number the public ledger and delivery screens read).
@@ -113,12 +125,6 @@ export async function POST(
             .where(eq(distributionAllotments.id, a.id))
       }
 
-      await db.update(distributionCycles).set({
-        status: "ACTIVE",
-        activatedAt: new Date(),
-        remainingPool: (cap - totalFinal).toFixed(2),
-      }).where(eq(distributionCycles.id, cycleId))
-
       // Mark participating families ACTIVE (they've entered the distribution).
       const benIds = [...new Set(allotments.map((a) => a.beneficiaryId))]
       if (benIds.length > 0)
@@ -127,17 +133,18 @@ export async function POST(
 
       await log({ ...actor, action: "DISTRIBUTION_ACTIVATED", resourceType: "distribution",
         resourceId: cycleId,
-        details: { period: cycle.period, families: benIds.length, totalDistributed: totalFinal, pool: cap },
+        details: { period: cycle.period, families: benIds.length, totalDistributed: totalFinal,
+          pool: cap, remaining: +(cap - totalFinal).toFixed(2) },
         request: req })
       return NextResponse.json({ ok: true })
     }
 
     // ── ACTIVE → COMPLETED (published to public ledger) ───────────────────────
     case "complete": {
-      if (cycle.status !== "ACTIVE")
-        return NextResponse.json({ error: "Only active cycles can be completed." }, { status: 400 })
-      await db.update(distributionCycles).set({ status: "COMPLETED", completedAt: new Date() })
-        .where(eq(distributionCycles.id, cycleId))
+      const [row] = await db.update(distributionCycles).set({ status: "COMPLETED", completedAt: new Date() })
+        .where(and(eq(distributionCycles.id, cycleId), eq(distributionCycles.status, "ACTIVE")))
+        .returning({ id: distributionCycles.id })
+      if (!row) return conflict("Only active cycles can be completed.")
       await log({ ...actor, action: "DISTRIBUTION_COMPLETED", resourceType: "distribution",
         resourceId: cycleId, details: { period: cycle.period }, request: req })
       return NextResponse.json({ ok: true })

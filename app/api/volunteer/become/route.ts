@@ -27,15 +27,20 @@ export async function POST(request: NextRequest) {
   await db.transaction(async (tx) => {
     await tx
       .update(users)
-      .set({ role: "VOLUNTEER", phone: phone ?? null })
+      .set({ role: "VOLUNTEER", ...(phone ? { phone } : {}) })
       .where(eq(users.id, session.user.id))
 
-    await tx.insert(volunteerProfiles).values({
-      userId: session.user.id,
-      district,
-      upazila: upazila ?? null,
-      kycStatus: "PENDING",
-    })
+    // Idempotent: a double-submit doesn't error or overwrite an existing profile
+    // (userId is unique). Becoming a volunteer twice is a no-op, not a 500.
+    await tx
+      .insert(volunteerProfiles)
+      .values({
+        userId: session.user.id,
+        district,
+        upazila: upazila ?? null,
+        kycStatus: "PENDING",
+      })
+      .onConflictDoNothing({ target: volunteerProfiles.userId })
   })
 
   await log({ userId: session.user.id, userName: session.user.name, userRole: "VOLUNTEER",

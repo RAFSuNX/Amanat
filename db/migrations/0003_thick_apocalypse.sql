@@ -1,0 +1,3 @@
+ALTER TABLE "distribution_cycles" ADD CONSTRAINT "cycle_total_pool_positive" CHECK ("distribution_cycles"."total_pool" > 0);--> statement-breakpoint
+ALTER TABLE "distribution_cycles" ADD CONSTRAINT "cycle_deduction_within_pool" CHECK ("distribution_cycles"."special_deduction_total" <= "distribution_cycles"."total_pool");--> statement-breakpoint
+ALTER TABLE "distribution_cycles" ADD CONSTRAINT "cycle_remaining_nonneg" CHECK ("distribution_cycles"."remaining_pool" IS NULL OR "distribution_cycles"."remaining_pool" >= 0);

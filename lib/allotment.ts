@@ -26,3 +26,10 @@ export function poolCap(totalPool: string, specialDeductionTotal: string | null)
 export function exceedsPool(totalFinal: number, cap: number): boolean {
   return totalFinal > cap + 0.001
 }
+
+// The books balance when money spent (sum of final allotments) plus what's left
+// equals the pool that was available. Used to detect drift - if this is ever
+// false for an active cycle, a number was changed outside the derived flow.
+export function reconciles(cap: number, totalFinal: number, remainingPool: number): boolean {
+  return Math.abs(totalFinal + remainingPool - cap) <= 0.01
+}

@@ -1,0 +1,2 @@
+CREATE UNIQUE INDEX "beneficiaries_nid_uq" ON "beneficiaries" USING btree ("nid_number") WHERE "beneficiaries"."nid_number" IS NOT NULL;--> statement-breakpoint
+CREATE UNIQUE INDEX "app_pending_dup_uq" ON "special_need_applications" USING btree ("beneficiary_id","title") WHERE "special_need_applications"."status" = 'PENDING';

@@ -79,29 +79,30 @@ export async function calculateDistribution(cycleId: number) {
   const pool = parseFloat(cycle.totalPool) - specialDeduction
   const remainingPool = Math.max(pool, 0)
 
-  // Delete any previous draft allotments for this cycle
+  // Build the allotment rows (so the exact per-family numbers can be both
+  // persisted and returned for the audit trail).
+  const allotmentValues =
+    rows.length > 0 && totalScore > 0
+      ? rows.map((r) => {
+          const rawAlloc = (r.score / totalScore) * remainingPool
+          const allocated = Math.min(rawAlloc, r.need) // cap at declared need
+          return {
+            cycleId,
+            beneficiaryId: r.beneficiary.id,
+            requestedAmount: r.need.toFixed(2),
+            allocatedAmount: allocated.toFixed(2),
+            weightedScore: r.score.toFixed(4),
+            deliveryStatus: "PENDING" as const,
+          }
+        })
+      : []
+
+  // Replace any previous draft allotments for this cycle.
   await db
     .delete(distributionAllotments)
     .where(eq(distributionAllotments.cycleId, cycleId))
-
-  // Insert allotments
-  if (rows.length > 0 && totalScore > 0) {
-    await db.insert(distributionAllotments).values(
-      rows.map((r) => {
-        const rawAlloc =
-          totalScore > 0 ? (r.score / totalScore) * remainingPool : 0
-        const allocated = Math.min(rawAlloc, r.need) // cap at declared need
-        return {
-          cycleId,
-          beneficiaryId: r.beneficiary.id,
-          requestedAmount: r.need.toFixed(2),
-          allocatedAmount: allocated.toFixed(2),
-          weightedScore: r.score.toFixed(4),
-          deliveryStatus: "PENDING" as const,
-        }
-      })
-    )
-  }
+  if (allotmentValues.length > 0)
+    await db.insert(distributionAllotments).values(allotmentValues)
 
   await db
     .update(distributionCycles)
@@ -110,4 +111,15 @@ export async function calculateDistribution(cycleId: number) {
       remainingPool: remainingPool.toFixed(2),
     })
     .where(eq(distributionCycles.id, cycleId))
+
+  const totalAllocated = allotmentValues.reduce((s, a) => s + parseFloat(a.allocatedAmount), 0)
+  return {
+    families: allotmentValues.length,
+    pool: +remainingPool.toFixed(2),
+    totalAllocated: +totalAllocated.toFixed(2),
+    breakdown: allotmentValues.map((a) => ({
+      beneficiaryId: a.beneficiaryId,
+      allocated: +a.allocatedAmount,
+    })),
+  }
 }

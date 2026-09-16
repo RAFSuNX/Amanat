@@ -42,18 +42,29 @@ export async function POST(request: NextRequest) {
     .where(eq(users.id, session.user.id))
 
   if (existing) {
-    await db
-      .update(volunteerProfiles)
-      .set({
-        kycDocType: docLocked ? existing.kycDocType : docType,
-        kycDocNumber: docLocked ? existing.kycDocNumber : docNumber,
-        kycDocImageUrl: docLocked ? existing.kycDocImageUrl : (docImageUrl ?? null),
-        passportPhotoUrl: passportPhotoUrl ?? existing.passportPhotoUrl ?? null,
-        kycStatus: "PENDING",
-        kycReviewNote: null,
-        kycReviewedAt: null,
-      })
-      .where(eq(volunteerProfiles.userId, session.user.id))
+    if (docLocked) {
+      // Identity doc is already on record and immutable, so this POST can only be
+      // an avatar/phone edit. Preserve the KYC review - editing your avatar must
+      // never silently revoke an existing approval.
+      await db
+        .update(volunteerProfiles)
+        .set({ passportPhotoUrl: passportPhotoUrl ?? existing.passportPhotoUrl ?? null })
+        .where(eq(volunteerProfiles.userId, session.user.id))
+    } else {
+      // A genuine (first) submission of the identity document → enters PENDING review.
+      await db
+        .update(volunteerProfiles)
+        .set({
+          kycDocType: docType,
+          kycDocNumber: docNumber,
+          kycDocImageUrl: docImageUrl ?? null,
+          passportPhotoUrl: passportPhotoUrl ?? existing.passportPhotoUrl ?? null,
+          kycStatus: "PENDING",
+          kycReviewNote: null,
+          kycReviewedAt: null,
+        })
+        .where(eq(volunteerProfiles.userId, session.user.id))
+    }
   } else {
     await db.insert(volunteerProfiles).values({
       userId: session.user.id,
