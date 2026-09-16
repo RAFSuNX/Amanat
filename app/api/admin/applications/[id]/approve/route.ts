@@ -4,14 +4,14 @@ import { specialNeedApplications } from "@/db/schema"
 import { and, eq } from "drizzle-orm"
 import { requireAdmin } from "@/lib/session"
 import { log } from "@/lib/audit"
-import { badRequest, conflict, parseId, unauthorized } from "@/lib/http"
+import { badRequest, conflict, parseId, readJson, unauthorized } from "@/lib/http"
 
 export async function POST(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const session = await requireAdmin()
   if (!session) return unauthorized()
   const id = parseId((await params).id)
   if (id === null) return badRequest("Invalid application id")
-  const { approvedAmount, note } = await req.json()
+  const { approvedAmount, note } = ((await readJson(req)) ?? {}) as { approvedAmount?: number; note?: string }
 
   const [row] = await db.update(specialNeedApplications).set({
     status: "APPROVED",

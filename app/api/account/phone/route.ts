@@ -14,7 +14,7 @@ export async function POST(request: NextRequest) {
   const session = await getSession()
   if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
 
-  const body = await request.json()
+  const body = await request.json().catch(() => ({}))
   const parsed = schema.safeParse(body)
   if (!parsed.success) {
     return NextResponse.json({ error: "Enter a valid mobile number." }, { status: 400 })

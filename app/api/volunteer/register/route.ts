@@ -20,7 +20,7 @@ const schema = z.object({
 })
 
 export async function POST(request: NextRequest) {
-  const parsed = schema.safeParse(await request.json())
+  const parsed = schema.safeParse(await request.json().catch(() => ({})))
   if (!parsed.success)
     return NextResponse.json({ error: parsed.error.issues[0].message }, { status: 400 })
   const { name, email, password, district, upazila, phone } = parsed.data

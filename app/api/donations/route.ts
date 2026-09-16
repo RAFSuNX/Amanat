@@ -5,7 +5,7 @@ import { donations } from "@/db/schema"
 import { getSession } from "@/lib/session"
 import { log } from "@/lib/audit"
 import { rateLimitOk } from "@/lib/redis"
-import { isUniqueViolation } from "@/lib/http"
+import { isUniqueViolation, readJson } from "@/lib/http"
 
 const schema = z.object({
   amount: z.coerce.number().positive(),
@@ -25,7 +25,7 @@ export async function POST(request: NextRequest) {
   if (!(await rateLimitOk(`donate:${ip}`, 10, 60)))
     return NextResponse.json({ error: "Too many submissions. Please wait a minute." }, { status: 429 })
 
-  const body = await request.json()
+  const body = await readJson(request)
   const parsed = schema.safeParse(body)
   if (!parsed.success) {
     return NextResponse.json(

@@ -5,7 +5,7 @@ import { specialNeedApplications, beneficiaries } from "@/db/schema"
 import { eq, and } from "drizzle-orm"
 import { requireVolunteer } from "@/lib/session"
 import { log } from "@/lib/audit"
-import { conflict, isUniqueViolation, unauthorized } from "@/lib/http"
+import { conflict, isUniqueViolation, readJson, unauthorized } from "@/lib/http"
 
 const schema = z.object({
   beneficiaryId: z.number().int().positive(),
@@ -18,7 +18,7 @@ export async function POST(request: NextRequest) {
   const session = await requireVolunteer()
   if (!session) return unauthorized()
 
-  const body = await request.json()
+  const body = await readJson(request)
   const parsed = schema.safeParse(body)
   if (!parsed.success) return NextResponse.json({ error: parsed.error.issues[0].message }, { status: 400 })
 

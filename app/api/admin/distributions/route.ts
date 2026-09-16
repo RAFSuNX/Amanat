@@ -9,7 +9,7 @@ export async function POST(req: NextRequest) {
   const session = await requireAdmin()
   if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
 
-  const parsed = createCycleSchema.safeParse(await req.json())
+  const parsed = createCycleSchema.safeParse(await req.json().catch(() => ({})))
   if (!parsed.success) {
     return NextResponse.json({ error: parsed.error.issues[0].message }, { status: 400 })
   }

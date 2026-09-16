@@ -21,6 +21,12 @@ export function parseId(raw: string): number | null {
   return Number.isInteger(n) && n > 0 ? n : null
 }
 
+// Parse a request body without letting a malformed/empty body throw a raw 500.
+// Returns null on invalid JSON; callers validate (zod) or default from there.
+export async function readJson(req: { json: () => Promise<unknown> }): Promise<unknown> {
+  return req.json().catch(() => null)
+}
+
 // A postgres unique-violation (23505). Drizzle wraps the driver error, so the
 // SQLSTATE lands on .cause, not the top level.
 export function isUniqueViolation(e: unknown): boolean {

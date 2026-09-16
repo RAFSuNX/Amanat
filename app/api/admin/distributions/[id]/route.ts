@@ -4,7 +4,7 @@ import { distributionCycles, distributionAllotments, beneficiaries } from "@/db/
 import { eq, and, inArray } from "drizzle-orm"
 import { requireAdmin } from "@/lib/session"
 import { log } from "@/lib/audit"
-import { calculateDistribution } from "@/lib/distribution"
+import { calculateDistribution, CycleStateError } from "@/lib/distribution"
 import { isCycleAction, overrideSchema } from "@/lib/contracts"
 import { sumFinal, poolCap, exceedsPool } from "@/lib/allotment"
 import { badRequest, conflict, parseId, unauthorized } from "@/lib/http"
@@ -40,7 +40,16 @@ export async function POST(
     case "calculate": {
       if (cycle.status !== "DRAFT")
         return badRequest("Cycle must be in DRAFT to calculate.")
-      const summary = await calculateDistribution(cycleId)
+      // The heavy lifting is one transaction (see calculateDistribution). The
+      // CycleStateError catch covers the race where it stopped being DRAFT
+      // between the check above and the locked read inside the transaction.
+      let summary
+      try {
+        summary = await calculateDistribution(cycleId)
+      } catch (e) {
+        if (e instanceof CycleStateError) return conflict(e.message)
+        throw e
+      }
       await log({ ...actor, action: "DISTRIBUTION_CALCULATED", resourceType: "distribution",
         resourceId: cycleId, details: { period: cycle.period, ...summary }, request: req })
       return NextResponse.json({ ok: true })
@@ -92,49 +101,58 @@ export async function POST(
 
     // ── ADMIN_REVIEW → ACTIVE (hard-block over pool) ──────────────────────────
     case "activate": {
-      const allotments = await db.query.distributionAllotments.findMany({
-        where: eq(distributionAllotments.cycleId, cycleId),
+      // One transaction, all-or-nothing: lock the cycle (FOR UPDATE) and verify
+      // ADMIN_REVIEW, re-read allotments under the lock, enforce the pool cap, then
+      // set the DERIVED remainingPool, lock in override amounts, and mark families.
+      // The transaction RETURNS its outcome (clean type narrowing at the call site).
+      const result = await db.transaction(async (tx) => {
+        const [claimed] = await tx
+          .select({ id: distributionCycles.id })
+          .from(distributionCycles)
+          .where(and(eq(distributionCycles.id, cycleId), eq(distributionCycles.status, "ADMIN_REVIEW")))
+          .for("update")
+        if (!claimed) return { status: "conflict" as const }
+
+        const allotments = await tx.query.distributionAllotments.findMany({
+          where: eq(distributionAllotments.cycleId, cycleId),
+        })
+        const cap = poolCap(cycle.totalPool, cycle.specialDeductionTotal)
+        const totalFinal = sumFinal(allotments)
+        // No writes yet - returning just commits a no-op transaction.
+        if (exceedsPool(totalFinal, cap)) return { status: "over" as const, totalFinal, cap }
+
+        await tx.update(distributionCycles).set({
+          status: "ACTIVE",
+          activatedAt: new Date(),
+          remainingPool: (cap - totalFinal).toFixed(2),
+        }).where(eq(distributionCycles.id, cycleId))
+
+        // Lock in final amounts: overrides become the authoritative allocated_amount.
+        for (const a of allotments)
+          if (a.manualOverrideAmount != null)
+            await tx.update(distributionAllotments)
+              .set({ allocatedAmount: a.manualOverrideAmount })
+              .where(eq(distributionAllotments.id, a.id))
+
+        const benIds = [...new Set(allotments.map((a) => a.beneficiaryId))]
+        if (benIds.length > 0)
+          await tx.update(beneficiaries).set({ status: "ACTIVE" })
+            .where(and(inArray(beneficiaries.id, benIds), eq(beneficiaries.status, "APPROVED")))
+
+        return { status: "ok" as const, families: benIds.length, totalFinal, cap }
       })
-      const cap = poolCap(cycle.totalPool, cycle.specialDeductionTotal)
-      const totalFinal = sumFinal(allotments)
 
-      // Conservation guard: never activate a cycle whose allotments exceed the pool.
-      if (exceedsPool(totalFinal, cap)) {
+      if (result.status === "conflict") return conflict("Cycle must be in admin review to activate.")
+      if (result.status === "over")
         return NextResponse.json({
-          error: `Total allocation (${totalFinal.toFixed(2)} BDT) exceeds the available pool (${cap.toFixed(2)} BDT). Reduce amounts before activating.`,
-          totalFinal, cap,
+          error: `Total allocation (${result.totalFinal.toFixed(2)} BDT) exceeds the available pool (${result.cap.toFixed(2)} BDT). Reduce amounts before activating.`,
+          totalFinal: result.totalFinal, cap: result.cap,
         }, { status: 400 })
-      }
-
-      // Atomically claim the transition; remainingPool is DERIVED here (cap - spent).
-      // If another request already activated, exactly one row updates - loser 409s.
-      const [row] = await db.update(distributionCycles).set({
-        status: "ACTIVE",
-        activatedAt: new Date(),
-        remainingPool: (cap - totalFinal).toFixed(2),
-      }).where(and(eq(distributionCycles.id, cycleId), eq(distributionCycles.status, "ADMIN_REVIEW")))
-        .returning({ id: distributionCycles.id })
-      if (!row) return conflict("Cycle must be in admin review to activate.")
-
-      // Lock in final amounts: overrides become the authoritative allocated_amount
-      // (this is the number the public ledger and delivery screens read).
-      for (const a of allotments) {
-        if (a.manualOverrideAmount != null)
-          await db.update(distributionAllotments)
-            .set({ allocatedAmount: a.manualOverrideAmount })
-            .where(eq(distributionAllotments.id, a.id))
-      }
-
-      // Mark participating families ACTIVE (they've entered the distribution).
-      const benIds = [...new Set(allotments.map((a) => a.beneficiaryId))]
-      if (benIds.length > 0)
-        await db.update(beneficiaries).set({ status: "ACTIVE" })
-          .where(and(inArray(beneficiaries.id, benIds), eq(beneficiaries.status, "APPROVED")))
 
       await log({ ...actor, action: "DISTRIBUTION_ACTIVATED", resourceType: "distribution",
         resourceId: cycleId,
-        details: { period: cycle.period, families: benIds.length, totalDistributed: totalFinal,
-          pool: cap, remaining: +(cap - totalFinal).toFixed(2) },
+        details: { period: cycle.period, families: result.families, totalDistributed: result.totalFinal,
+          pool: result.cap, remaining: +(result.cap - result.totalFinal).toFixed(2) },
         request: req })
       return NextResponse.json({ ok: true })
     }

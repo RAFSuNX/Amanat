@@ -16,7 +16,7 @@ export async function POST(
   const { id } = await params
   const allotmentId = Number(id)
 
-  const parsed = volunteerRequestSchema.safeParse(await request.json())
+  const parsed = volunteerRequestSchema.safeParse(await request.json().catch(() => ({})))
   if (!parsed.success)
     return NextResponse.json({ error: parsed.error.issues[0].message }, { status: 400 })
   const { note, requestedAmount, receiptUrl } = parsed.data
