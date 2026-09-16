@@ -92,6 +92,7 @@ export const users = pgTable("users", {
   emailVerified: boolean("email_verified").notNull().default(false),
   createdAt: timestamp("created_at").notNull().defaultNow(),
   updatedAt: timestamp("updated_at").notNull().defaultNow(),
+  syncId: text("sync_id").notNull().default(sql`gen_random_uuid()`).unique(),
 })
 
 // Better Auth required tables
@@ -156,6 +157,8 @@ export const volunteerProfiles = pgTable("volunteer_profiles", {
     () => users.id
   ),
   createdAt: timestamp("created_at").notNull().defaultNow(),
+  updatedAt: timestamp("updated_at").notNull().defaultNow(),
+  syncId: text("sync_id").notNull().default(sql`gen_random_uuid()`).unique(),
 })
 
 // ─── Beneficiaries ─────────────────────────────────────────────────────────────
@@ -183,6 +186,7 @@ export const beneficiaries = pgTable("beneficiaries", {
   reviewedAt: timestamp("reviewed_at"),
   createdAt: timestamp("created_at").notNull().defaultNow(),
   updatedAt: timestamp("updated_at").notNull().defaultNow(),
+  syncId: text("sync_id").notNull().default(sql`gen_random_uuid()`).unique(),
 }, (t) => [
   // One national ID = one beneficiary. Partial (NID is optional) so many rows may
   // have no NID, but a given NID can't be registered twice.
@@ -221,6 +225,8 @@ export const needAssessments = pgTable("need_assessments", {
   notes: text("notes"),
   status: assessmentStatusEnum("status").notNull().default("ACTIVE"),
   createdAt: timestamp("created_at").notNull().defaultNow(),
+  updatedAt: timestamp("updated_at").notNull().defaultNow(),
+  syncId: text("sync_id").notNull().default(sql`gen_random_uuid()`).unique(),
 })
 
 // ─── Donations ─────────────────────────────────────────────────────────────────
@@ -241,6 +247,8 @@ export const donations = pgTable("donations", {
   confirmedAt: timestamp("confirmed_at"),
   rejectionNote: text("rejection_note"),
   createdAt: timestamp("created_at").notNull().defaultNow(),
+  updatedAt: timestamp("updated_at").notNull().defaultNow(),
+  syncId: text("sync_id").notNull().default(sql`gen_random_uuid()`).unique(),
 }, (t) => [
   // A provider transaction reference is unique per method - the same bKash/Nagad
   // txn can't be banked twice. Stops double-submits from inflating the ledger.
@@ -269,6 +277,8 @@ export const distributionCycles = pgTable("distribution_cycles", {
   createdAt: timestamp("created_at").notNull().defaultNow(),
   activatedAt: timestamp("activated_at"),
   completedAt: timestamp("completed_at"),
+  updatedAt: timestamp("updated_at").notNull().defaultNow(),
+  syncId: text("sync_id").notNull().default(sql`gen_random_uuid()`).unique(),
 }, (t) => [
   // Money can't drift into impossible states even via a direct DB edit: the pool
   // is positive, the special-needs reserve never exceeds it, and remaining is
@@ -320,6 +330,8 @@ export const distributionAllotments = pgTable("distribution_allotments", {
     .default("PENDING"),
   deliveryNote: text("delivery_note"),
   deliveredAt: timestamp("delivered_at"),
+  updatedAt: timestamp("updated_at").notNull().defaultNow(),
+  syncId: text("sync_id").notNull().default(sql`gen_random_uuid()`).unique(),
 })
 
 // ─── Special Need Applications ──────────────────────────────────────────────────

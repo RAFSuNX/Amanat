@@ -27,7 +27,9 @@ COPY --from=deps /app/node_modules ./node_modules
 COPY package.json package-lock.json ./
 COPY drizzle.config.ts drizzle.audit.config.ts ./
 COPY db ./db
-COPY scripts/preflight.mjs ./scripts/preflight.mjs
+# preflight for the migrate job; sync-* scripts for the ledger sync worker (same
+# image, different command - see k8s/amanat/07-sync-worker.yaml).
+COPY scripts/preflight.mjs scripts/sync-ledger-core.mjs scripts/sync-worker.mjs ./scripts/
 # Preflight checks the DBs are reachable, then applies both migration sets.
 CMD ["sh", "-c", "node scripts/preflight.mjs && npm run db:migrate && npm run db:audit:migrate"]
 
