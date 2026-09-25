@@ -63,6 +63,9 @@
     "@prisma/client@7.10.0": true,
     "@prisma/engines@7.10.0": true,
     "better-sqlite3@12.11.1": true,
+    "esbuild@0.18.20": true,
+    "esbuild@0.21.5": true,
+    "esbuild@0.25.12": true,
     "esbuild@0.28.2": true,
     "prisma@7.10.0": true,
     "unrs-resolver@1.12.2": true
