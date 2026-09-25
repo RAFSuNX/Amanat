@@ -109,7 +109,7 @@ export function CycleManage({ cycle, rows }: { cycle: Cycle; rows: Row[] }) {
         {cycle.status === "DRAFT" && (
           <>
             <Button disabled={busy} onClick={() => post({ action: "calculate" })}>
-              {busy ? "…" : "Calculate distribution"}
+              {busy ? "Calculating..." : "Calculate distribution"}
             </Button>
             <span className="text-xs text-muted-foreground">
               Splits the pool across all approved families, then opens volunteer review.
@@ -119,7 +119,7 @@ export function CycleManage({ cycle, rows }: { cycle: Cycle; rows: Row[] }) {
         {cycle.status === "VOLUNTEER_REVIEW" && (
           <>
             <Button disabled={busy} onClick={() => post({ action: "close-review" })}>
-              {busy ? "…" : "Close volunteer review"}
+              {busy ? "Closing..." : "Close volunteer review"}
             </Button>
             <span className="text-xs text-muted-foreground">
               Volunteers can request adjustments until you close review.
@@ -136,7 +136,7 @@ export function CycleManage({ cycle, rows }: { cycle: Cycle; rows: Row[] }) {
                 }
               }}
             >
-              {busy ? "…" : "Activate cycle"}
+              {busy ? "Activating..." : "Activate cycle"}
             </Button>
             {overCap && (
               <span className="text-xs text-destructive">
@@ -155,7 +155,7 @@ export function CycleManage({ cycle, rows }: { cycle: Cycle; rows: Row[] }) {
                 }
               }}
             >
-              {busy ? "…" : "Complete & publish"}
+              {busy ? "Publishing..." : "Complete & publish"}
             </Button>
             <span className="text-xs text-muted-foreground">
               {delivered} of {rows.length} deliveries recorded.

@@ -12,6 +12,7 @@ export function PhoneForm({ current }: { current: string | null }) {
   const [phone, setPhone] = useState(current ?? "")
   const [error, setError] = useState("")
   const [loading, setLoading] = useState(false)
+  const [saved, setSaved] = useState(false)
 
   async function save() {
     setError("")
@@ -28,6 +29,8 @@ export function PhoneForm({ current }: { current: string | null }) {
         return
       }
       setEditing(false)
+      setSaved(true)
+      setTimeout(() => setSaved(false), 2500)
       router.refresh()
     } catch {
       setError("Network error. Please try again.")
@@ -41,7 +44,10 @@ export function PhoneForm({ current }: { current: string | null }) {
       <div className="flex items-center justify-between py-3 border-t border-border/40">
         <div>
           <p className="text-xs text-muted-foreground uppercase tracking-wide mb-0.5">Mobile Number</p>
-          <p className="text-sm">{current ?? "Not set"}</p>
+          <p className="text-sm flex items-center gap-2">
+            {current ?? "Not set"}
+            {saved && <span className="text-xs text-primary font-medium">Saved</span>}
+          </p>
         </div>
         <Button size="sm" variant="outline" onClick={() => setEditing(true)}>
           {current ? "Edit" : "Add"}
@@ -68,7 +74,7 @@ export function PhoneForm({ current }: { current: string | null }) {
           Cancel
         </Button>
       </div>
-      {error && <p className="text-xs text-red-500">{error}</p>}
+      {error && <p className="text-xs text-destructive">{error}</p>}
     </div>
   )
 }

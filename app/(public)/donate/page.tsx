@@ -88,7 +88,7 @@ export default function DonatePage() {
   const [receiptUploading, setReceiptUploading] = useState(false)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState("")
-  const [done, setDone] = useState(false)
+  const [done, setDone] = useState<{ receipt: string; donationId: number } | null>(null)
 
   const [receiptError, setReceiptError] = useState("")
 
@@ -124,7 +124,8 @@ export default function DonatePage() {
         body: JSON.stringify({ amount, method, transactionRef: txnRef, donorName: name, donorPhone: phone, donorEmail: email, isAnonymous, receiptImageUrl: receiptUrl || undefined }),
       })
       if (!res.ok) { const d = await res.json().catch(() => ({})); setError(d.error ?? "Something went wrong."); return }
-      setDone(true)
+      const d = await res.json().catch(() => ({}))
+      setDone({ receipt: d.receipt ?? "", donationId: d.donationId ?? 0 })
     } catch {
       setError("Network error. Please try again.")
     } finally {
@@ -136,18 +137,41 @@ export default function DonatePage() {
     return (
       <div className="h-dvh flex flex-col overflow-hidden">
         <PublicNav />
-        <div className="flex-1 flex flex-col items-center justify-center gap-6 px-[5vw] text-center">
-          <p className="text-[10px] uppercase tracking-[0.2em] text-primary">Submitted</p>
-          <h1 className="text-3xl font-bold tracking-tight">Thank you for your donation.</h1>
-          <p className="text-sm text-muted-foreground max-w-sm leading-relaxed">
-            Your donation is pending admin confirmation. Once verified, it will appear on the public ledger.
-          </p>
-          <div className="flex gap-4 mt-2">
-            <Link href="/ledger/donations">
-              <Button variant="outline">View Ledger</Button>
-            </Link>
-            <Button onClick={() => router.push("/")}>Back to Home</Button>
+        <div className="flex-1 flex flex-col items-center justify-center gap-6 px-[5vw] text-center max-w-md mx-auto w-full">
+          <div className="w-12 h-12 rounded-full bg-primary/10 text-primary flex items-center justify-center">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M20 6 9 17l-5-5" />
+            </svg>
           </div>
+          <div>
+            <p className="text-[10px] uppercase tracking-[0.2em] text-primary mb-2">Submitted</p>
+            <h1 className="text-2xl font-bold tracking-tight">Thank you for your donation.</h1>
+            <p className="text-sm text-muted-foreground mt-3 leading-relaxed">
+              Your donation is <strong>pending admin verification</strong> and will appear on the public ledger within approximately one hour.
+            </p>
+          </div>
+          {done.receipt && (
+            <div className="w-full border border-border/60 rounded-lg px-5 py-4 bg-muted/30 text-left">
+              <p className="text-[10px] uppercase tracking-widest text-muted-foreground mb-1">Your Amanat Receipt</p>
+              <p className="text-lg font-bold font-mono text-primary">{done.receipt}</p>
+              <p className="text-xs text-muted-foreground mt-2 leading-relaxed">
+                Keep this reference. We urge you to monitor the public ledger until your donation is verified and confirmed — this is how you know it reached us properly.
+              </p>
+            </div>
+          )}
+          <div className="flex flex-col gap-2 w-full">
+            <Link href="/ledger/donations" className="w-full">
+              <Button className="w-full">View Public Ledger</Button>
+            </Link>
+            {done.donationId > 0 && (
+              <Link href={`/ledger/donations/${done.donationId}/invoice`} className="w-full">
+                <Button variant="outline" className="w-full">View Your Invoice</Button>
+              </Link>
+            )}
+          </div>
+          <button onClick={() => router.push("/")} className="text-xs text-muted-foreground hover:text-foreground transition-colors">
+            Back to Home
+          </button>
         </div>
       </div>
     )

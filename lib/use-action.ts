@@ -3,19 +3,15 @@
 import { useState } from "react"
 import { useRouter } from "next/navigation"
 
-// Shared client helper for "POST an action, then refresh" buttons. Guarantees the
-// three things every hand-rolled handler was missing somewhere:
-//   1. loading is ALWAYS reset (finally) - a network failure can't wedge a button,
-//   2. server errors (409/400/500) are surfaced, not silently swallowed,
-//   3. network failures show a message instead of an unhandled rejection.
-// On success it refreshes the server components so the UI reflects the new state.
 export function useAction() {
   const router = useRouter()
   const [loading, setLoading] = useState<string | null>(null)
   const [error, setError] = useState("")
+  const [success, setSuccess] = useState<string | null>(null)
 
   async function run(key: string, url: string, body?: unknown): Promise<boolean> {
     setError("")
+    setSuccess(null)
     setLoading(key)
     try {
       const res = await fetch(url, {
@@ -30,6 +26,8 @@ export function useAction() {
         return false
       }
       router.refresh()
+      setSuccess(key)
+      setTimeout(() => setSuccess(null), 2500)
       return true
     } catch {
       setError("Network error. Please check your connection and try again.")
@@ -39,5 +37,5 @@ export function useAction() {
     }
   }
 
-  return { loading, error, setError, run }
+  return { loading, error, success, setError, run }
 }

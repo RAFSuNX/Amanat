@@ -50,26 +50,13 @@ async function sendDonationConfirmation(email: string, name: string, amount: num
             <td style="padding:32px">
               <h1 style="margin:0 0 12px;font-size:20px;color:#18181b">Thank you, ${name}</h1>
               <p style="margin:0 0 22px;font-size:14px;line-height:1.6;color:#52525b">
-                We have received your donation. Here is a summary:
+                We have received your donation of <strong>${amountFmt} BDT</strong> via ${method}.
               </p>
-              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:0 0 24px;border:1px solid #e4e4e7;border-radius:8px;overflow:hidden">
-                <tr><td style="padding:12px 16px;background:#f9fafb;border-bottom:1px solid #e4e4e7">
-                  <span style="font-size:11px;letter-spacing:1px;text-transform:uppercase;color:#71717a;font-weight:600">Amount</span>
-                  <p style="margin:4px 0 0;font-size:18px;font-weight:700;color:#2f6b45">${amountFmt} BDT</p>
-                </td></tr>
-                <tr><td style="padding:12px 16px;background:#f9fafb;border-bottom:1px solid #e4e4e7">
-                  <span style="font-size:11px;letter-spacing:1px;text-transform:uppercase;color:#71717a;font-weight:600">Method</span>
-                  <p style="margin:4px 0 0;font-size:14px;color:#18181b">${method}</p>
-                </td></tr>
-                <tr><td style="padding:12px 16px;background:#f9fafb;border-bottom:1px solid #e4e4e7">
-                  <span style="font-size:11px;letter-spacing:1px;text-transform:uppercase;color:#71717a;font-weight:600">Transaction Reference</span>
-                  <p style="margin:4px 0 0;font-size:13px;font-family:monospace;color:#18181b">${ref}</p>
-                </td></tr>
-                <tr><td style="padding:12px 16px;background:#f9fafb">
-                  <span style="font-size:11px;letter-spacing:1px;text-transform:uppercase;color:#71717a;font-weight:600">Amanat Receipt Number</span>
-                  <p style="margin:4px 0 0;font-size:13px;font-family:monospace;font-weight:700;color:#2f6b45">${receipt}</p>
-                </td></tr>
-              </table>
+              <div style="background:#f9fafb;border:1px solid #e4e4e7;border-radius:8px;padding:20px 24px;margin:0 0 22px">
+                <p style="margin:0;font-size:28px;font-weight:700;color:#2f6b45;letter-spacing:-0.5px">${amountFmt} BDT</p>
+                <p style="margin:8px 0 0;font-size:13px;color:#52525b">${method} &middot; Ref: <span style="font-family:monospace">${ref}</span></p>
+                <p style="margin:6px 0 0;font-size:12px;color:#71717a">Receipt: <strong style="font-family:monospace;color:#2f6b45">${receipt}</strong></p>
+              </div>
               <p style="margin:0 0 14px;font-size:14px;line-height:1.6;color:#52525b">
                 Your donation is <strong>pending review</strong> and will appear on the public ledger within approximately <strong>one hour</strong>.
                 Our team will verify it within <strong>24 hours</strong>, after which it will be added to the donation pool.
@@ -77,15 +64,15 @@ async function sendDonationConfirmation(email: string, name: string, amount: num
               <p style="margin:0 0 24px;font-size:14px;line-height:1.6;color:#52525b">
                 We urge you to <strong>keep an eye on the public ledger</strong> until your donation is verified and confirmed.
                 This is how you can be sure your donation reached us properly and is accounted for.
-                If your donation does not appear within one hour or is not verified within 24 hours, please reach out to us immediately.
+                If it does not appear within one hour or is not verified within 24 hours, please reach out to us immediately.
               </p>
-              <table role="presentation" cellpadding="0" cellspacing="0" style="margin-bottom:12px">
+              <table role="presentation" cellpadding="0" cellspacing="0">
                 <tr><td style="border-radius:6px;background:#2f6b45">
                   <a href="${LEDGER_URL}" style="display:inline-block;padding:13px 30px;font-size:14px;font-weight:600;color:#ffffff;text-decoration:none;border-radius:6px">View Public Ledger</a>
                 </td></tr>
               </table>
-              <p style="margin:0;font-size:12px;color:#71717a">
-                Once verified, your invoice will be available at:<br/>
+              <p style="margin:22px 0 0;font-size:12px;color:#71717a">
+                Once verified, your invoice will be at:<br/>
                 <a href="${INVOICE_URL}" style="color:#2f6b45;word-break:break-all">${INVOICE_URL}</a>
               </p>
             </td>
@@ -174,5 +161,5 @@ export async function POST(request: NextRequest) {
   if (data.donorEmail)
     sendDonationConfirmation(data.donorEmail, data.donorName, data.amount, data.method, data.transactionRef, receipt, donationId).catch(() => {})
 
-  return NextResponse.json({ ok: true }, { status: 201 })
+  return NextResponse.json({ ok: true, receipt, donationId }, { status: 201 })
 }

@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input"
 import { useAction } from "@/lib/use-action"
 
 export function ApplicationActions({ id }: { id: number }) {
-  const { loading, error, setError, run } = useAction()
+  const { loading, error, success, setError, run } = useAction()
   const [approvedAmount, setApprovedAmount] = useState("")
   const [note, setNote] = useState("")
   const [showReject, setShowReject] = useState(false)
@@ -24,13 +24,19 @@ export function ApplicationActions({ id }: { id: number }) {
     }
   }
 
+  if (success) return (
+    <p className="text-xs text-primary font-medium">
+      {success === "approve" ? "Approved" : "Rejected"}
+    </p>
+  )
+
   return (
     <div className="flex flex-col gap-2 min-w-[200px]">
       <div className="flex gap-1.5 items-center">
         <Input type="number" min="0" step="0.01" placeholder="Amount" value={approvedAmount}
           onChange={e => setApprovedAmount(e.target.value)} className="h-8 text-xs w-24" />
         <Button size="sm" disabled={loading !== null || !approvedAmount} onClick={() => act("approve")}>
-          {loading === "approve" ? "..." : "Approve"}
+          {loading === "approve" ? "Approving..." : "Approve"}
         </Button>
         <Button size="sm" variant="outline" onClick={() => setShowReject(!showReject)}>
           Reject
@@ -40,7 +46,7 @@ export function ApplicationActions({ id }: { id: number }) {
         <div className="flex gap-1.5">
           <Input placeholder="Reason" value={note} onChange={e => setNote(e.target.value)} className="h-8 text-xs" />
           <Button size="sm" variant="destructive" disabled={loading !== null} onClick={() => act("reject")}>
-            {loading === "reject" ? "..." : "Confirm"}
+            {loading === "reject" ? "Rejecting..." : "Confirm"}
           </Button>
         </div>
       )}
