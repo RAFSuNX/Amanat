@@ -27,7 +27,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
         <Link href="/">
           <img src="/logo.png" alt="Amanat" className="h-12 w-auto object-contain" />
         </Link>
-        <MobileMenu links={NAV} signIn={false} />
+        <MobileMenu links={NAV} signIn={false} signOutButton />
       </div>
 
       {/* Sidebar - desktop only */}

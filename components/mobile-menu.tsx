@@ -3,16 +3,21 @@
 import { useState, useEffect } from "react"
 import { createPortal } from "react-dom"
 import Link from "next/link"
+import { useRouter } from "next/navigation"
+import { signOut } from "@/lib/auth-client"
 
 export function MobileMenu({
   links,
   donateButton,
   signIn = true,
+  signOutButton = false,
 }: {
   links: { href: string; label: string }[]
   donateButton?: boolean
   signIn?: boolean
+  signOutButton?: boolean
 }) {
+  const router = useRouter()
   const [open, setOpen] = useState(false)
 
   // Lock body scroll when open
@@ -48,6 +53,15 @@ export function MobileMenu({
               className="px-6 py-4 text-sm text-muted-foreground hover:bg-muted border-b border-border/10">
               Sign in
             </Link>
+          )}
+          {signOutButton && (
+            <button
+              type="button"
+              onClick={async () => { handleClose(); await signOut(); router.push("/login") }}
+              className="px-6 py-4 text-sm text-muted-foreground hover:bg-muted border-b border-border/10 text-left w-full"
+            >
+              Sign out
+            </button>
           )}
         </nav>
         {donateButton && (
