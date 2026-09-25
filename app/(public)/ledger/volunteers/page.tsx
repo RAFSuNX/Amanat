@@ -4,6 +4,11 @@ import type { Metadata } from "next"
 export const metadata: Metadata = {
   title: "Volunteer Ledger",
   description: "All verified Amanat volunteers are on public record. Transparency is how we build trust.",
+  openGraph: {
+    title: "Volunteer Ledger | Amanat",
+    description: "All verified Amanat volunteers are on public record. Transparency is how we build trust.",
+    url: "https://theamanat.org/ledger/volunteers",
+  },
 }
 
 import { ledgerDb as db } from "@/db/remote"

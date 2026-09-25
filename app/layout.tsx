@@ -12,13 +12,17 @@ export const metadata: Metadata = {
     template: "%s | Amanat",
   },
   description: "A transparent welfare platform connecting donors with those in need across Bangladesh.",
+  applicationName: "Amanat",
   openGraph: {
     siteName: "Amanat",
     type: "website",
+    locale: "en_US",
     title: "Amanat: The Hope for All of Us",
     description: "A transparent welfare platform connecting donors with those in need across Bangladesh.",
+    url: "https://theamanat.org",
   },
   twitter: { card: "summary_large_image" },
+  formatDetection: { telephone: false, email: false, address: false },
   icons: {
     icon: "/logo.png",
     apple: "/logo.png",
@@ -35,6 +39,22 @@ export default function RootLayout({
       <body className="min-h-full flex flex-col bg-white text-gray-900">
         <ProgressBar />
         {children}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "NGO",
+              name: "Amanat",
+              alternateName: "The Hope for All of Us",
+              url: "https://theamanat.org",
+              description: "A transparent welfare platform connecting donors with those in need across Bangladesh.",
+              contactPoint: { "@type": "ContactPoint", email: "support@theamanat.org", contactType: "customer support" },
+              areaServed: "BD",
+              knowsLanguage: ["en", "bn"],
+            }),
+          }}
+        />
       </body>
     </html>
   )

@@ -4,6 +4,11 @@ import type { Metadata } from "next"
 export const metadata: Metadata = {
   title: "Contact",
   description: "Get in touch with Amanat. Questions about donations, volunteering, or the platform — we reply within 6 to 12 hours.",
+  openGraph: {
+    title: "Contact | Amanat",
+    description: "Get in touch with Amanat. Questions about donations, volunteering, or the platform — we reply within 6 to 12 hours.",
+    url: "https://theamanat.org/contact",
+  },
 }
 
 import { PublicNav } from "@/components/public-nav"
