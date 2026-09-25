@@ -23,8 +23,10 @@ export default async function AdminVolunteersPage() {
       phone: users.phone,
       createdAt: users.createdAt,
       district: volunteerProfiles.district,
+      upazila: volunteerProfiles.upazila,
       kycStatus: volunteerProfiles.kycStatus,
       kycDocType: volunteerProfiles.kycDocType,
+      kycDocNumber: volunteerProfiles.kycDocNumber,
       kycDocImageUrl: volunteerProfiles.kycDocImageUrl,
       profileId: volunteerProfiles.id,
     })
@@ -83,8 +85,16 @@ export default async function AdminVolunteersPage() {
                 {v.kycStatus === "PENDING" && v.profileId && (
                   <KycActions
                     profileId={v.profileId}
-                    docImageUrl={v.kycDocImageUrl ?? undefined}
-                    docType={v.kycDocType ?? undefined}
+                    volunteer={{
+                      name: v.name,
+                      email: v.email,
+                      phone: v.phone,
+                      district: v.district,
+                      upazila: v.upazila,
+                      docType: v.kycDocType,
+                      docNumber: v.kycDocNumber,
+                      docImageUrl: v.kycDocImageUrl,
+                    }}
                   />
                 )}
               </TableCell>
