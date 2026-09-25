@@ -26,8 +26,12 @@ async function sendDonationConfirmation(email: string, name: string, amount: num
       `Thank you for your donation, ${name}\n\n` +
       `We have received your donation of ${amountFmt} BDT via ${method}.\n` +
       `Transaction reference: ${ref}\n\n` +
-      `Your donation is currently pending review. It will appear on the public ledger within approximately one hour.\n\n` +
-      `Our team will verify your donation within 24 hours. You can check the status at any time:\n${LEDGER_URL}\n\n` +
+      `Your donation is currently pending review. It will appear on the public ledger within approximately one hour.\n` +
+      `Our team will verify it within 24 hours, after which it will be added to the donation pool.\n\n` +
+      `We urge you to keep an eye on the public ledger until your donation is verified and confirmed.\n` +
+      `This is how you can be sure your donation reached us properly and is accounted for.\n` +
+      `If it does not appear within one hour or is not verified within 24 hours, please contact us immediately.\n\n` +
+      `View the public ledger: ${LEDGER_URL}\n\n` +
       `Need help? Contact ${SUPPORT_EMAIL}\n\n` +
       `Amanat. The Hope for All of Us`,
     html: `
@@ -59,12 +63,14 @@ async function sendDonationConfirmation(email: string, name: string, amount: num
                   <p style="margin:4px 0 0;font-size:13px;font-family:monospace;color:#18181b">${ref}</p>
                 </td></tr>
               </table>
-              <p style="margin:0 0 8px;font-size:14px;line-height:1.6;color:#52525b">
+              <p style="margin:0 0 14px;font-size:14px;line-height:1.6;color:#52525b">
                 Your donation is <strong>pending review</strong> and will appear on the public ledger within approximately <strong>one hour</strong>.
-                Our team will verify it within <strong>24 hours</strong>.
+                Our team will verify it within <strong>24 hours</strong>, after which it will be added to the donation pool.
               </p>
               <p style="margin:0 0 24px;font-size:14px;line-height:1.6;color:#52525b">
-                You can check the ledger at any time to see your donation's status.
+                We urge you to <strong>keep an eye on the public ledger</strong> until your donation is verified and confirmed.
+                This is how you can be sure your donation reached us properly and is accounted for.
+                If your donation does not appear within one hour or is not verified within 24 hours, please reach out to us immediately.
               </p>
               <table role="presentation" cellpadding="0" cellspacing="0">
                 <tr><td style="border-radius:6px;background:#2f6b45">
