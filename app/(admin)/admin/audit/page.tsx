@@ -1,5 +1,6 @@
+import { auditDb, auditLogs } from "@/db/audit"
 import { db } from "@/db"
-import { auditLogs } from "@/db/schema"
+import { auditLogs as auditLogsMain } from "@/db/schema"
 import { desc } from "drizzle-orm"
 import { Badge } from "@/components/ui/badge"
 import {
@@ -13,10 +14,9 @@ const actionColor = (action: string): "default" | "secondary" | "destructive" =>
 }
 
 export default async function AuditLogPage() {
-  const logs = await db.query.auditLogs.findMany({
-    orderBy: [desc(auditLogs.createdAt)],
-    limit: 500,
-  })
+  const logs = auditDb
+    ? await auditDb.query.auditLogs.findMany({ orderBy: [desc(auditLogs.createdAt)], limit: 500 })
+    : await db.query.auditLogs.findMany({ orderBy: [desc(auditLogsMain.createdAt)], limit: 500 })
 
   return (
     <div className="flex flex-col gap-6">

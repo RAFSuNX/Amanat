@@ -100,9 +100,13 @@ async function syncTable(primary, dest, table) {
     // so a crash mid-batch just replays the same rows (idempotent) next pass.
     // postgres-js builds the (cols) VALUES (...) with correct per-column binding.
     await dest.begin(async (tx) => {
+      // Conflict on id: handles rows that exist in dest with a different or null
+      // sync_id (e.g. users pre-dating the sync worker). sync_id is always
+      // updated so subsequent passes align correctly on sync_id thereafter.
+      // The primary DB uses persistent storage and never resets, so id is stable.
       await tx`
         insert into ${tx(table)} ${tx(rows, ...cols)}
-        on conflict (sync_id) do update set ${tx.unsafe(setList)}`
+        on conflict (id) do update set ${tx.unsafe(setList)}`
       await tx`
         insert into _sync_state (table_name, last_updated_at)
         values (${table}, ${nextWm})
