@@ -1,5 +1,11 @@
 export const dynamic = "force-dynamic"
 
+import type { Metadata } from "next"
+export const metadata: Metadata = {
+  title: "Volunteer Ledger",
+  description: "All verified Amanat volunteers are on public record. Transparency is how we build trust.",
+}
+
 import { ledgerDb as db } from "@/db/remote"
 import { users, volunteerProfiles } from "@/db/schema"
 import { eq } from "drizzle-orm"
