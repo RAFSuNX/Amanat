@@ -11,11 +11,11 @@ async function sendDonationConfirmation(email: string, name: string, amount: num
   if (!process.env.RESEND_API_KEY) return
   const { Resend } = await import("resend")
   const resend = new Resend(process.env.RESEND_API_KEY)
-  const APP_URL = process.env.BETTER_AUTH_URL || "https://theamanat.org"
+  const BASE_URL = process.env.BETTER_AUTH_URL || "https://theamanat.org"
   const SUPPORT_EMAIL = process.env.SUPPORT_EMAIL || "support@theamanat.org"
-  const LOGO_URL = `${APP_URL}/logo-white.png`
-  const LEDGER_URL = `${APP_URL}/ledger/donations`
-  const INVOICE_URL = `${APP_URL}/ledger/donations/${donationId}/invoice`
+  const LOGO_URL = `${BASE_URL}/logo-white.png`
+  const LEDGER_URL = `${BASE_URL}/ledger/donations`
+  const INVOICE_URL = `${BASE_URL}/ledger/donations/${donationId}/invoice`
   const amountFmt = amount.toLocaleString("en-BD")
 
   await resend.emails.send({
