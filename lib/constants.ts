@@ -1,1 +1,1 @@
-export const SUPPORT_EMAIL = "support@amanat.org"
+export const SUPPORT_EMAIL = "support@theamanat.org"

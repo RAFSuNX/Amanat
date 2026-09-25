@@ -11,8 +11,8 @@ async function sendVerificationEmail(user: { email: string }, url: string) {
   const { Resend } = await import("resend")
   const resend = new Resend(process.env.RESEND_API_KEY)
 
-  const APP_URL = process.env.BETTER_AUTH_URL || "https://amanat.rafsunx.com"
-  const SUPPORT_EMAIL = process.env.SUPPORT_EMAIL || "support@amanat.org"
+  const APP_URL = process.env.BETTER_AUTH_URL || "https://theamanat.org"
+  const SUPPORT_EMAIL = process.env.SUPPORT_EMAIL || "support@theamanat.org"
   // White logo sits on the green header band, so it reads correctly in both
   // light and dark mode (email clients don't reliably support CSS filters or
   // prefers-color-scheme logo swaps, so we avoid needing them).
@@ -96,7 +96,7 @@ export const auth = betterAuth({
   },
   // Only our own origin is a valid redirect/callback target - blocks open-redirect
   // phishing through the verification link's callbackURL.
-  trustedOrigins: [process.env.BETTER_AUTH_URL || "https://amanat.rafsunx.com"],
+  trustedOrigins: [process.env.BETTER_AUTH_URL || "https://theamanat.org"],
   // Throttle abuse: email-bombing a victim, enumeration, and burning Resend quota
   // by hammering the verification-email / sign-up endpoints. Counters live in
   // Redis ("secondary-storage") so the limit holds across all replicas instead

@@ -190,7 +190,7 @@ export default async function InvoicePage({
                 credited to the shared welfare fund. The funds will be distributed to verified
                 beneficiaries in accordance with Amanat&apos;s transparent, need-based distribution
                 process. All donations and distributions are recorded on the public ledger at{" "}
-                <span style={{ color: "#3B5E45", fontStyle: "italic" }}>amanat.org/ledger</span>.
+                <span style={{ color: "#3B5E45", fontStyle: "italic" }}>theamanat.org/ledger</span>.
               </p>
             </div>
 
@@ -231,8 +231,8 @@ export default async function InvoicePage({
                   Contact
                 </p>
                 <p style={{ fontSize: "0.65rem", color: "#6B8070", fontFamily: "system-ui, sans-serif" }}>+880 1X-XXXX-XXXX</p>
-                <p style={{ fontSize: "0.65rem", color: "#6B8070", fontFamily: "system-ui, sans-serif" }}>contact@amanat.org</p>
-                <p style={{ fontSize: "0.65rem", color: "#6B8070", fontFamily: "system-ui, sans-serif" }}>amanat.org</p>
+                <p style={{ fontSize: "0.65rem", color: "#6B8070", fontFamily: "system-ui, sans-serif" }}>contact@theamanat.org</p>
+                <p style={{ fontSize: "0.65rem", color: "#6B8070", fontFamily: "system-ui, sans-serif" }}>theamanat.org</p>
               </div>
 
               {/* Right: signature block - bottom aligned */}
@@ -254,7 +254,7 @@ export default async function InvoicePage({
             {/* Bottom transparency note */}
             <p style={{ fontSize: "0.6rem", color: "#c0d4c5", fontFamily: "system-ui, sans-serif", lineHeight: "1.6", borderTop: "1px solid #edf2ee", paddingTop: "10px" }}>
               Amanat operates as a transparent welfare system. Every taka in and every taka out is publicly accounted for.
-              This receipt is verifiable at amanat.org/ledger using the transaction reference above.
+              This receipt is verifiable at theamanat.org/ledger using the transaction reference above.
             </p>
           </div>
 

@@ -32,7 +32,7 @@ export default function Image() {
       </div>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
         <div style={{ fontSize: "18px", color: "#555", fontWeight: 500 }}>Bangladesh Welfare Platform</div>
-        <div style={{ fontSize: "18px", color: "#3d8c5e" }}>amanat.org</div>
+        <div style={{ fontSize: "18px", color: "#3d8c5e" }}>theamanat.org</div>
       </div>
     </div>,
     { ...size },
