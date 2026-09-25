@@ -11,7 +11,7 @@ async function sendVerificationEmail(user: { email: string }, url: string) {
   const { Resend } = await import("resend")
   const resend = new Resend(process.env.RESEND_API_KEY)
 
-  const BASE_URL = process.env.BETTER_AUTH_URL || "https://theamanat.org"
+  const BASE_URL = process.env.NEXT_PUBLIC_APP_URL || process.env.BETTER_AUTH_URL || "https://theamanat.org"
   const SUPPORT_EMAIL = process.env.SUPPORT_EMAIL || "support@theamanat.org"
   // White logo sits on the green header band, so it reads correctly in both
   // light and dark mode (email clients don't reliably support CSS filters or

@@ -11,7 +11,7 @@ async function sendDonationConfirmation(email: string, name: string, amount: num
   if (!process.env.RESEND_API_KEY) return
   const { Resend } = await import("resend")
   const resend = new Resend(process.env.RESEND_API_KEY)
-  const BASE_URL = process.env.BETTER_AUTH_URL || "https://theamanat.org"
+  const BASE_URL = process.env.NEXT_PUBLIC_APP_URL || process.env.BETTER_AUTH_URL || "https://theamanat.org"
   const SUPPORT_EMAIL = process.env.SUPPORT_EMAIL || "support@theamanat.org"
   const LOGO_URL = `${BASE_URL}/logo-white.png`
   const LEDGER_URL = `${BASE_URL}/ledger/donations`
