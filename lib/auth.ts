@@ -1,5 +1,4 @@
 import { betterAuth } from "better-auth"
-import { SUPPORT_EMAIL } from "@/lib/constants"
 import { drizzleAdapter } from "better-auth/adapters/drizzle"
 import { db } from "@/db"
 import * as schema from "@/db/schema"
@@ -13,6 +12,7 @@ async function sendVerificationEmail(user: { email: string }, url: string) {
   const resend = new Resend(process.env.RESEND_API_KEY)
 
   const APP_URL = process.env.BETTER_AUTH_URL || "https://amanat.rafsunx.com"
+  const SUPPORT_EMAIL = process.env.SUPPORT_EMAIL || "support@amanat.org"
   // White logo sits on the green header band, so it reads correctly in both
   // light and dark mode (email clients don't reliably support CSS filters or
   // prefers-color-scheme logo swaps, so we avoid needing them).
