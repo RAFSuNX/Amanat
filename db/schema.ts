@@ -253,6 +253,7 @@ export const donations = pgTable("donations", {
   // A provider transaction reference is unique per method - the same bKash/Nagad
   // txn can't be banked twice. Stops double-submits from inflating the ledger.
   uniqueIndex("donations_method_txn_ref_uq").on(t.method, t.transactionRef),
+  check("donation_amount_positive", sql`${t.amount} > 0`),
 ])
 
 // ─── Distribution Cycles ────────────────────────────────────────────────────────
@@ -332,7 +333,11 @@ export const distributionAllotments = pgTable("distribution_allotments", {
   deliveredAt: timestamp("delivered_at"),
   updatedAt: timestamp("updated_at").notNull().defaultNow(),
   syncId: text("sync_id").notNull().default(sql`gen_random_uuid()`).unique(),
-})
+}, (t) => [
+  check("allotment_requested_positive", sql`${t.requestedAmount} > 0`),
+  check("allotment_allocated_nonneg", sql`${t.allocatedAmount} IS NULL OR ${t.allocatedAmount} >= 0`),
+  check("allotment_override_nonneg", sql`${t.manualOverrideAmount} IS NULL OR ${t.manualOverrideAmount} >= 0`),
+])
 
 // ─── Special Need Applications ──────────────────────────────────────────────────
 

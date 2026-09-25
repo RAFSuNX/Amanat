@@ -43,6 +43,13 @@
       "when": 1789532884057,
       "tag": "0005_neat_vivisector",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1790336906108,
+      "tag": "0006_salty_sway",
+      "breakpoints": true
     }
   ]
 }

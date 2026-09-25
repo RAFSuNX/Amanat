@@ -1,0 +1,4 @@
+ALTER TABLE "distribution_allotments" ADD CONSTRAINT "allotment_requested_positive" CHECK ("distribution_allotments"."requested_amount" > 0);--> statement-breakpoint
+ALTER TABLE "distribution_allotments" ADD CONSTRAINT "allotment_allocated_nonneg" CHECK ("distribution_allotments"."allocated_amount" IS NULL OR "distribution_allotments"."allocated_amount" >= 0);--> statement-breakpoint
+ALTER TABLE "distribution_allotments" ADD CONSTRAINT "allotment_override_nonneg" CHECK ("distribution_allotments"."manual_override_amount" IS NULL OR "distribution_allotments"."manual_override_amount" >= 0);--> statement-breakpoint
+ALTER TABLE "donations" ADD CONSTRAINT "donation_amount_positive" CHECK ("donations"."amount" > 0);

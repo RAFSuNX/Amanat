@@ -6,7 +6,7 @@ import { requireAdmin } from "@/lib/session"
 import { log } from "@/lib/audit"
 import { calculateDistribution, CycleStateError } from "@/lib/distribution"
 import { isCycleAction, overrideSchema } from "@/lib/contracts"
-import { sumFinal, poolCap, exceedsPool } from "@/lib/allotment"
+import { sumFinal, poolCap, exceedsPool, reconciles } from "@/lib/allotment"
 import { badRequest, conflict, parseId, unauthorized } from "@/lib/http"
 
 // Cycle status transitions are done atomically: the required current status is in
@@ -159,12 +159,23 @@ export async function POST(
 
     // ── ACTIVE → COMPLETED (published to public ledger) ───────────────────────
     case "complete": {
+      // Re-read allotments inside the transaction and verify money conservation
+      // before publishing. Guards against manual DB edits between activate and complete.
+      const allotments = await db.query.distributionAllotments.findMany({
+        where: eq(distributionAllotments.cycleId, cycleId),
+      })
+      const cap = poolCap(cycle.totalPool, cycle.specialDeductionTotal)
+      const totalFinal = sumFinal(allotments)
+      const remaining = parseFloat(cycle.remainingPool ?? "0")
+      if (!reconciles(cap, totalFinal, remaining))
+        return conflict(`Money conservation violated: pool=${cap}, distributed=${totalFinal.toFixed(2)}, remaining=${remaining}. Do not complete.`)
+
       const [row] = await db.update(distributionCycles).set({ status: "COMPLETED", completedAt: new Date() })
         .where(and(eq(distributionCycles.id, cycleId), eq(distributionCycles.status, "ACTIVE")))
         .returning({ id: distributionCycles.id })
       if (!row) return conflict("Only active cycles can be completed.")
       await log({ ...actor, action: "DISTRIBUTION_COMPLETED", resourceType: "distribution",
-        resourceId: cycleId, details: { period: cycle.period }, request: req })
+        resourceId: cycleId, details: { period: cycle.period, totalDistributed: totalFinal.toFixed(2) }, request: req })
       return NextResponse.json({ ok: true })
     }
 
