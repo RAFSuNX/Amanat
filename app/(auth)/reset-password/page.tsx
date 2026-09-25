@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState } from "react"
 import { useRouter, useSearchParams } from "next/navigation"
 import Link from "next/link"
 import { authClient } from "@/lib/auth-client"
@@ -16,12 +16,10 @@ export default function ResetPasswordPage() {
   const [password, setPassword] = useState("")
   const [confirm, setConfirm] = useState("")
   const [loading, setLoading] = useState(false)
-  const [formError, setFormError] = useState("")
+  const [formError, setFormError] = useState(
+    error ? "This reset link is invalid or has expired. Please request a new one." : ""
+  )
   const [done, setDone] = useState(false)
-
-  useEffect(() => {
-    if (error) setFormError("This reset link is invalid or has expired. Please request a new one.")
-  }, [error])
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
