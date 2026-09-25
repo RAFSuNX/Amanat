@@ -163,26 +163,22 @@ export default async function LedgerDonationsPage() {
             {rows.map((d) => {
               const isPending = d.status === "PENDING"
               const displayDate = (isPending ? d.createdAt : (d.confirmedAt ?? d.createdAt))
-              const receipt = isPending ? null : receiptNumber(d.id, displayDate)
+              const receipt = receiptNumber(d.id, displayDate)
               return (
                 <TableRow key={d.id} className={isPending ? "opacity-70" : ""}>
                   <TableCell>
-                    {receipt ? (
-                      <DonationQuickView
-                        donation={{
-                          id: d.id,
-                          donorName: d.donorName,
-                          isAnonymous: d.isAnonymous,
-                          amount: d.amount,
-                          method: d.method,
-                          transactionRef: d.transactionRef,
-                          confirmedAt: displayDate.toISOString(),
-                          receipt,
-                        }}
-                      />
-                    ) : (
-                      <span className="text-xs text-muted-foreground italic">Pending</span>
-                    )}
+                    <DonationQuickView
+                      donation={{
+                        id: d.id,
+                        donorName: d.donorName,
+                        isAnonymous: d.isAnonymous,
+                        amount: d.amount,
+                        method: d.method,
+                        transactionRef: d.transactionRef,
+                        confirmedAt: displayDate.toISOString(),
+                        receipt,
+                      }}
+                    />
                   </TableCell>
                   <TableCell className="text-sm text-muted-foreground">
                     {displayDate.toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" })}
@@ -198,20 +194,13 @@ export default async function LedgerDonationsPage() {
                     {maskRef(d.transactionRef)}
                   </TableCell>
                   <TableCell>
-                    {isPending ? (
-                      <span className="inline-flex items-center gap-1 text-xs text-amber-600 bg-amber-50 border border-amber-200 px-2 py-0.5 rounded-full">
-                        <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse" />
-                        In Review
-                      </span>
-                    ) : (
-                      <Link
-                        href={`/ledger/donations/${d.id}/invoice`}
-                        target="_blank"
-                        className="text-xs text-primary hover:underline underline-offset-2"
-                      >
-                        Invoice
-                      </Link>
-                    )}
+                    <Link
+                      href={`/ledger/donations/${d.id}/invoice`}
+                      target="_blank"
+                      className="text-xs text-primary hover:underline underline-offset-2"
+                    >
+                      Invoice
+                    </Link>
                   </TableCell>
                 </TableRow>
               )
