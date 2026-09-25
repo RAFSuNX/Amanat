@@ -6,7 +6,7 @@ import { ProgressBar } from "@/components/progress-bar"
 const geist = Geist({ subsets: ["latin"], variable: "--font-geist" })
 
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.BETTER_AUTH_URL ?? "https://theamanat.org"),
+  metadataBase: new URL(process.env.APP_URL ?? process.env.BETTER_AUTH_URL ?? "https://theamanat.org"),
   title: {
     default: "Amanat: The Hope for All of Us",
     template: "%s | Amanat",
