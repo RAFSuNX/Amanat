@@ -45,7 +45,7 @@ export function KycActions({ profileId, volunteer }: { profileId: number; volunt
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
+      <DialogTrigger>
         <Button size="sm" variant="outline">Review KYC</Button>
       </DialogTrigger>
       <DialogContent className="max-w-lg">
