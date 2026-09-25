@@ -7,7 +7,7 @@ import { log } from "@/lib/audit"
 import { rateLimitOk } from "@/lib/redis"
 import { isUniqueViolation, readJson } from "@/lib/http"
 
-async function sendDonationConfirmation(email: string, name: string, amount: number, method: string, ref: string) {
+async function sendDonationConfirmation(email: string, name: string, amount: number, method: string, ref: string, receipt: string, donationId: number) {
   if (!process.env.RESEND_API_KEY) return
   const { Resend } = await import("resend")
   const resend = new Resend(process.env.RESEND_API_KEY)
@@ -15,6 +15,7 @@ async function sendDonationConfirmation(email: string, name: string, amount: num
   const SUPPORT_EMAIL = process.env.SUPPORT_EMAIL || "support@amanat.org"
   const LOGO_URL = `${APP_URL}/logo-white.png`
   const LEDGER_URL = `${APP_URL}/ledger/donations`
+  const INVOICE_URL = `${APP_URL}/ledger/donations/${donationId}/invoice`
   const amountFmt = amount.toLocaleString("en-BD")
 
   await resend.emails.send({
@@ -25,13 +26,15 @@ async function sendDonationConfirmation(email: string, name: string, amount: num
     text:
       `Thank you for your donation, ${name}\n\n` +
       `We have received your donation of ${amountFmt} BDT via ${method}.\n` +
-      `Transaction reference: ${ref}\n\n` +
+      `Transaction reference: ${ref}\n` +
+      `Your Amanat receipt number: ${receipt}\n\n` +
       `Your donation is currently pending review. It will appear on the public ledger within approximately one hour.\n` +
       `Our team will verify it within 24 hours, after which it will be added to the donation pool.\n\n` +
       `We urge you to keep an eye on the public ledger until your donation is verified and confirmed.\n` +
       `This is how you can be sure your donation reached us properly and is accounted for.\n` +
       `If it does not appear within one hour or is not verified within 24 hours, please contact us immediately.\n\n` +
-      `View the public ledger: ${LEDGER_URL}\n\n` +
+      `View the public ledger: ${LEDGER_URL}\n` +
+      `Your invoice (available once verified): ${INVOICE_URL}\n\n` +
       `Need help? Contact ${SUPPORT_EMAIL}\n\n` +
       `Amanat. The Hope for All of Us`,
     html: `
@@ -58,9 +61,13 @@ async function sendDonationConfirmation(email: string, name: string, amount: num
                   <span style="font-size:11px;letter-spacing:1px;text-transform:uppercase;color:#71717a;font-weight:600">Method</span>
                   <p style="margin:4px 0 0;font-size:14px;color:#18181b">${method}</p>
                 </td></tr>
-                <tr><td style="padding:12px 16px;background:#f9fafb">
+                <tr><td style="padding:12px 16px;background:#f9fafb;border-bottom:1px solid #e4e4e7">
                   <span style="font-size:11px;letter-spacing:1px;text-transform:uppercase;color:#71717a;font-weight:600">Transaction Reference</span>
                   <p style="margin:4px 0 0;font-size:13px;font-family:monospace;color:#18181b">${ref}</p>
+                </td></tr>
+                <tr><td style="padding:12px 16px;background:#f9fafb">
+                  <span style="font-size:11px;letter-spacing:1px;text-transform:uppercase;color:#71717a;font-weight:600">Amanat Receipt Number</span>
+                  <p style="margin:4px 0 0;font-size:13px;font-family:monospace;font-weight:700;color:#2f6b45">${receipt}</p>
                 </td></tr>
               </table>
               <p style="margin:0 0 14px;font-size:14px;line-height:1.6;color:#52525b">
@@ -72,11 +79,15 @@ async function sendDonationConfirmation(email: string, name: string, amount: num
                 This is how you can be sure your donation reached us properly and is accounted for.
                 If your donation does not appear within one hour or is not verified within 24 hours, please reach out to us immediately.
               </p>
-              <table role="presentation" cellpadding="0" cellspacing="0">
+              <table role="presentation" cellpadding="0" cellspacing="0" style="margin-bottom:12px">
                 <tr><td style="border-radius:6px;background:#2f6b45">
                   <a href="${LEDGER_URL}" style="display:inline-block;padding:13px 30px;font-size:14px;font-weight:600;color:#ffffff;text-decoration:none;border-radius:6px">View Public Ledger</a>
                 </td></tr>
               </table>
+              <p style="margin:0;font-size:12px;color:#71717a">
+                Once verified, your invoice will be available at:<br/>
+                <a href="${INVOICE_URL}" style="color:#2f6b45;word-break:break-all">${INVOICE_URL}</a>
+              </p>
             </td>
           </tr>
           <tr>
@@ -126,8 +137,10 @@ export async function POST(request: NextRequest) {
   const session = await getSession()
   const data = parsed.data
 
+  let donationId: number
+  let donationDate: Date
   try {
-    await db.insert(donations).values({
+    const [row] = await db.insert(donations).values({
       userId: session?.user.id ?? null,
       donorName: data.donorName,
       donorPhone: data.donorPhone ?? null,
@@ -138,7 +151,9 @@ export async function POST(request: NextRequest) {
       isAnonymous: data.isAnonymous,
       receiptImageUrl: data.receiptImageUrl ?? null,
       status: "PENDING",
-    })
+    }).returning({ id: donations.id, createdAt: donations.createdAt })
+    donationId = row.id
+    donationDate = row.createdAt
   } catch (e) {
     if (isUniqueViolation(e))
       return NextResponse.json(
@@ -148,13 +163,16 @@ export async function POST(request: NextRequest) {
     throw e
   }
 
+  const d = donationDate.toISOString().slice(0, 10).replace(/-/g, "")
+  const receipt = `AMT-${d}-${String(donationId).padStart(5, "0")}`
+
   await log({ userId: session?.user.id, userName: data.donorName, userRole: session?.user.role as string ?? "GUEST",
     action: "DONATION_SUBMITTED", resourceType: "donation",
     details: { amount: data.amount, method: data.method, isAnonymous: data.isAnonymous }, request })
 
   // Fire-and-forget: email failure must never block or fail the donation response.
   if (data.donorEmail)
-    sendDonationConfirmation(data.donorEmail, data.donorName, data.amount, data.method, data.transactionRef).catch(() => {})
+    sendDonationConfirmation(data.donorEmail, data.donorName, data.amount, data.method, data.transactionRef, receipt, donationId).catch(() => {})
 
   return NextResponse.json({ ok: true }, { status: 201 })
 }

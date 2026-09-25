@@ -6,7 +6,17 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { authClient } from "@/lib/auth-client"
 
-export function VerifyEmailClient({ invalid, email }: { invalid: boolean; email: string | null }) {
+export function VerifyEmailClient({
+  invalid,
+  email,
+  verified = false,
+  destination = "/account",
+}: {
+  invalid: boolean
+  email: string | null
+  verified?: boolean
+  destination?: string
+}) {
   const [addr, setAddr] = useState(email ?? "")
   const [sending, setSending] = useState(false)
   const [sent, setSent] = useState(false)
@@ -19,11 +29,32 @@ export function VerifyEmailClient({ invalid, email }: { invalid: boolean; email:
     setSending(true)
     const { error: sendError } = await authClient.sendVerificationEmail({
       email: addr,
-      callbackURL: "/verify-email",
+      callbackURL: "/verify-email?verified=1",
     })
     setSending(false)
     if (sendError) { setError(sendError.message ?? "Could not send. Please try again."); return }
     setSent(true)
+  }
+
+  if (verified) {
+    return (
+      <div className="w-full max-w-sm text-center flex flex-col gap-4">
+        <div className="w-12 h-12 rounded-full flex items-center justify-center mx-auto bg-primary/10 text-primary">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M20 6 9 17l-5-5" />
+          </svg>
+        </div>
+        <div>
+          <h1 className="text-xl font-bold">Email verified</h1>
+          <p className="text-sm text-muted-foreground mt-2 leading-relaxed">
+            Your email address has been confirmed and your account is now active.
+          </p>
+        </div>
+        <Link href={destination}>
+          <Button className="w-full">Continue to your account</Button>
+        </Link>
+      </div>
+    )
   }
 
   return (
@@ -73,7 +104,7 @@ export function VerifyEmailClient({ invalid, email }: { invalid: boolean; email:
           />
           {error && <p className="text-xs text-destructive">{error}</p>}
           <Button onClick={resend} disabled={sending} variant={invalid ? "default" : "outline"} className="w-full">
-            {sending ? "Sending…" : "Resend verification email"}
+            {sending ? "Sending..." : "Resend verification email"}
           </Button>
         </div>
       )}

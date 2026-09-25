@@ -55,7 +55,7 @@ export default function RegisterPage() {
         return
       }
 
-      const { data, error: authError } = await signUp.email({ email, password, name })
+      const { data, error: authError } = await signUp.email({ email, password, name, callbackURL: "/verify-email?verified=1" })
       if (authError || !data) {
         setError(authError?.message ?? "Registration failed.")
         return
