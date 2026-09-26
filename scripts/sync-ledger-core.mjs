@@ -26,6 +26,21 @@ const TABLES = [
   "donations",
 ]
 
+// Full business table set for Neon — includes everything with updated_at + sync_id.
+// sessions/verifications/accounts skipped (transient auth data).
+// audit_logs skipped (append-only, lives in separate audit DB in production).
+const NEON_TABLES = [
+  "users",
+  "volunteer_profiles",
+  "beneficiaries",
+  "beneficiary_members",
+  "need_assessments",
+  "distribution_cycles",
+  "distribution_allotments",
+  "donations",
+  "special_need_applications",
+]
+
 const BATCH = 500
 
 function connect(url, max = 2) {
@@ -124,8 +139,9 @@ export async function syncOnce({ log = console.log } = {}) {
   if (!primaryUrl) throw new Error("DATABASE_URL not set")
 
   const dests = [
-    ["ledger", process.env.REMOTE_PUBLIC_LEDGER_DATABASE_URL],
-    ["backup", process.env.BACKUP_DATABASE_URL],
+    ["ledger", process.env.REMOTE_PUBLIC_LEDGER_DATABASE_URL, TABLES],
+    ["backup", process.env.BACKUP_DATABASE_URL, TABLES],
+    ["neon",   process.env.NEON_DATABASE_URL,   NEON_TABLES],
   ].filter(([, url]) => !!url)
 
   const primary = connect(primaryUrl)
@@ -140,12 +156,12 @@ export async function syncOnce({ log = console.log } = {}) {
     }
     try {
       const summary = {}
-      for (const [name, url] of dests) {
+      for (const [name, url, tables] of dests) {
         const dest = connect(url)
         try {
           await ensureSyncState(dest)
           let n = 0
-          for (const table of TABLES) n += await syncTable(primary, dest, table)
+          for (const table of tables) n += await syncTable(primary, dest, table)
           summary[name] = n
           log(`sync -> ${name}: ${n} row(s) upserted`)
         } finally {

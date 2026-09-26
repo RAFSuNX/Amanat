@@ -208,6 +208,8 @@ export const beneficiaryMembers = pgTable("beneficiary_members", {
   isDisabled: boolean("is_disabled").notNull().default(false),
   isEarner: boolean("is_earner").notNull().default(false),
   // isChild (age < 12) and isElderly (age >= 60) are computed in app logic
+  updatedAt: timestamp("updated_at").notNull().defaultNow(),
+  syncId: text("sync_id").notNull().default(sql`gen_random_uuid()`).unique(),
 })
 
 // ─── Need Assessments ──────────────────────────────────────────────────────────
@@ -371,9 +373,9 @@ export const specialNeedApplications = pgTable("special_need_applications", {
   deliveryNote: text("delivery_note"),
   deliveredAt: timestamp("delivered_at"),
   createdAt: timestamp("created_at").notNull().defaultNow(),
+  updatedAt: timestamp("updated_at").notNull().defaultNow(),
+  syncId: text("sync_id").notNull().default(sql`gen_random_uuid()`).unique(),
 }, (t) => [
-  // Stops an accidental double-submit creating two identical open requests for the
-  // same beneficiary. Partial on PENDING, so a resubmit after review is allowed.
   uniqueIndex("app_pending_dup_uq").on(t.beneficiaryId, t.title).where(sql`${t.status} = 'PENDING'`),
 ])
 

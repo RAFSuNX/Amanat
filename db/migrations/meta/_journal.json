@@ -57,6 +57,13 @@
       "when": 1790402453093,
       "tag": "0007_whole_iron_monger",
       "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1790408495093,
+      "tag": "0008_tiresome_riptide",
+      "breakpoints": true
     }
   ]
 }

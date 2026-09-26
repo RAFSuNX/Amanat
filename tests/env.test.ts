@@ -7,6 +7,7 @@ const VALID: Record<string, string> = {
   REDIS_URL: "redis://localhost:6379",
   BACKUP_DATABASE_URL: "postgresql://u:p@host:5432/backup",
   REMOTE_PUBLIC_LEDGER_DATABASE_URL: "postgresql://u:p@host:5432/remote",
+  NEON_DATABASE_URL: "postgresql://u:p@host:5432/neon",
   BETTER_AUTH_SECRET: "x7f".padEnd(40, "k"), // 40 chars, not a placeholder word
   BETTER_AUTH_URL: "https://amanat.example.com",
   R2_ENDPOINT: "https://acc.r2.cloudflarestorage.com",
