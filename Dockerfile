@@ -34,8 +34,8 @@ CMD ["sh", "-c", "\
   node scripts/preflight.mjs && \
   npm run db:migrate && \
   npm run db:audit:migrate && \
-  DATABASE_URL=$NEON_DATABASE_URL npm run db:migrate && \
-  DATABASE_URL=$REMOTE_PUBLIC_LEDGER_DATABASE_URL npm run db:migrate \
+  DATABASE_URL=$NEON_DATABASE_URL npm run db:migrate || echo 'Neon migration non-blocking failure' && \
+  DATABASE_URL=$REMOTE_PUBLIC_LEDGER_DATABASE_URL npm run db:migrate || echo 'Ledger migration non-blocking failure' \
 "]
 
 FROM base AS runner
