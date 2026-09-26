@@ -62,6 +62,7 @@ export default async function KycReviewPage({
       kycDocNumber: volunteerProfiles.kycDocNumber,
       kycDocImageUrl: volunteerProfiles.kycDocImageUrl,
       kycDocBackImageUrl: volunteerProfiles.kycDocBackImageUrl,
+      passportPhotoUrl: volunteerProfiles.passportPhotoUrl,
       district: volunteerProfiles.district,
       upazila: volunteerProfiles.upazila,
       presentAddress: volunteerProfiles.presentAddress,
@@ -128,8 +129,18 @@ export default async function KycReviewPage({
           <KycReviewForm profileId={v.profileId} />
         </div>
 
-        {/* Right: document images */}
+        {/* Right: portrait + document images */}
         <div className="flex flex-col gap-5">
+          {v.passportPhotoUrl && (
+            <div className="flex flex-col gap-2">
+              <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">Passport Photo</p>
+              <img
+                src={v.passportPhotoUrl}
+                alt="Passport photo"
+                className="w-28 h-28 rounded-lg border object-cover"
+              />
+            </div>
+          )}
           <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">Identity Documents</p>
           {frontUrl ? (
             <DocViewer url={frontUrl.url} label="Front of Document" isPdf={frontUrl.isPdf} />
