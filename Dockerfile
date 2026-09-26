@@ -35,8 +35,7 @@ CMD ["sh", "-c", "\
   node scripts/preflight.mjs && \
   npm run db:migrate && \
   npm run db:audit:migrate && \
-  sh scripts/migrate-remote.sh neon \"$NEON_DATABASE_URL\" && \
-  sh scripts/migrate-remote.sh ledger \"$REMOTE_PUBLIC_LEDGER_DATABASE_URL\" \
+  sh scripts/migrate-remote.sh neon \"$NEON_DATABASE_URL\" \
 "]
 
 FROM base AS runner
