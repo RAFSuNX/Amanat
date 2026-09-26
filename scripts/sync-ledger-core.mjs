@@ -133,6 +133,7 @@ async function syncTable(primary, dest, table) {
   return total
 }
 
+
 // One full pass over every dest+table, guarded by a single advisory lock.
 export async function syncOnce({ log = console.log } = {}) {
   const primaryUrl = process.env.DATABASE_URL

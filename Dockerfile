@@ -30,8 +30,16 @@ COPY db ./db
 # preflight for the migrate job; sync-* scripts for the ledger sync worker (same
 # image, different command - see k8s/amanat/07-sync-worker.yaml).
 COPY scripts/preflight.mjs scripts/sync-ledger-core.mjs scripts/sync-worker.mjs ./scripts/
-# Preflight checks the DBs are reachable, then applies both migration sets.
-CMD ["sh", "-c", "node scripts/preflight.mjs && npm run db:migrate && npm run db:audit:migrate"]
+# Preflight checks the DBs are reachable, then applies all migration sets.
+# Neon and Supabase ledger get the main schema migrations automatically —
+# no more manual ALTER TABLE on remote databases after every deploy.
+CMD ["sh", "-c", "\
+  node scripts/preflight.mjs && \
+  npm run db:migrate && \
+  npm run db:audit:migrate && \
+  DATABASE_URL=$NEON_DATABASE_URL npm run db:migrate && \
+  DATABASE_URL=$REMOTE_PUBLIC_LEDGER_DATABASE_URL npm run db:migrate \
+"]
 
 FROM base AS runner
 ENV NODE_ENV=production
