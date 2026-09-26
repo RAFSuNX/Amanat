@@ -7,15 +7,15 @@ import { parseId } from "@/lib/http"
 import Link from "next/link"
 import { KycReviewForm } from "./form"
 
-function resolveDocUrl(value: string | null): string | null {
+function resolveDocUrl(value: string | null): { url: string; isPdf: boolean } | null {
   if (!value) return null
-  if (value.startsWith("http")) return value // legacy public URL
+  const isPdf = value.toLowerCase().endsWith(".pdf")
+  if (value.startsWith("http")) return { url: value, isPdf }
   const k = Buffer.from(value, "utf-8").toString("base64url")
-  return `/api/admin/kyc-doc?k=${k}`
+  return { url: `/api/admin/kyc-doc?k=${k}`, isPdf }
 }
 
-function DocViewer({ url, label }: { url: string; label: string }) {
-  const isPdf = url.includes(".pdf") || url.includes("application%2Fpdf")
+function DocViewer({ url, label, isPdf }: { url: string; label: string; isPdf: boolean }) {
   return (
     <div className="border border-border/60 rounded-xl overflow-hidden bg-muted/10">
       <div className="px-4 py-2.5 border-b border-border/40 bg-muted/20 flex items-center justify-between">
@@ -132,14 +132,14 @@ export default async function KycReviewPage({
         <div className="flex flex-col gap-5">
           <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">Identity Documents</p>
           {frontUrl ? (
-            <DocViewer url={frontUrl} label="Front of Document" />
+            <DocViewer url={frontUrl.url} label="Front of Document" isPdf={frontUrl.isPdf} />
           ) : (
             <div className="border border-border/60 rounded-xl flex items-center justify-center h-32 bg-muted/10 text-muted-foreground text-sm">
               No front document uploaded
             </div>
           )}
           {backUrl ? (
-            <DocViewer url={backUrl} label="Back of Document" />
+            <DocViewer url={backUrl.url} label="Back of Document" isPdf={backUrl.isPdf} />
           ) : (
             <div className="border border-border/60 rounded-xl flex items-center justify-center h-32 bg-muted/10 text-xs text-muted-foreground">
               No back document uploaded
