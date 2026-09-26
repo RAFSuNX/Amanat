@@ -29,13 +29,14 @@ COPY drizzle.config.ts drizzle.audit.config.ts ./
 COPY db ./db
 # preflight for the migrate job; sync-* scripts for the ledger sync worker (same
 # image, different command - see k8s/amanat/07-sync-worker.yaml).
-COPY scripts/preflight.mjs scripts/sync-ledger-core.mjs scripts/sync-worker.mjs ./scripts/
+COPY scripts/preflight.mjs scripts/migrate-remote.sh scripts/sync-ledger-core.mjs scripts/sync-worker.mjs ./scripts/
+RUN chmod +x scripts/migrate-remote.sh
 CMD ["sh", "-c", "\
   node scripts/preflight.mjs && \
   npm run db:migrate && \
   npm run db:audit:migrate && \
-  DATABASE_URL=$NEON_DATABASE_URL npm run db:migrate || echo 'Neon migration non-blocking failure' && \
-  DATABASE_URL=$REMOTE_PUBLIC_LEDGER_DATABASE_URL npm run db:migrate || echo 'Ledger migration non-blocking failure' \
+  sh scripts/migrate-remote.sh neon \"$NEON_DATABASE_URL\" && \
+  sh scripts/migrate-remote.sh ledger \"$REMOTE_PUBLIC_LEDGER_DATABASE_URL\" \
 "]
 
 FROM base AS runner
