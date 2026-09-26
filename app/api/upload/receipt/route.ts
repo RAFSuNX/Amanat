@@ -17,6 +17,10 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "Only JPEG, PNG, WebP or GIF images accepted." }, { status: 400 })
   }
 
+  if (file.size < 1024) {
+    return NextResponse.json({ error: "File too small to be a valid receipt image." }, { status: 400 })
+  }
+
   if (file.size > 5 * 1024 * 1024) {
     return NextResponse.json({ error: "File too large. Maximum 5MB." }, { status: 400 })
   }
