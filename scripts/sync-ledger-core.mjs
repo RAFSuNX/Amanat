@@ -26,20 +26,8 @@ const TABLES = [
   "donations",
 ]
 
-// Full business table set for Neon — includes everything with updated_at + sync_id.
-// sessions/verifications/accounts skipped (transient auth data).
-// audit_logs skipped (append-only, lives in separate audit DB in production).
-const NEON_TABLES = [
-  "users",
-  "volunteer_profiles",
-  "beneficiaries",
-  "beneficiary_members",
-  "need_assessments",
-  "distribution_cycles",
-  "distribution_allotments",
-  "donations",
-  "special_need_applications",
-]
+// Neon gets all business tables — TABLES plus the two that were missing sync_id.
+const NEON_TABLES = [...TABLES, "beneficiary_members", "special_need_applications"]
 
 const BATCH = 500
 
@@ -133,7 +121,6 @@ async function syncTable(primary, dest, table) {
   return total
 }
 
-
 // One full pass over every dest+table, guarded by a single advisory lock.
 export async function syncOnce({ log = console.log } = {}) {
   const primaryUrl = process.env.DATABASE_URL
@@ -158,7 +145,6 @@ export async function syncOnce({ log = console.log } = {}) {
     try {
       const summary = {}
       for (const [name, url, tables] of dests) {
-        // Each destination is fully independent — one failing never blocks another.
         const dest = connect(url)
         try {
           await ensureSyncState(dest)
@@ -167,15 +153,12 @@ export async function syncOnce({ log = console.log } = {}) {
             try {
               n += await syncTable(primary, dest, table)
             } catch (err) {
-              // Schema drift (missing column, missing table) — log and continue.
-              // Fix: apply migrations to the destination DB.
               log(`sync -> ${name}: skip ${table}: ${err.message}`)
             }
           }
           summary[name] = n
           log(`sync -> ${name}: ${n} row(s) upserted`)
         } catch (err) {
-          // Full destination failure (connection, auth) — log and continue to next dest.
           log(`sync -> ${name}: dest failed: ${err.message}`)
           summary[name] = 'failed'
         } finally {
