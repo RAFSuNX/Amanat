@@ -37,7 +37,7 @@ export async function GET(request: NextRequest) {
     request,
   })
 
-  return new Response(doc.body, {
+  return new Response(new Uint8Array(doc.body), {
     headers: {
       "Content-Type": doc.contentType,
       "Content-Disposition": `inline; filename="${key.split("/").pop()}"`,
