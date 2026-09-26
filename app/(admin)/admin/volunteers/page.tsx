@@ -12,7 +12,6 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
-import { KycActions } from "./kyc-actions"
 
 export default async function AdminVolunteersPage() {
   const volunteers = await db
@@ -83,19 +82,9 @@ export default async function AdminVolunteersPage() {
               </TableCell>
               <TableCell>
                 {v.kycStatus === "PENDING" && v.profileId && (
-                  <KycActions
-                    profileId={v.profileId}
-                    volunteer={{
-                      name: v.name,
-                      email: v.email,
-                      phone: v.phone,
-                      district: v.district,
-                      upazila: v.upazila,
-                      docType: v.kycDocType,
-                      docNumber: v.kycDocNumber,
-                      docImageUrl: v.kycDocImageUrl,
-                    }}
-                  />
+                  <Link href={`/admin/volunteers/${v.profileId}/kyc`}>
+                    <Button size="sm" variant="outline">Review KYC</Button>
+                  </Link>
                 )}
               </TableCell>
             </TableRow>

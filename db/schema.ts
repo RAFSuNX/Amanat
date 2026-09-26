@@ -146,9 +146,13 @@ export const volunteerProfiles = pgTable("volunteer_profiles", {
     .references(() => users.id, { onDelete: "cascade" }),
   district: text("district").notNull(),
   upazila: text("upazila"),
+  presentAddress: text("present_address"),
+  permanentAddress: text("permanent_address"),
   kycDocType: kycDocTypeEnum("kyc_doc_type"),
   kycDocNumber: text("kyc_doc_number"),
+  // Stored as R2 object key (private). Use getPresignedUrl() to serve — never expose as public URL.
   kycDocImageUrl: text("kyc_doc_image_url"),
+  kycDocBackImageUrl: text("kyc_doc_back_image_url"),
   passportPhotoUrl: text("passport_photo_url"),
   kycStatus: kycStatusEnum("kyc_status").notNull().default("PENDING"),
   kycReviewNote: text("kyc_review_note"),

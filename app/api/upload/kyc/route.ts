@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server"
 import { requireVolunteer } from "@/lib/session"
-import { uploadToR2 } from "@/lib/storage"
+import { uploadToR2, uploadPrivateToR2 } from "@/lib/storage"
 import { randomUUID } from "crypto"
 
 function slug(name: string) {
@@ -33,7 +33,14 @@ export async function POST(request: NextRequest) {
   const key = `volunteers/${folder}/${volunteerSlug}/${Date.now()}-${randomUUID().slice(0, 8)}.${ext}`
 
   const buffer = Buffer.from(await file.arrayBuffer())
-  const url = await uploadToR2(buffer, key, file.type)
 
-  return NextResponse.json({ url })
+  if (type === "portrait") {
+    // Passport photos are public (used as avatars)
+    const url = await uploadToR2(buffer, key, file.type)
+    return NextResponse.json({ url })
+  } else {
+    // KYC documents are private — return only the key, never the public URL
+    const docKey = await uploadPrivateToR2(buffer, key, file.type)
+    return NextResponse.json({ key: docKey })
+  }
 }

@@ -9,9 +9,12 @@ import { log } from "@/lib/audit"
 const schema = z.object({
   legalName: z.string().min(1),
   phone: z.string().min(7).max(16).optional(),
+  presentAddress: z.string().min(1).optional(),
+  permanentAddress: z.string().min(1).optional(),
   docType: z.enum(["NID", "PASSPORT", "DRIVING_LICENSE"]),
   docNumber: z.string().min(1),
-  docImageUrl: z.string().url().optional(),
+  docImageUrl: z.string().optional(), // R2 key (private) or legacy URL
+  docBackImageUrl: z.string().optional(), // R2 key for back of document
   passportPhotoUrl: z.string().url().optional(),
 })
 
@@ -25,7 +28,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: parsed.error.issues[0].message }, { status: 400 })
   }
 
-  const { legalName, phone, docType, docNumber, docImageUrl, passportPhotoUrl } = parsed.data
+  const { legalName, phone, presentAddress, permanentAddress, docType, docNumber, docImageUrl, docBackImageUrl, passportPhotoUrl } = parsed.data
 
   const existing = await db.query.volunteerProfiles.findFirst({
     where: eq(volunteerProfiles.userId, session.user.id),
@@ -55,9 +58,12 @@ export async function POST(request: NextRequest) {
       await db
         .update(volunteerProfiles)
         .set({
+          presentAddress: presentAddress ?? existing.presentAddress ?? null,
+          permanentAddress: permanentAddress ?? existing.permanentAddress ?? null,
           kycDocType: docType,
           kycDocNumber: docNumber,
           kycDocImageUrl: docImageUrl ?? null,
+          kycDocBackImageUrl: docBackImageUrl ?? null,
           passportPhotoUrl: passportPhotoUrl ?? existing.passportPhotoUrl ?? null,
           kycStatus: "PENDING",
           kycReviewNote: null,
@@ -69,9 +75,12 @@ export async function POST(request: NextRequest) {
     await db.insert(volunteerProfiles).values({
       userId: session.user.id,
       district: "Unknown",
+      presentAddress: presentAddress ?? null,
+      permanentAddress: permanentAddress ?? null,
       kycDocType: docType,
       kycDocNumber: docNumber,
       kycDocImageUrl: docImageUrl ?? null,
+      kycDocBackImageUrl: docBackImageUrl ?? null,
       passportPhotoUrl: passportPhotoUrl ?? null,
       kycStatus: "PENDING",
     })
