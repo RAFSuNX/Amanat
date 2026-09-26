@@ -1,5 +1,4 @@
 import { S3Client, PutObjectCommand, GetObjectCommand } from "@aws-sdk/client-s3"
-import { getSignedUrl } from "@aws-sdk/s3-request-presigner"
 
 const r2 = new S3Client({
   region: "auto",
@@ -21,18 +20,28 @@ export async function uploadToR2(buffer: Buffer, key: string, contentType: strin
 }
 
 // Upload to private KYC bucket — returns only the key, never a public URL.
-// Access exclusively via getPresignedUrl(). KYC docs are identity documents; never expose publicly.
+// Access exclusively via streamFromR2() through an authenticated server endpoint.
 export async function uploadPrivateToR2(buffer: Buffer, key: string, contentType: string): Promise<string> {
   await r2.send(new PutObjectCommand({ Bucket: PRIVATE_BUCKET, Key: key, Body: buffer, ContentType: contentType }))
   return key
 }
 
-// Generate a 1-hour presigned URL for a private KYC document key.
-export async function getPresignedUrl(key: string): Promise<string> {
-  return getSignedUrl(r2, new GetObjectCommand({ Bucket: PRIVATE_BUCKET, Key: key }), { expiresIn: 3600 })
+// Fetch a private KYC document from R2 and return it as a Buffer + content type.
+// Only call this from an authenticated server route — never expose the key to the client.
+export async function streamFromR2(key: string): Promise<{ body: Buffer; contentType: string } | null> {
+  try {
+    const res = await r2.send(new GetObjectCommand({ Bucket: PRIVATE_BUCKET, Key: key }))
+    const chunks: Buffer[] = []
+    for await (const chunk of res.Body as AsyncIterable<Uint8Array>) {
+      chunks.push(Buffer.from(chunk))
+    }
+    return { body: Buffer.concat(chunks), contentType: res.ContentType ?? "application/octet-stream" }
+  } catch {
+    return null
+  }
 }
 
-// True if the value is a private key (not a legacy public URL).
+// True if the stored value is a private R2 key (not a legacy public URL).
 export function isKey(value: string): boolean {
   return !value.startsWith("https://") && !value.startsWith("http://")
 }

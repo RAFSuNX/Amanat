@@ -6,13 +6,15 @@ import { redirect } from "next/navigation"
 import { parseId } from "@/lib/http"
 import Link from "next/link"
 import { KycReviewForm } from "./form"
-import { getPresignedUrl, isKey } from "@/lib/storage"
+import { isKey } from "@/lib/storage"
 
-async function resolveDocUrl(value: string | null): Promise<string | null> {
+// Private keys are served through the admin proxy endpoint — never exposed directly.
+// Legacy public URLs pass through as-is (transitional, until docs are re-uploaded).
+function resolveDocUrl(value: string | null): string | null {
   if (!value) return null
-  // Legacy public URL — return as-is. New uploads store only the R2 key.
-  if (!isKey(value)) return value
-  return getPresignedUrl(value)
+  if (!isKey(value)) return value // legacy public URL
+  const k = Buffer.from(value, "utf-8").toString("base64url")
+  return `/api/admin/kyc-doc?k=${k}`
 }
 
 function DocViewer({ url, label }: { url: string; label: string }) {
@@ -79,11 +81,9 @@ export default async function KycReviewPage({
   if (!v) redirect("/admin/volunteers")
   if (v.kycStatus !== "PENDING") redirect("/admin/volunteers")
 
-  // Resolve presigned URLs server-side — never sent to client as keys
-  const [frontUrl, backUrl] = await Promise.all([
-    resolveDocUrl(v.kycDocImageUrl),
-    resolveDocUrl(v.kycDocBackImageUrl),
-  ])
+  // Proxy URLs — key is base64url-encoded, never sent as raw R2 key
+  const frontUrl = resolveDocUrl(v.kycDocImageUrl)
+  const backUrl = resolveDocUrl(v.kycDocBackImageUrl)
 
   const fields = [
     { label: "Full Name", value: v.name },
