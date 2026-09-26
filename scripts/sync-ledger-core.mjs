@@ -157,15 +157,28 @@ export async function syncOnce({ log = console.log } = {}) {
     try {
       const summary = {}
       for (const [name, url, tables] of dests) {
+        // Each destination is fully independent — one failing never blocks another.
         const dest = connect(url)
         try {
           await ensureSyncState(dest)
           let n = 0
-          for (const table of tables) n += await syncTable(primary, dest, table)
+          for (const table of tables) {
+            try {
+              n += await syncTable(primary, dest, table)
+            } catch (err) {
+              // Schema drift (missing column, missing table) — log and continue.
+              // Fix: apply migrations to the destination DB.
+              log(`sync -> ${name}: skip ${table}: ${err.message}`)
+            }
+          }
           summary[name] = n
           log(`sync -> ${name}: ${n} row(s) upserted`)
+        } catch (err) {
+          // Full destination failure (connection, auth) — log and continue to next dest.
+          log(`sync -> ${name}: dest failed: ${err.message}`)
+          summary[name] = 'failed'
         } finally {
-          await dest.end({ timeout: 5 })
+          await dest.end({ timeout: 5 }).catch(() => {})
         }
       }
       return { skipped: false, summary }

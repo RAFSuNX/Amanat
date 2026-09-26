@@ -11,6 +11,7 @@ export const metadata: Metadata = {
   },
 }
 
+import { receiptNumber } from "@/lib/receipt"
 import { ledgerDb as db } from "@/db/remote"
 import { donations, distributionAllotments, distributionCycles, needAssessments, beneficiaries } from "@/db/schema"
 import { eq, desc, sql, and, inArray } from "drizzle-orm"
@@ -27,10 +28,6 @@ function maskRef(ref: string) {
   return ref.slice(0, 3) + "****" + ref.slice(-3)
 }
 
-function receiptNumber(id: number, date: Date) {
-  const d = date.toISOString().slice(0, 10).replace(/-/g, "")
-  return `AMT-${d}-${String(id).padStart(5, "0")}`
-}
 
 async function getFundStats() {
   // Total money in (confirmed only)

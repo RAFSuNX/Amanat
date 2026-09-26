@@ -3,11 +3,7 @@ import { donations, users } from "@/db/schema"
 import { eq } from "drizzle-orm"
 import { notFound } from "next/navigation"
 import { PrintButton } from "./print-button"
-
-function receiptNumber(id: number, date: Date) {
-  const d = date.toISOString().slice(0, 10).replace(/-/g, "")
-  return `AMT-${d}-${String(id).padStart(5, "0")}`
-}
+import { receiptNumber } from "@/lib/receipt"
 
 function formatDateTime(date: Date) {
   return date.toLocaleString("en-GB", {
