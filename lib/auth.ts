@@ -5,18 +5,16 @@ import * as schema from "@/db/schema"
 import { redisSecondaryStorage } from "@/lib/redis"
 
 const hasResend = Boolean(process.env.RESEND_API_KEY)
+const BASE_URL = process.env.NEXT_PUBLIC_APP_URL || process.env.BETTER_AUTH_URL || "https://theamanat.org"
+const SUPPORT_EMAIL = process.env.SUPPORT_EMAIL || "support@theamanat.org"
+const LOGO_URL = `${BASE_URL}/logo-white.png`
 
 async function sendVerificationEmail(user: { email: string }, url: string) {
   if (!hasResend) return
   const { Resend } = await import("resend")
   const resend = new Resend(process.env.RESEND_API_KEY)
 
-  const BASE_URL = process.env.NEXT_PUBLIC_APP_URL || process.env.BETTER_AUTH_URL || "https://theamanat.org"
-  const SUPPORT_EMAIL = process.env.SUPPORT_EMAIL || "support@theamanat.org"
-  // White logo sits on the green header band, so it reads correctly in both
-  // light and dark mode (email clients don't reliably support CSS filters or
-  // prefers-color-scheme logo swaps, so we avoid needing them).
-  const LOGO_URL = `${BASE_URL}/logo-white.png`
+  // White logo sits on the green header band — correct in both light and dark email clients.
 
   await resend.emails.send({
     // RESEND_FROM_EMAIL is a raw address; the "Amanat" display name is added here.
@@ -91,9 +89,6 @@ export const auth = betterAuth({
       if (!hasResend) return
       const { Resend } = await import("resend")
       const resend = new Resend(process.env.RESEND_API_KEY)
-      const BASE_URL = process.env.NEXT_PUBLIC_APP_URL || process.env.BETTER_AUTH_URL || "https://theamanat.org"
-      const SUPPORT_EMAIL = process.env.SUPPORT_EMAIL || "support@theamanat.org"
-      const LOGO_URL = `${BASE_URL}/logo-white.png`
       await resend.emails.send({
         from: `Amanat | The Hope for All of Us <${process.env.RESEND_FROM_EMAIL}>`,
         replyTo: SUPPORT_EMAIL,

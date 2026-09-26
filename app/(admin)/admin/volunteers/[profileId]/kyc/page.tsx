@@ -6,13 +6,10 @@ import { redirect } from "next/navigation"
 import { parseId } from "@/lib/http"
 import Link from "next/link"
 import { KycReviewForm } from "./form"
-import { isKey } from "@/lib/storage"
 
-// Private keys are served through the admin proxy endpoint — never exposed directly.
-// Legacy public URLs pass through as-is (transitional, until docs are re-uploaded).
 function resolveDocUrl(value: string | null): string | null {
   if (!value) return null
-  if (!isKey(value)) return value // legacy public URL
+  if (value.startsWith("http")) return value // legacy public URL
   const k = Buffer.from(value, "utf-8").toString("base64url")
   return `/api/admin/kyc-doc?k=${k}`
 }

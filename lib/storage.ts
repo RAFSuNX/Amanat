@@ -40,8 +40,3 @@ export async function streamFromR2(key: string): Promise<{ body: Buffer; content
     return null
   }
 }
-
-// True if the stored value is a private R2 key (not a legacy public URL).
-export function isKey(value: string): boolean {
-  return !value.startsWith("https://") && !value.startsWith("http://")
-}
