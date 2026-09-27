@@ -1,146 +1,129 @@
 # Amanat
 
-**The Hope for All of Us**
+Amanat means trust. The system is named for what it asks of everyone involved: donors trust that their money reaches real people, volunteers trust that the system protects the families they register, families trust that help will come consistently, and admins trust that the record is permanent and honest.
 
-Amanat is a welfare system, not a platform. It exists to connect people who are willing to donate with volunteers who go on the ground to find and support those who genuinely cannot sustain themselves or their families.
-
-We believe welfare must be structured, accountable, and transparent. Every taka donated is recorded. Every family registered is on record. Every distribution is calculated, reviewed, and published publicly. Nothing is hidden.
+This is a welfare system, not a charity platform. It exists to move money from people who have it to people who cannot sustain themselves or their families, through a network of on-the-ground volunteers who verify, document, and deliver. Every step is recorded. Nothing disappears.
 
 ---
 
-## What This Is
+## The Problem This Solves
 
-A monthly welfare cycle operates as follows:
+Informal welfare in Bangladesh breaks down in one of two ways. Either money gets collected with good intentions and nobody can account for where it went, or it gets distributed equally regardless of need, which means the family with six children and no earner gets the same as the family with three working adults. Neither is acceptable.
 
-1. **Donors contribute** via bKash, Nagad, or bank transfer. They submit their transaction reference. An admin verifies and adds it to the shared fund pool.
-2. **Volunteers register families** on the ground. They verify who cannot support themselves, record household details, assess monthly needs, and submit for admin approval.
-3. **The system calculates distribution** proportionally, weighted by family size, dependants, disability, and earner status. Families with greater need receive a proportionally larger share.
-4. **Volunteers review allotments** before the cycle goes live. If a family has an urgent situation, the volunteer can flag it or submit a special need application.
-5. **Admin approves** the final distribution, volunteers deliver, and the results are published on the public ledger.
+Amanat solves both. Every taka that enters the pool is tracked from submission to confirmation. Every family in the system has a documented need assessment. The distribution algorithm calculates proportional shares based on family size, number of children, elderly members, disabled members, and whether anyone in the household earns an income. The results are published publicly before delivery, and the delivered amounts are published after. Anyone with internet access can verify the numbers.
 
 ---
 
-## Who Can Participate
+## How a Cycle Works
 
-| Role | How to join |
-|---|---|
-| Donor | Self-register at `/register`, or donate anonymously without an account |
-| Volunteer | Apply via `/register` (volunteer type), verified by admin after KYC |
-| Admin | First admin seeded manually in DB; subsequent admins added by existing admin |
+The system operates in monthly cycles.
 
-Volunteers must complete KYC (NID, passport, or driving license — front and back) before accessing any beneficiary tools. KYC documents are stored in a private R2 bucket and served exclusively via server-side signed URLs — never exposed directly.
+A volunteer finds a family that cannot support itself. They register the family in the system with full household details, a need assessment, and their own identity on the record. An admin reviews and approves the registration.
 
----
+Donors contribute throughout the month. Each donor submits the transaction reference of their bKash, Nagad, or bank transfer. An admin verifies the transaction and confirms it into the pool. The donor receives a receipt number and a confirmation email. If the donor wants to remain anonymous on the public ledger, that preference is respected, but the amount is always shown.
 
-## Transparency
+When the admin is ready to run a distribution cycle, the system calculates how the pool should be split across all approved families. The calculation is deterministic and documented. The volunteer who covers each family reviews their allotment before the cycle goes live. If a family has an urgent situation that month, the volunteer can flag it or submit a special need application. The admin reviews adjustments, locks the amounts, and activates the cycle.
 
-All confirmed donations and completed distributions are publicly visible at `/ledger` with no login required. Donors may choose to remain anonymous per transaction, but the amount and date are always shown.
+Volunteers then deliver to their assigned families and record delivery. Once all deliveries are complete, the admin closes the cycle and publishes the results to the public ledger. The cycle is permanently on record. It cannot be altered.
 
 ---
 
-## Technical Stack
+## Who Is Involved
 
-| Layer | Technology |
-|---|---|
-| Framework | Next.js 16 (App Router, Node server, Turbopack) |
-| Language | TypeScript |
-| Database | PostgreSQL 17 (in-cluster StatefulSet, Longhorn PVC) |
-| ORM | Drizzle ORM |
-| Auth | Better Auth |
-| Cache | Redis 7 (in-cluster, AOF+RDB persistence) |
-| UI | Tailwind CSS v4 + shadcn/ui |
-| File storage | Cloudflare R2 (public bucket for avatars/receipts, private bucket for KYC docs) |
-| Email | Resend (transactional) |
-| Deployment | k8s via Flux GitOps — images from GHCR, secrets from Doppler |
-| DB backups | Daily pg_dump → Supabase + real-time push-sync → Neon |
+Donors are the simplest participant. They can donate with or without an account. With an account they get a dashboard showing their donation history and receipt numbers. Without an account they get a receipt number in their confirmation email and can find their transaction on the public ledger using that number.
+
+Volunteers must complete a full KYC process before accessing any tools. They submit their NID or passport (front and back), a passport-size photo, their present address, and their permanent address. An admin reviews the documents before approving access. Every action a volunteer takes in the system is permanently logged with their identity attached. If a volunteer registers a family that turns out to be fraudulent, the record shows exactly who submitted it and when.
+
+Admins have access to the full system. They confirm donations, approve beneficiaries, approve volunteer KYC, run distribution cycles, and view the audit log. Every admin action is recorded in a separate append-only audit database that cannot be modified or deleted even by other admins. The first admin must be seeded manually in the database. All subsequent admins are added by an existing admin.
 
 ---
 
-## Local Development
+## The Public Ledger
 
-**Prerequisites:** Docker, Node.js 24+
+The public ledger at `/ledger` is readable by anyone with no login required. It shows every confirmed donation, every completed distribution cycle, and every verified volunteer. The data is served from a Supabase read replica that is kept in sync within seconds of every write to the primary database. The primary database never serves public reads.
+
+Donations show the donor name (or Anonymous), the amount, the method, the date, and a link to the receipt. Distributions show the cycle period, total pool, number of families, and total distributed. Volunteers show their name, district, and verification status.
+
+---
+
+## The Technical System
+
+The application is a Next.js 16 server-side rendered app running on a self-hosted Kubernetes cluster. The database is PostgreSQL 17 on a StatefulSet with Longhorn persistent storage. Authentication is handled by Better Auth with email and password, Redis-backed sessions, and full audit of every sign-in. File storage uses Cloudflare R2 with two separate buckets: one public for donation receipts and volunteer passport photos, one private for KYC identity documents. KYC documents are never served from a public URL. They are fetched from the private bucket server-side by an authenticated admin endpoint and logged in the audit trail every time they are accessed.
+
+Email is handled by Resend. When a donor submits a donation, they receive a confirmation email with their receipt number, a summary of the pending status, and a direct link to the public ledger. If they provided an email, they are urged to monitor the ledger until their donation is confirmed. The verification email for new accounts uses the same template structure.
+
+The sync worker is a separate process running in the cluster. It listens for database change notifications and pushes updates to three external destinations: the Supabase public ledger replica (7 public tables, real-time), Neon (9 business tables, real-time full backup), and the Supabase backup database (daily full pg_dump of everything including the audit database). If any destination fails, the others continue independently. The watermark only advances after a successful commit, so a crashed sync worker replays any missed writes on restart.
+
+Money math is enforced at multiple layers. The database has CHECK constraints that prevent any donation amount from being zero or negative, and any allotment from being negative. State transitions are atomic: a donation can only be confirmed if it is currently pending, a distribution cycle can only be activated if the total allocation does not exceed the pool, and a completed cycle cannot be reopened. A reconciliation check runs at publish time to verify that the sum of all allotments plus the remaining pool equals the original pool cap to within a rounding tolerance. If the check fails, the cycle cannot be published.
+
+---
+
+## Running Locally
+
+Prerequisites: Docker and Node.js 24 or later.
 
 ```bash
 git clone https://github.com/RAFSuNX/Amanat.git
 cd Amanat
-
-# Start everything: postgres, audit-postgres, redis, and Next.js dev server
-# Uses local-only env vars — zero production credentials
 docker compose up app-dev --build
 ```
 
-Visit `http://localhost:3000`.
+That single command starts postgres, the audit database, Redis, runs all migrations, seeds mock data, and starts the Next.js development server at http://localhost:3000.
 
-The `app-dev` service:
-- Runs `npm run dev` with hot reload (source directory is mounted)
-- Uses only local databases — never touches Supabase, Neon, or R2
-- Skips R2/Neon connectivity checks at startup (`DEV_SKIP_CONNECTIVITY=1`)
-- Seeds realistic mock data on first run (idempotent, safe to re-run)
-- Emails are disabled (empty `RESEND_API_KEY` → `requireEmailVerification = false`)
+The dev environment uses only local databases and hardcoded local-only credentials. It never connects to the production databases, Neon, Supabase, or R2. The seed script verifies that the database URL contains localhost before inserting any data, so it cannot run against a remote database even if misconfigured.
 
-### First-time admin account
-
-After `docker compose up app-dev --build`, register at `/register` then promote:
+To create a dev admin account, register at `/register` with any email and password, then run:
 
 ```bash
 docker exec amanat-postgres-1 psql -U amanat -d amanat \
   -c "UPDATE users SET role='ADMIN', email_verified=true WHERE email='your@email.com';"
 ```
 
-### Dev vs prod isolation
+Email verification is not required in the dev environment because RESEND_API_KEY is empty, which sets requireEmailVerification to false in Better Auth.
 
-| | Dev (`docker compose up app-dev`) | Prod (k8s + Flux) |
+| | Dev (docker compose up app-dev) | Prod (k8s + Flux) |
 |---|---|---|
-| Database | Local Docker postgres | In-cluster postgres-0 (Longhorn) |
-| Secrets | Hardcoded local values in compose | Doppler → k8s ExternalSecret |
-| Migrations | Auto-run on container start | `db-migrate` k8s Job before rollout |
-| Seed data | Mock data inserted automatically | Never — real data only |
-| Email | Disabled | Resend (transactional) |
-| File storage | Fake R2 (uploads fail gracefully) | Cloudflare R2 (real buckets) |
+| Database | Local Docker postgres | In-cluster postgres-0 on Longhorn |
+| Secrets | Hardcoded local values in compose | Doppler synced to k8s ExternalSecret |
+| Migrations | Auto-run on container start | db-migrate k8s Job before rollout |
+| Seed data | Mock data on first run | Never |
+| Email | Disabled | Resend |
+| File storage | Fake R2, uploads fail gracefully | Cloudflare R2 |
 | Connectivity checks | Skipped | Run at every pod startup |
 
-**Dev scripts never affect prod:** `seed-dev.mjs` hard-aborts if `DATABASE_URL` is not `localhost`, `dev.sh` is manual-only, the `app-dev` compose service is not referenced by CI or Flux.
-
 ---
 
-## Deployment
+## Deploying
 
-Production is deployed to a k8s cluster via Flux GitOps. Images are built and pushed to GHCR by GitHub Actions, then `server-hub/k8s/amanat/kustomization.yaml` is updated with the new SHA.
+Production deploys are triggered manually via GitHub Actions and delivered by Flux GitOps. The workflow builds multi-arch Docker images (amd64 and arm64 natively, no QEMU emulation) and pushes them to GHCR. After a successful build, the image SHA is updated in the server-hub repository and Flux rolls it out to the cluster.
 
 ```bash
-# Trigger a build
 gh workflow run "CI and build" --repo RAFSuNX/Amanat --ref main
-# Then update server-hub kustomization.yaml with the new image SHA
 ```
 
-Migrations run automatically as a k8s Job before new app pods start. Neon is also migrated in the same job (with retry).
+The deploy sequence is: migration job runs first (applies all pending Drizzle migrations to the primary database, the audit database, and Neon), then new app pods start, then old pods terminate. The public ledger replica and backup database are not blocking. If they are unreachable during deployment, the migration job logs the failure and continues.
 
-### Rollback
-
-- **App:** update `kustomization.yaml` to the previous image SHA
-- **Schema:** migrations are forward-only. For a destructive change, restore from Neon (real-time copy) or Supabase backup (daily pg_dump). See `docs/disaster-recovery.md`.
+Secrets are managed in Doppler under the amanat project, prd config, and synced to the cluster via External Secrets Operator.
 
 ---
 
-## Data Integrity
+## Rollback
 
-- **Primary DB:** PostgreSQL with ACID transactions, DB-level CHECK constraints on all money fields, atomic state machine transitions
-- **Audit trail:** Separate append-only audit database — every admin action is permanently recorded
-- **Real-time backup:** Neon receives push-sync of all 9 business tables within seconds of every write
-- **Daily snapshot:** Full pg_dump of both databases to Supabase at 02:00 Dhaka time
-- **Disaster recovery:** See `docs/disaster-recovery.md`
+Rolling back the application is a one-line change to the image SHA in the server-hub kustomization. The database schema is forward-only. Additive migrations (new nullable columns, new indexes) are backward-compatible with the previous app image, so an app rollback after an additive migration is safe.
+
+Destructive schema changes are not auto-revertible. In that case, restore from Neon (real-time copy, seconds of lag) or from the Supabase backup (nightly pg_dump). Full restore procedures are in `docs/disaster-recovery.md`.
 
 ---
 
 ## Principles
 
-**No middlemen on the money.** Funds go to volunteers who handle the actual purchase of necessities for each family.
+No middlemen on the money. Funds go directly to volunteers who handle the actual purchase and delivery of necessities. The system does not hold a float or pay out through any intermediary.
 
-**Permanent records.** Every family registered stays in the system indefinitely.
+Permanent records. Every family, every donation, every distribution, every admin action is in the system indefinitely and cannot be removed.
 
-**Public accountability.** Anyone can verify the ledger at `/ledger` without an account.
+Public accountability. Any person anywhere can open the ledger and verify the numbers without creating an account.
 
-**Need, not equality.** Distribution is proportional to assessed need, not equal per family.
+Need, not equality. A household with three children, an elderly dependent, and no earner receives more than a household with two working adults. The algorithm is documented and deterministic.
 
 ---
 
