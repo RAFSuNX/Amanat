@@ -32,37 +32,6 @@ services:
     volumes:
       - redis_data:/data
 
-  backup:
-    build:
-      context: .
-      dockerfile: docker/Dockerfile.backup
-    restart: unless-stopped
-    depends_on:
-      - postgres
-      - postgres-audit
-    environment:
-      DATABASE_URL: postgresql://amanat:${POSTGRES_PASSWORD:-amanat_dev}@postgres:5432/amanat
-      AUDIT_DATABASE_URL: postgresql://amanat_audit:${AUDIT_DB_PASSWORD:-amanat_audit_dev}@postgres-audit:5432/amanat_audit
-      BACKUP_DATABASE_URL: ${BACKUP_DATABASE_URL}
-
-  app:
-    build: .
-    restart: unless-stopped
-    ports:
-      - "3000:3000"
-    environment:
-      DATABASE_URL: postgresql://amanat:${POSTGRES_PASSWORD:-amanat_dev}@postgres:5432/amanat
-      REDIS_URL: redis://redis:6379
-      BETTER_AUTH_SECRET: ${BETTER_AUTH_SECRET}
-      BETTER_AUTH_URL: ${BETTER_AUTH_URL:-http://localhost:3000}
-      CLOUDINARY_CLOUD_NAME: ${CLOUDINARY_CLOUD_NAME}
-      CLOUDINARY_API_KEY: ${CLOUDINARY_API_KEY}
-      CLOUDINARY_API_SECRET: ${CLOUDINARY_API_SECRET}
-      RESEND_API_KEY: ${RESEND_API_KEY}
-    depends_on:
-      - postgres
-      - redis
-
 volumes:
   postgres_data:
   postgres_audit_data:

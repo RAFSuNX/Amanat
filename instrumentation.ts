@@ -4,7 +4,10 @@
 export async function register() {
   if (process.env.NEXT_RUNTIME === "nodejs") {
     const { validateEnv, checkConnectivity } = await import("./lib/env")
-    validateEnv()            // keys present + values real (not placeholders)
-    await checkConnectivity() // DB/Redis/R2 actually reachable
+    validateEnv()
+    // Skip connectivity checks in dev (R2/Neon/Supabase not needed locally)
+    if (process.env.DEV_SKIP_CONNECTIVITY !== "1") {
+      await checkConnectivity()
+    }
   }
 }
