@@ -1,6 +1,7 @@
 import { db } from "@/db"
 import { donations } from "@/db/schema"
 import { desc } from "drizzle-orm"
+import Link from "next/link"
 import { Badge } from "@/components/ui/badge"
 import {
   Table,
@@ -69,6 +70,10 @@ export default async function AdminDonationsPage() {
               </TableCell>
               <TableCell>
                 <div className="flex flex-col gap-2">
+                  <Link href={`/admin/donations/${d.id}`}
+                    className="text-xs text-primary underline underline-offset-2">
+                    View Details
+                  </Link>
                   {d.receiptImageUrl && (
                     <a href={d.receiptImageUrl} target="_blank" rel="noopener noreferrer"
                       className="text-xs text-primary underline underline-offset-2">
