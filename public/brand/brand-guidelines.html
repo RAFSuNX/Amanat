@@ -1,0 +1,1303 @@
+<title>Amanat — Brand Guidelines</title>
+<style>
+  .brand-toolbar {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(243,247,244,0.97);
+    border-bottom: 1px solid #d4ddd6;
+    padding: 10px 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    backdrop-filter: blur(8px);
+  }
+  .brand-toolbar-label {
+    font-size: 0.7rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: #9aaea0;
+    font-family: system-ui, sans-serif;
+  }
+  .brand-toolbar-btn {
+    background: #3B5E45;
+    color: white;
+    border: none;
+    padding: 7px 18px;
+    font-size: 0.75rem;
+    font-family: system-ui, sans-serif;
+    cursor: pointer;
+    border-radius: 6px;
+    font-weight: 500;
+  }
+  .brand-toolbar-btn:hover { background: #1A2E20; }
+  @media print {
+    .brand-toolbar { display: none !important; }
+  }
+</style>
+<div class="brand-toolbar">
+  <span class="brand-toolbar-label">Amanat Brand Guidelines</span>
+  <button class="brand-toolbar-btn" onclick="window.print()">Download PDF</button>
+</div>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --green-night:  #1A2E20;
+    --green-core:   #3B5E45;
+    --green-sage:   #7aab8a;
+    --green-mist:   #9aaea0;
+    --green-pale:   #f3f7f4;
+    --green-frost:  #edf2ee;
+    --green-border: #d4ddd6;
+    --white:        #ffffff;
+    --ink:          #1A2E20;
+  }
+
+  html { font-size: 16px; }
+
+  body {
+    background: var(--white);
+    color: var(--ink);
+    font-family: system-ui, -apple-system, sans-serif;
+    line-height: 1.6;
+  }
+
+  /* ── Cover ───────────────────────────────── */
+  .cover {
+    background: var(--green-night);
+    color: var(--white);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 60px 80px;
+    position: relative;
+    overflow: hidden;
+  }
+  .cover::after {
+    content: '';
+    position: absolute;
+    right: -120px; bottom: -120px;
+    width: 480px; height: 480px;
+    border-radius: 50%;
+    background: none;
+    pointer-events: none;
+  }
+  .cover-top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+  }
+  .cover-wordmark {
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: 2.8rem;
+    font-weight: normal;
+    letter-spacing: 0.02em;
+    color: var(--white);
+  }
+  .cover-label {
+    font-size: 0.65rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--green-mist);
+    padding-top: 8px;
+  }
+  .cover-body {
+    max-width: 560px;
+  }
+  .cover-eyebrow {
+    font-size: 0.65rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--green-sage);
+    margin-bottom: 20px;
+  }
+  .cover-title {
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: 3.8rem;
+    font-weight: normal;
+    line-height: 1.15;
+    color: var(--white);
+    text-wrap: balance;
+    margin-bottom: 28px;
+  }
+  .cover-sub {
+    font-size: 0.92rem;
+    color: var(--green-mist);
+    line-height: 1.75;
+    max-width: 420px;
+  }
+  .cover-footer {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+  }
+  .cover-url {
+    font-size: 0.65rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--green-sage);
+  }
+  .cover-year {
+    font-size: 0.65rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--green-mist);
+  }
+  .cover-bar {
+    position: absolute;
+    left: 0; top: 0;
+    width: 5px; height: 100%;
+    background: var(--green-core);
+  }
+
+  /* ── Section wrapper ────────────────────── */
+  .section {
+    padding: 80px;
+    border-bottom: 1px solid var(--green-frost);
+    max-width: 1000px;
+    margin: 0 auto;
+  }
+  .section-full {
+    padding: 80px;
+    border-bottom: 1px solid var(--green-frost);
+  }
+  .section-bg {
+    background: var(--green-pale);
+  }
+  .section-dark {
+    background: var(--green-night);
+    color: var(--white);
+  }
+
+  .eyebrow {
+    font-size: 0.6rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--green-mist);
+    margin-bottom: 12px;
+  }
+  .section-dark .eyebrow { color: var(--green-sage); }
+
+  .section-title {
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: 2rem;
+    font-weight: normal;
+    color: var(--green-night);
+    margin-bottom: 40px;
+    line-height: 1.25;
+  }
+  .section-dark .section-title { color: var(--white); }
+
+  .section-lead {
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: 1.15rem;
+    color: var(--green-core);
+    line-height: 1.8;
+    max-width: 640px;
+    margin-bottom: 32px;
+  }
+  .body-text {
+    font-size: 0.9rem;
+    color: #3d5244;
+    line-height: 1.85;
+    max-width: 640px;
+  }
+
+  /* ── Color palette ──────────────────────── */
+  .palette-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 16px;
+    margin-top: 40px;
+  }
+  .swatch {
+    border-radius: 4px;
+    overflow: hidden;
+    border: 1px solid var(--green-frost);
+  }
+  .swatch-color {
+    height: 96px;
+  }
+  .swatch-info {
+    background: var(--white);
+    padding: 12px 14px;
+    border-top: 1px solid var(--green-frost);
+  }
+  .swatch-name {
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: var(--green-night);
+    display: block;
+    margin-bottom: 3px;
+    letter-spacing: 0.02em;
+  }
+  .swatch-hex {
+    font-family: 'SF Mono', 'Fira Mono', 'Consolas', monospace;
+    font-size: 0.68rem;
+    color: var(--green-mist);
+    display: block;
+    margin-bottom: 6px;
+  }
+  .swatch-usage {
+    font-size: 0.62rem;
+    color: var(--green-mist);
+    line-height: 1.5;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
+  /* ── Typography specimens ───────────────── */
+  .type-grid {
+    display: grid;
+    gap: 1px;
+    background: var(--green-frost);
+    border: 1px solid var(--green-frost);
+    border-radius: 4px;
+    overflow: hidden;
+    margin-top: 40px;
+  }
+  .type-row {
+    background: var(--white);
+    padding: 28px 32px;
+    display: flex;
+    align-items: baseline;
+    gap: 40px;
+  }
+  .type-meta {
+    min-width: 160px;
+    flex-shrink: 0;
+  }
+  .type-label {
+    font-size: 0.6rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--green-mist);
+    display: block;
+    margin-bottom: 4px;
+  }
+  .type-spec {
+    font-size: 0.68rem;
+    color: var(--green-mist);
+    font-family: 'SF Mono', 'Fira Mono', monospace;
+  }
+
+  /* specimens */
+  .specimen-h1 {
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: 2.6rem;
+    font-weight: normal;
+    color: var(--green-night);
+    line-height: 1.15;
+  }
+  .specimen-h2 {
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: 1.75rem;
+    font-weight: normal;
+    color: var(--green-night);
+  }
+  .specimen-h3 {
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: 1.2rem;
+    font-weight: normal;
+    color: var(--green-core);
+    font-style: italic;
+  }
+  .specimen-body {
+    font-size: 0.95rem;
+    color: #3d5244;
+    line-height: 1.85;
+  }
+  .specimen-ui {
+    font-size: 0.85rem;
+    color: var(--green-night);
+    font-weight: 500;
+    font-family: system-ui, -apple-system, sans-serif; /* Geist on live site */
+  }
+  .specimen-label {
+    font-size: 0.6rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--green-mist);
+  }
+  .specimen-mono {
+    font-family: 'SF Mono', 'Fira Mono', 'Consolas', monospace;
+    font-size: 0.8rem;
+    color: var(--green-core);
+  }
+
+  /* ── Logo usage ─────────────────────────── */
+  .logo-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1px;
+    background: var(--green-frost);
+    border: 1px solid var(--green-frost);
+    border-radius: 4px;
+    overflow: hidden;
+    margin-top: 40px;
+  }
+  .logo-box {
+    background: var(--white);
+    padding: 48px 40px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    align-items: flex-start;
+  }
+  .logo-box-dark { background: var(--green-night); }
+  .logo-box-green { background: var(--green-core); }
+  .logo-box-pale { background: var(--green-pale); }
+
+  .logo-wordmark {
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: 2.2rem;
+    font-weight: normal;
+    letter-spacing: 0.02em;
+    color: var(--green-night);
+    line-height: 1;
+  }
+  .logo-wordmark-white { color: var(--white); }
+  .logo-tagline {
+    font-size: 0.6rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--green-mist);
+  }
+  .logo-tagline-light { color: rgba(255,255,255,0.6); }
+
+  .logo-box-label {
+    font-size: 0.58rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--green-mist);
+    margin-top: auto;
+  }
+  .logo-box-dark .logo-box-label { color: rgba(154,174,160,0.7); }
+  .logo-box-green .logo-box-label { color: rgba(154,174,160,0.8); }
+
+  /* ── Do / Don't ─────────────────────────── */
+  .donts-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-top: 40px;
+  }
+  .rule-card {
+    border-radius: 4px;
+    overflow: hidden;
+    border: 1px solid var(--green-frost);
+  }
+  .rule-head {
+    padding: 10px 16px;
+    font-size: 0.6rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    font-weight: 600;
+  }
+  .rule-head-do { background: #e8f5ed; color: #2d6640; }
+  .rule-head-dont { background: #fbeaea; color: #8b3030; }
+  .rule-body {
+    padding: 20px 16px;
+    background: var(--white);
+  }
+  .rule-item {
+    font-size: 0.82rem;
+    color: #3d5244;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--green-frost);
+    line-height: 1.55;
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+  }
+  .rule-item:last-child { border-bottom: none; }
+  .rule-icon { flex-shrink: 0; font-size: 0.75rem; margin-top: 2px; }
+
+  /* ── Voice ──────────────────────────────── */
+  .voice-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    margin-top: 40px;
+  }
+  .voice-card {
+    padding: 28px 24px;
+    background: var(--green-pale);
+    border-radius: 4px;
+    border: 1px solid var(--green-frost);
+  }
+  .voice-attr {
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: 1.15rem;
+    color: var(--green-night);
+    margin-bottom: 10px;
+  }
+  .voice-not {
+    font-size: 0.62rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--green-mist);
+    margin-bottom: 14px;
+  }
+  .voice-example {
+    font-size: 0.82rem;
+    color: #3d5244;
+    line-height: 1.7;
+    font-style: italic;
+    border-left: 2px solid var(--green-sage);
+    padding-left: 12px;
+    margin-top: 14px;
+  }
+
+  /* ── UI elements ────────────────────────── */
+  .ui-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    margin-top: 40px;
+  }
+  .ui-block {
+    border: 1px solid var(--green-frost);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  .ui-block-label {
+    padding: 8px 16px;
+    font-size: 0.58rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--green-mist);
+    background: var(--green-pale);
+    border-bottom: 1px solid var(--green-frost);
+  }
+  .ui-block-inner {
+    padding: 24px 20px;
+    background: var(--white);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    align-items: center;
+  }
+
+  /* buttons — rounded-lg (6px), Geist/system-ui, matches live site */
+  .btn-primary {
+    background: oklch(0.40 0.11 155);
+    color: oklch(0.99 0.005 155);
+    border: 1px solid transparent;
+    border-radius: 6px;
+    padding: 7px 18px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    letter-spacing: 0.01em;
+    cursor: default;
+    font-family: system-ui;
+    white-space: nowrap;
+  }
+  .btn-outline {
+    background: transparent;
+    color: oklch(0.40 0.11 155);
+    border: 1px solid oklch(0.88 0.02 155);
+    border-radius: 6px;
+    padding: 7px 18px;
+    font-size: 0.8rem;
+    font-family: system-ui;
+    cursor: default;
+    white-space: nowrap;
+  }
+  .btn-ghost {
+    background: transparent;
+    color: oklch(0.50 0.045 155);
+    border: 1px solid transparent;
+    border-radius: 6px;
+    padding: 7px 14px;
+    font-size: 0.8rem;
+    font-family: system-ui;
+    cursor: default;
+  }
+  .btn-sm {
+    padding: 5px 10px;
+    font-size: 0.75rem;
+    border-radius: 5px;
+  }
+
+  /* badges */
+  .badge { padding: 3px 10px; font-size: 0.68rem; letter-spacing: 0.06em; font-family: system-ui; }
+  .badge-active { background: #e8f5ed; color: #2d6640; }
+  .badge-pending { background: #f5f0e8; color: #7a6030; }
+  .badge-rejected { background: #fbeaea; color: #8b3030; }
+
+  /* card row sample */
+  .sample-row {
+    border: 1px solid var(--green-frost);
+    border-radius: 4px;
+    padding: 16px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    width: 100%;
+    background: var(--white);
+  }
+  .sample-row-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+  }
+  .sample-name { font-size: 0.92rem; font-weight: 600; color: var(--green-night); }
+  .sample-amount { font-size: 1.1rem; font-weight: 700; color: var(--green-night); }
+  .sample-meta { font-size: 0.72rem; color: var(--green-mist); }
+  .sample-pill {
+    display: inline-flex;
+    align-items: stretch;
+    border: 1px solid var(--green-frost);
+    border-radius: 3px;
+    font-size: 0.68rem;
+    color: #3d5244;
+    overflow: hidden;
+  }
+  .sample-pill span { padding: 2px 8px; }
+  .sample-pill-div { width: 1px; background: var(--green-frost); }
+
+  /* ── Spacing scale ──────────────────────── */
+  .spacing-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 40px;
+    font-size: 0.82rem;
+  }
+  .spacing-table th {
+    text-align: left;
+    font-size: 0.6rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--green-mist);
+    padding: 0 16px 12px 0;
+    font-weight: 500;
+    border-bottom: 1px solid var(--green-frost);
+  }
+  .spacing-table td {
+    padding: 14px 16px 14px 0;
+    border-bottom: 1px solid var(--green-frost);
+    color: #3d5244;
+    vertical-align: middle;
+  }
+  .spacing-bar-wrap { display: flex; align-items: center; gap: 12px; }
+  .spacing-bar { height: 6px; background: var(--green-sage); border-radius: 2px; }
+  .spacing-mono { font-family: 'SF Mono', 'Fira Mono', monospace; font-size: 0.72rem; color: var(--green-mist); }
+
+  /* ── Accent bar elements ────────────────── */
+  .bar-top { height: 5px; background: var(--green-core); width: 100%; }
+  .bar-grad { height: 3px; background: var(--green-core); width: 100%; }
+
+  /* ── Footer ─────────────────────────────── */
+  .guide-footer {
+    background: var(--green-night);
+    color: var(--white);
+    padding: 48px 80px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+  }
+  .guide-footer-left {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .footer-word {
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: 1.5rem;
+    color: var(--white);
+  }
+  .footer-tag {
+    font-size: 0.6rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--green-sage);
+  }
+  .footer-note {
+    font-size: 0.65rem;
+    color: var(--green-mist);
+    letter-spacing: 0.08em;
+  }
+
+  /* ── Responsive ─────────────────────────── */
+  @media (max-width: 700px) {
+    .cover { padding: 40px 28px; }
+    .section, .section-full { padding: 48px 28px; }
+    .cover-title { font-size: 2.4rem; }
+    .logo-grid, .donts-grid, .voice-grid, .ui-grid { grid-template-columns: 1fr; }
+    .type-row { flex-direction: column; gap: 16px; }
+    .guide-footer { flex-direction: column; gap: 24px; padding: 40px 28px; }
+  }
+</style>
+
+<!-- ══════════════════════════════════════════ COVER -->
+<div class="cover">
+  <div class="cover-bar"></div>
+  <div class="cover-top">
+    <div class="cover-wordmark">Amanat</div>
+    <div class="cover-label">Brand Guidelines · 2025</div>
+  </div>
+  <div class="cover-body">
+    <div class="cover-eyebrow">Visual Identity System</div>
+    <div class="cover-title">The mark of trust, in every form.</div>
+    <p class="cover-sub">
+      Amanat is a welfare system built on radical transparency. These guidelines
+      define how the brand appears across all surfaces — print, digital, and document —
+      so that every encounter communicates the same thing: this organisation handles
+      what people give it with complete honesty.
+    </p>
+  </div>
+  <div class="cover-footer">
+    <div class="cover-url">theamanat.org</div>
+    <div class="cover-year">Bangladesh · 2025</div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════ BRAND STORY -->
+<div class="section-full" style="padding: 80px;">
+  <div style="max-width: 1000px; margin: 0 auto;">
+    <div class="eyebrow">01 — Brand Foundation</div>
+    <h2 class="section-title">What Amanat means</h2>
+
+    <p class="section-lead">
+      Amanat is the Arabic word for trust — specifically the trust placed in a person
+      when something precious is handed to them for safekeeping.
+    </p>
+    <p class="body-text">
+      That meaning carries everything. Donors trust us with money that belongs to
+      families they will never meet. Volunteers trust us with identities they have
+      verified personally. Families trust us to deliver, month after month, without
+      the amount shrinking on its way to them. The brand exists to make that trust
+      visible and to keep it legible across every surface it touches.
+    </p>
+    <div style="margin-top: 40px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px;">
+      <div style="padding: 24px; background: var(--green-pale); border-left: 3px solid var(--green-core); border-radius: 0 4px 4px 0;">
+        <div style="font-size: 0.6rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--green-mist); margin-bottom: 10px;">Mission</div>
+        <div style="font-family: Georgia, serif; font-size: 1rem; color: var(--green-night); line-height: 1.6;">Move money from those who have it to those who cannot sustain themselves, with a permanent, verifiable record of every taka.</div>
+      </div>
+      <div style="padding: 24px; background: var(--green-pale); border-left: 3px solid var(--green-core); border-radius: 0 4px 4px 0;">
+        <div style="font-size: 0.6rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--green-mist); margin-bottom: 10px;">Tagline</div>
+        <div style="font-family: Georgia, serif; font-size: 1rem; color: var(--green-night); line-height: 1.6; font-style: italic;">"The Hope for All of Us"</div>
+        <div style="font-size: 0.72rem; color: var(--green-mist); margin-top: 10px;">Used beneath the wordmark in formal contexts.</div>
+      </div>
+      <div style="padding: 24px; background: var(--green-pale); border-left: 3px solid var(--green-core); border-radius: 0 4px 4px 0;">
+        <div style="font-size: 0.6rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--green-mist); margin-bottom: 10px;">Principle</div>
+        <div style="font-family: Georgia, serif; font-size: 1rem; color: var(--green-night); line-height: 1.6;">Everything Amanat does is publicly accountable. Nothing disappears.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════ LOGO -->
+<div class="section-full section-bg" style="padding: 80px;">
+  <div style="max-width: 1000px; margin: 0 auto;">
+    <div class="eyebrow">02 — Wordmark</div>
+    <h2 class="section-title">Logo & wordmark usage</h2>
+    <p class="body-text">
+      The Amanat wordmark is set in Georgia — a humanist serif chosen for its warmth,
+      legibility, and air of permanent record. The wordmark should always appear at a
+      size where its serifs are readable. Never apply outline, shadow, or distortion.
+    </p>
+
+    <div class="logo-grid">
+      <div class="logo-box">
+        <div class="logo-wordmark">Amanat</div>
+        <div class="logo-tagline" style="letter-spacing: 0.18em;">The Hope for All of Us</div>
+        <div class="logo-box-label">Primary — on white</div>
+      </div>
+      <div class="logo-box logo-box-pale">
+        <div class="logo-wordmark">Amanat</div>
+        <div class="logo-tagline">The Hope for All of Us</div>
+        <div class="logo-box-label">On pale moss</div>
+      </div>
+      <div class="logo-box logo-box-dark">
+        <div class="logo-wordmark logo-wordmark-white">Amanat</div>
+        <div class="logo-tagline logo-tagline-light">The Hope for All of Us</div>
+        <div class="logo-box-label">On Forest Night</div>
+      </div>
+      <div class="logo-box logo-box-green">
+        <div class="logo-wordmark logo-wordmark-white">Amanat</div>
+        <div class="logo-tagline logo-tagline-light">The Hope for All of Us</div>
+        <div class="logo-box-label">On Amanat Green</div>
+      </div>
+    </div>
+
+    <div style="margin-top: 32px; background: #fbeaea; border: 1px solid #f5d4d4; border-radius: 4px; padding: 20px 24px;">
+      <div style="font-size: 0.6rem; letter-spacing: 0.18em; text-transform: uppercase; color: #8b3030; margin-bottom: 12px; font-weight: 600;">Never do this</div>
+      <div style="display: flex; flex-wrap: wrap; gap: 32px; align-items: center;">
+        <div style="text-align: center;">
+          <div style="font-family: Georgia, serif; font-size: 1.8rem; color: var(--green-core); opacity: 0.3; margin-bottom: 6px;">Amanat</div>
+          <div style="font-size: 0.6rem; color: #8b3030; text-transform: uppercase; letter-spacing: 0.1em;">Low opacity</div>
+        </div>
+        <div style="text-align: center;">
+          <div style="font-family: Arial, sans-serif; font-size: 1.8rem; color: var(--green-night); margin-bottom: 6px;">Amanat</div>
+          <div style="font-size: 0.6rem; color: #8b3030; text-transform: uppercase; letter-spacing: 0.1em;">Wrong typeface</div>
+        </div>
+        <div style="text-align: center;">
+          <div style="font-family: Georgia, serif; font-size: 1.8rem; color: #e74c3c; margin-bottom: 6px;">Amanat</div>
+          <div style="font-size: 0.6rem; color: #8b3030; text-transform: uppercase; letter-spacing: 0.1em;">Off-brand color</div>
+        </div>
+        <div style="text-align: center;">
+          <div style="font-family: Georgia, serif; font-size: 1.8rem; color: var(--green-night); text-transform: uppercase; letter-spacing: 0.3em; margin-bottom: 6px;">AMANAT</div>
+          <div style="font-size: 0.6rem; color: #8b3030; text-transform: uppercase; letter-spacing: 0.1em;">All-caps</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════ COLOUR -->
+<div class="section-full" style="padding: 80px;">
+  <div style="max-width: 1000px; margin: 0 auto;">
+    <div class="eyebrow">03 — Colour</div>
+    <h2 class="section-title">The palette</h2>
+    <p class="body-text">
+      The palette draws from the deep greens of the Bengal landscape — paddy fields,
+      river vegetation, forested hills. Every tone is a considered step in a single
+      green family, from almost-black to near-white. There are no accent hues from
+      outside this family; restraint is the mark of trust.
+    </p>
+    <div class="palette-grid">
+      <div class="swatch">
+        <div class="swatch-color" style="background: #1A2E20;"></div>
+        <div class="swatch-info">
+          <span class="swatch-name">Forest Night</span>
+          <span class="swatch-hex">#1A2E20</span>
+          <span class="swatch-usage">Headlines · Primary text · Backgrounds (dark)</span>
+        </div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-color" style="background: #3B5E45;"></div>
+        <div class="swatch-info">
+          <span class="swatch-name">Amanat Green</span>
+          <span class="swatch-hex">#3B5E45</span>
+          <span class="swatch-usage">Primary brand · Buttons · Links · Accent bars</span>
+        </div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-color" style="background: #3d5244;"></div>
+        <div class="swatch-info">
+          <span class="swatch-name">Field Green</span>
+          <span class="swatch-hex">#3d5244</span>
+          <span class="swatch-usage">Body text on white</span>
+        </div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-color" style="background: #7aab8a;"></div>
+        <div class="swatch-info">
+          <span class="swatch-name">Sage</span>
+          <span class="swatch-hex">#7aab8a</span>
+          <span class="swatch-usage">Secondary highlights · Supporting accents</span>
+        </div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-color" style="background: #9aaea0;"></div>
+        <div class="swatch-info">
+          <span class="swatch-name">Mist</span>
+          <span class="swatch-hex">#9aaea0</span>
+          <span class="swatch-usage">Captions · Labels · Secondary text</span>
+        </div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-color" style="background: #f3f7f4; border-bottom: 1px solid #edf2ee;"></div>
+        <div class="swatch-info">
+          <span class="swatch-name">Pale Moss</span>
+          <span class="swatch-hex">#f3f7f4</span>
+          <span class="swatch-usage">Page backgrounds · Card fills</span>
+        </div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-color" style="background: #edf2ee; border-bottom: 1px solid #d4ddd6;"></div>
+        <div class="swatch-info">
+          <span class="swatch-name">Frost</span>
+          <span class="swatch-hex">#edf2ee</span>
+          <span class="swatch-usage">Borders · Dividers · Table rules</span>
+        </div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-color" style="background: #d4ddd6; border-bottom: 1px solid #c0d4c5;"></div>
+        <div class="swatch-info">
+          <span class="swatch-name">Border Green</span>
+          <span class="swatch-hex">#d4ddd6</span>
+          <span class="swatch-usage">Heavier rule lines · Footer dividers</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Gradient -->
+    <div style="margin-top: 32px; padding: 20px 24px; background: var(--green-pale); border-radius: 4px; border: 1px solid var(--green-frost);">
+      <div style="font-size: 0.6rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--green-mist); margin-bottom: 14px;">Document bottom bar</div>
+      <div style="height: 10px; border-radius: 3px; background: #3B5E45; margin-bottom: 10px;"></div>
+      <div style="font-family: 'SF Mono', monospace; font-size: 0.72rem; color: var(--green-mist);">#3B5E45</div>
+      <div style="font-size: 0.72rem; color: var(--green-mist); margin-top: 4px;">Used exclusively on document footer bars. Not for backgrounds or buttons.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════ TYPOGRAPHY -->
+<div class="section-full section-bg" style="padding: 80px;">
+  <div style="max-width: 1000px; margin: 0 auto;">
+    <div class="eyebrow">04 — Typography</div>
+    <h2 class="section-title">Type system</h2>
+    <p class="body-text">
+      Two typefaces. <strong>Georgia</strong> for display, narrative, and formal documents — its serifs carry the weight of a signed record. <strong>Geist</strong> (sans-serif) for all UI, labels, and data — the typeface used across the live website and admin system. Labels always uppercase, always tracked at 0.18–0.22em.
+    </p>
+
+    <div class="type-grid">
+      <div class="type-row">
+        <div class="type-meta">
+          <span class="type-label">Display / H1</span>
+          <span class="type-spec">Georgia · 2.6rem · normal</span>
+        </div>
+        <div class="specimen-h1">Amanat Welfare System</div>
+      </div>
+      <div class="type-row">
+        <div class="type-meta">
+          <span class="type-label">Section / H2</span>
+          <span class="type-spec">Georgia · 1.75rem · normal</span>
+        </div>
+        <div class="specimen-h2">Donation Confirmed</div>
+      </div>
+      <div class="type-row">
+        <div class="type-meta">
+          <span class="type-label">Subhead / H3</span>
+          <span class="type-spec">Georgia · 1.2rem · italic</span>
+        </div>
+        <div class="specimen-h3">Distribution Cycle — September 2025</div>
+      </div>
+      <div class="type-row">
+        <div class="type-meta">
+          <span class="type-label">Body / Prose</span>
+          <span class="type-spec">Georgia · 0.95rem · normal</span>
+        </div>
+        <div class="specimen-body">Every taka that enters the pool is tracked from submission to confirmation. Every family in the system has a documented need assessment.</div>
+      </div>
+      <div class="type-row">
+        <div class="type-meta">
+          <span class="type-label">UI / Interface</span>
+          <span class="type-spec">system-ui · 0.88rem · 500</span>
+        </div>
+        <div class="specimen-ui">Confirm Donation &nbsp;·&nbsp; View Details &nbsp;·&nbsp; Review KYC</div>
+      </div>
+      <div class="type-row">
+        <div class="type-meta">
+          <span class="type-label">Label / Caption</span>
+          <span class="type-spec">system-ui · 0.6rem · 500 · 0.2em tracked</span>
+        </div>
+        <div class="specimen-label">Transaction Reference &nbsp;·&nbsp; Donation Details &nbsp;·&nbsp; Official Receipt</div>
+      </div>
+      <div class="type-row">
+        <div class="type-meta">
+          <span class="type-label">Monospace / Data</span>
+          <span class="type-spec">SF Mono / Consolas · 0.8rem</span>
+        </div>
+        <div class="specimen-mono">AMT-20250927-00012 &nbsp;·&nbsp; DEV-BK-001</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════ SPACING -->
+<div class="section-full" style="padding: 80px;">
+  <div style="max-width: 1000px; margin: 0 auto;">
+    <div class="eyebrow">05 — Spacing & Layout</div>
+    <h2 class="section-title">Space scale</h2>
+    <p class="body-text">All spacing derives from a 4px base unit. Padding compounds in exact multiples.</p>
+    <table class="spacing-table">
+      <thead>
+        <tr>
+          <th>Token</th>
+          <th>Value</th>
+          <th>Rem</th>
+          <th>Use</th>
+          <th>Visual</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="spacing-mono">space-1</span></td>
+          <td>4px</td>
+          <td>0.25rem</td>
+          <td>Internal gap, icon spacing</td>
+          <td><div class="spacing-bar-wrap"><div class="spacing-bar" style="width: 4px;"></div></div></td>
+        </tr>
+        <tr>
+          <td><span class="spacing-mono">space-2</span></td>
+          <td>8px</td>
+          <td>0.5rem</td>
+          <td>Label gap, tight padding</td>
+          <td><div class="spacing-bar-wrap"><div class="spacing-bar" style="width: 8px;"></div></div></td>
+        </tr>
+        <tr>
+          <td><span class="spacing-mono">space-3</span></td>
+          <td>12px</td>
+          <td>0.75rem</td>
+          <td>Pill padding, badge</td>
+          <td><div class="spacing-bar-wrap"><div class="spacing-bar" style="width: 12px;"></div></div></td>
+        </tr>
+        <tr>
+          <td><span class="spacing-mono">space-4</span></td>
+          <td>16px</td>
+          <td>1rem</td>
+          <td>Card inner gap, form field</td>
+          <td><div class="spacing-bar-wrap"><div class="spacing-bar" style="width: 16px;"></div></div></td>
+        </tr>
+        <tr>
+          <td><span class="spacing-mono">space-5</span></td>
+          <td>20px</td>
+          <td>1.25rem</td>
+          <td>Card padding (x)</td>
+          <td><div class="spacing-bar-wrap"><div class="spacing-bar" style="width: 20px;"></div></div></td>
+        </tr>
+        <tr>
+          <td><span class="spacing-mono">space-6</span></td>
+          <td>24px</td>
+          <td>1.5rem</td>
+          <td>Section interior gap</td>
+          <td><div class="spacing-bar-wrap"><div class="spacing-bar" style="width: 24px;"></div></div></td>
+        </tr>
+        <tr>
+          <td><span class="spacing-mono">space-10</span></td>
+          <td>40px</td>
+          <td>2.5rem</td>
+          <td>Card padding (y), subsection</td>
+          <td><div class="spacing-bar-wrap"><div class="spacing-bar" style="width: 40px;"></div></div></td>
+        </tr>
+        <tr>
+          <td><span class="spacing-mono">space-14</span></td>
+          <td>56px</td>
+          <td>3.5rem</td>
+          <td>Document gutter (horizontal)</td>
+          <td><div class="spacing-bar-wrap"><div class="spacing-bar" style="width: 56px;"></div></div></td>
+        </tr>
+        <tr>
+          <td><span class="spacing-mono">space-20</span></td>
+          <td>80px</td>
+          <td>5rem</td>
+          <td>Section break, major division</td>
+          <td><div class="spacing-bar-wrap"><div class="spacing-bar" style="width: 80px;"></div></div></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════ UI ELEMENTS -->
+<div class="section-full section-bg" style="padding: 80px;">
+  <div style="max-width: 1000px; margin: 0 auto;">
+    <div class="eyebrow">06 — UI Components</div>
+    <h2 class="section-title">Interface elements</h2>
+    <p class="body-text">All specs below are pulled directly from the component source. Font is <strong>Geist</strong> for all UI. Base radius token: <code style="font-size:0.78rem;background:var(--green-pale);padding:1px 5px;border-radius:3px;">--radius: 0.375rem (6px)</code>. Background: warm near-white <code style="font-size:0.78rem;background:var(--green-pale);padding:1px 5px;border-radius:3px;">oklch(0.985 0.004 90)</code>.</p>
+
+    <!-- Nav -->
+    <div style="margin-top:32px;border:1px solid var(--green-frost);border-radius:6px;overflow:hidden;">
+      <div style="padding:8px 16px;font-size:0.58rem;letter-spacing:0.16em;text-transform:uppercase;color:var(--green-mist);background:var(--green-pale);border-bottom:1px solid var(--green-frost);">Nav — h-16 (64px) · sticky · border-b border-border/40 · px-10</div>
+      <div style="height:64px;display:flex;align-items:center;justify-content:space-between;padding:0 40px;background:oklch(0.985 0.004 90);border-bottom:1px solid oklch(0.88 0.02 155 / 0.4);">
+        <img src="/logo.png" alt="Amanat" style="height:48px;width:auto;object-fit:contain;" onerror="this.style.display='none';this.insertAdjacentHTML('afterend','<span style=&quot;font-family:Georgia,serif;font-size:1.2rem;color:oklch(0.12 0.015 155);&quot;>Amanat</span>')" />
+        <div style="display:flex;align-items:center;gap:24px;">
+          <span style="font-size:0.75rem;color:oklch(0.50 0.045 155);font-family:system-ui;">Donations</span>
+          <span style="font-size:0.75rem;color:oklch(0.50 0.045 155);font-family:system-ui;">Distributions</span>
+          <span style="font-size:0.75rem;color:oklch(0.50 0.045 155);font-family:system-ui;">Volunteers</span>
+          <span style="font-size:0.75rem;color:oklch(0.50 0.045 155);font-family:system-ui;">Sign in</span>
+          <!-- Button sm: h-7 28px, text-[0.8rem], rounded-lg, px-2.5 -->
+          <button style="height:28px;background:oklch(0.40 0.11 155);color:oklch(0.99 0.005 155);border:1px solid transparent;border-radius:6px;padding:0 10px;font-size:0.8rem;font-family:system-ui;font-weight:500;cursor:default;">Donate</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Buttons -->
+    <div style="margin-top:24px;border:1px solid var(--green-frost);border-radius:6px;overflow:hidden;">
+      <div style="padding:8px 16px;font-size:0.58rem;letter-spacing:0.16em;text-transform:uppercase;color:var(--green-mist);background:var(--green-pale);border-bottom:1px solid var(--green-frost);">Button variants · all rounded-lg (6px) · font-medium · Geist</div>
+      <div style="padding:20px 24px;background:oklch(0.985 0.004 90);display:flex;flex-direction:column;gap:16px;">
+
+        <!-- sizes row -->
+        <div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap;padding-bottom:16px;border-bottom:1px solid var(--green-frost);">
+          <div style="font-size:0.58rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--green-mist);min-width:60px;">Sizes</div>
+          <!-- xs: h-6 24px text-xs px-2 -->
+          <div style="display:flex;flex-direction:column;align-items:center;gap:6px;">
+            <button style="height:24px;background:oklch(0.40 0.11 155);color:oklch(0.99 0.005 155);border:1px solid transparent;border-radius:5px;padding:0 8px;font-size:0.75rem;font-family:system-ui;font-weight:500;cursor:default;white-space:nowrap;">Label</button>
+            <span style="font-size:0.55rem;color:var(--green-mist);font-family:monospace;">xs · h-6 · 24px</span>
+          </div>
+          <!-- sm: h-7 28px text-[0.8rem] px-2.5 -->
+          <div style="display:flex;flex-direction:column;align-items:center;gap:6px;">
+            <button style="height:28px;background:oklch(0.40 0.11 155);color:oklch(0.99 0.005 155);border:1px solid transparent;border-radius:6px;padding:0 10px;font-size:0.8rem;font-family:system-ui;font-weight:500;cursor:default;white-space:nowrap;">Label</button>
+            <span style="font-size:0.55rem;color:var(--green-mist);font-family:monospace;">sm · h-7 · 28px</span>
+          </div>
+          <!-- default: h-8 32px text-sm px-2.5 -->
+          <div style="display:flex;flex-direction:column;align-items:center;gap:6px;">
+            <button style="height:32px;background:oklch(0.40 0.11 155);color:oklch(0.99 0.005 155);border:1px solid transparent;border-radius:6px;padding:0 10px;font-size:0.875rem;font-family:system-ui;font-weight:500;cursor:default;white-space:nowrap;">Label</button>
+            <span style="font-size:0.55rem;color:var(--green-mist);font-family:monospace;">default · h-8 · 32px</span>
+          </div>
+          <!-- lg: h-9 36px text-sm px-2.5 -->
+          <div style="display:flex;flex-direction:column;align-items:center;gap:6px;">
+            <button style="height:36px;background:oklch(0.40 0.11 155);color:oklch(0.99 0.005 155);border:1px solid transparent;border-radius:6px;padding:0 10px;font-size:0.875rem;font-family:system-ui;font-weight:500;cursor:default;white-space:nowrap;">Label</button>
+            <span style="font-size:0.55rem;color:var(--green-mist);font-family:monospace;">lg · h-9 · 36px</span>
+          </div>
+        </div>
+
+        <!-- variants row -->
+        <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
+          <div style="font-size:0.58rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--green-mist);min-width:60px;">Variants</div>
+          <!-- default -->
+          <div style="display:flex;flex-direction:column;align-items:center;gap:6px;">
+            <button style="height:32px;background:oklch(0.40 0.11 155);color:oklch(0.99 0.005 155);border:1px solid transparent;border-radius:6px;padding:0 10px;font-size:0.875rem;font-family:system-ui;font-weight:500;cursor:default;">Confirm</button>
+            <span style="font-size:0.55rem;color:var(--green-mist);font-family:monospace;">default</span>
+          </div>
+          <!-- outline -->
+          <div style="display:flex;flex-direction:column;align-items:center;gap:6px;">
+            <button style="height:32px;background:oklch(0.985 0.004 90);color:oklch(0.12 0.015 155);border:1px solid oklch(0.88 0.02 155);border-radius:6px;padding:0 10px;font-size:0.875rem;font-family:system-ui;font-weight:500;cursor:default;">View</button>
+            <span style="font-size:0.55rem;color:var(--green-mist);font-family:monospace;">outline</span>
+          </div>
+          <!-- secondary -->
+          <div style="display:flex;flex-direction:column;align-items:center;gap:6px;">
+            <button style="height:32px;background:oklch(0.94 0.025 155);color:oklch(0.30 0.08 155);border:1px solid transparent;border-radius:6px;padding:0 10px;font-size:0.875rem;font-family:system-ui;font-weight:500;cursor:default;">Review</button>
+            <span style="font-size:0.55rem;color:var(--green-mist);font-family:monospace;">secondary</span>
+          </div>
+          <!-- ghost -->
+          <div style="display:flex;flex-direction:column;align-items:center;gap:6px;">
+            <button style="height:32px;background:transparent;color:oklch(0.50 0.045 155);border:1px solid transparent;border-radius:6px;padding:0 10px;font-size:0.875rem;font-family:system-ui;font-weight:500;cursor:default;">Cancel</button>
+            <span style="font-size:0.55rem;color:var(--green-mist);font-family:monospace;">ghost</span>
+          </div>
+          <!-- destructive — bg-destructive/10 text-destructive, NOT solid red -->
+          <div style="display:flex;flex-direction:column;align-items:center;gap:6px;">
+            <button style="height:32px;background:oklch(0.57 0.22 27 / 0.1);color:oklch(0.57 0.22 27);border:1px solid transparent;border-radius:6px;padding:0 10px;font-size:0.875rem;font-family:system-ui;font-weight:500;cursor:default;">Reject</button>
+            <span style="font-size:0.55rem;color:var(--green-mist);font-family:monospace;">destructive</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Badges -->
+    <div style="margin-top:24px;border:1px solid var(--green-frost);border-radius:6px;overflow:hidden;">
+      <div style="padding:8px 16px;font-size:0.58rem;letter-spacing:0.16em;text-transform:uppercase;color:var(--green-mist);background:var(--green-pale);border-bottom:1px solid var(--green-frost);">Badge · h-5 (20px) · rounded-4xl (full pill) · text-xs · font-medium · px-2</div>
+      <div style="padding:20px 24px;background:white;display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
+        <!-- default: bg-primary text-primary-foreground -->
+        <div style="display:flex;flex-direction:column;align-items:center;gap:6px;">
+          <span style="height:20px;display:inline-flex;align-items:center;border-radius:9999px;background:oklch(0.40 0.11 155);color:oklch(0.99 0.005 155);font-size:0.75rem;font-weight:500;padding:0 8px;font-family:system-ui;white-space:nowrap;">CONFIRMED</span>
+          <span style="font-size:0.55rem;color:var(--green-mist);font-family:monospace;">default</span>
+        </div>
+        <!-- secondary: bg-secondary text-secondary-foreground -->
+        <div style="display:flex;flex-direction:column;align-items:center;gap:6px;">
+          <span style="height:20px;display:inline-flex;align-items:center;border-radius:9999px;background:oklch(0.94 0.025 155);color:oklch(0.30 0.08 155);font-size:0.75rem;font-weight:500;padding:0 8px;font-family:system-ui;white-space:nowrap;">PENDING</span>
+          <span style="font-size:0.55rem;color:var(--green-mist);font-family:monospace;">secondary</span>
+        </div>
+        <!-- destructive: bg-destructive/10 text-destructive -->
+        <div style="display:flex;flex-direction:column;align-items:center;gap:6px;">
+          <span style="height:20px;display:inline-flex;align-items:center;border-radius:9999px;background:oklch(0.57 0.22 27 / 0.1);color:oklch(0.57 0.22 27);font-size:0.75rem;font-weight:500;padding:0 8px;font-family:system-ui;white-space:nowrap;">REJECTED</span>
+          <span style="font-size:0.55rem;color:var(--green-mist);font-family:monospace;">destructive</span>
+        </div>
+        <!-- outline: border-border text-foreground -->
+        <div style="display:flex;flex-direction:column;align-items:center;gap:6px;">
+          <span style="height:20px;display:inline-flex;align-items:center;border-radius:9999px;border:1px solid oklch(0.88 0.02 155);color:oklch(0.12 0.015 155);font-size:0.75rem;font-weight:500;padding:0 8px;font-family:system-ui;white-space:nowrap;">ACTIVE</span>
+          <span style="font-size:0.55rem;color:var(--green-mist);font-family:monospace;">outline</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card row + contact pill + method tag -->
+    <div style="margin-top:24px;border:1px solid var(--green-frost);border-radius:6px;overflow:hidden;">
+      <div style="padding:8px 16px;font-size:0.58rem;letter-spacing:0.16em;text-transform:uppercase;color:var(--green-mist);background:var(--green-pale);border-bottom:1px solid var(--green-frost);">Donation card row (admin list)</div>
+      <div style="padding:20px;background:white;">
+        <div style="border:1px solid oklch(0.88 0.02 155);border-radius:6px;padding:16px 20px;display:flex;flex-direction:column;gap:10px;background:oklch(0.985 0.004 90);">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px;">
+            <div>
+              <div style="display:flex;align-items:center;gap:8px;">
+                <span style="font-size:0.95rem;font-weight:600;color:oklch(0.12 0.015 155);font-family:system-ui;">Rina Begum</span>
+                <span style="font-size:0.62rem;border:1px solid oklch(0.88 0.02 155);border-radius:3px;padding:1px 6px;color:oklch(0.50 0.045 155);font-family:system-ui;">Public: Anonymous</span>
+              </div>
+              <!-- contact pill: inline-flex items-stretch border border-border/50 rounded text-[11px] -->
+              <div style="margin-top:5px;">
+                <span style="display:inline-flex;align-items:stretch;border:1px solid oklch(0.88 0.02 155);border-radius:3px;font-size:0.688rem;color:oklch(0.30 0.08 155);font-family:system-ui;overflow:hidden;">
+                  <span style="padding:2px 8px;">01712 345 678</span>
+                  <span style="border-left:1px solid oklch(0.88 0.02 155);"></span>
+                  <span style="padding:2px 8px;">donor@example.com</span>
+                </span>
+              </div>
+            </div>
+            <div style="display:flex;align-items:center;gap:10px;flex-shrink:0;">
+              <span style="font-size:1.1rem;font-weight:700;color:oklch(0.12 0.015 155);font-family:system-ui;">৳5,000</span>
+              <!-- badge secondary (PENDING) -->
+              <span style="height:20px;display:inline-flex;align-items:center;border-radius:9999px;background:oklch(0.94 0.025 155);color:oklch(0.30 0.08 155);font-size:0.75rem;font-weight:500;padding:0 8px;font-family:system-ui;">PENDING</span>
+            </div>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;">
+            <div style="display:flex;align-items:center;gap:8px;">
+              <!-- method tag -->
+              <span style="border:1px solid oklch(0.88 0.02 155);border-radius:3px;padding:2px 8px;font-size:0.625rem;font-family:system-ui;text-transform:uppercase;letter-spacing:0.1em;color:oklch(0.30 0.08 155);">BKASH</span>
+              <span style="font-family:monospace;font-size:0.72rem;color:oklch(0.50 0.045 155);">DEV-BK-001</span>
+              <span style="color:oklch(0.88 0.02 155);">·</span>
+              <span style="font-size:0.72rem;color:oklch(0.50 0.045 155);font-family:system-ui;">27 Sep 2025</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:10px;">
+              <a style="font-size:0.75rem;color:oklch(0.40 0.11 155);text-decoration:underline;text-underline-offset:3px;font-family:system-ui;">View Details</a>
+              <!-- btn sm default -->
+              <button style="height:28px;background:oklch(0.40 0.11 155);color:oklch(0.99 0.005 155);border:1px solid transparent;border-radius:6px;padding:0 10px;font-size:0.8rem;font-family:system-ui;font-weight:500;cursor:default;">Confirm</button>
+              <!-- btn sm outline -->
+              <button style="height:28px;background:oklch(0.985 0.004 90);color:oklch(0.12 0.015 155);border:1px solid oklch(0.88 0.02 155);border-radius:6px;padding:0 10px;font-size:0.8rem;font-family:system-ui;font-weight:500;cursor:default;">Reject</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Document bars -->
+    <div style="margin-top:24px;border:1px solid var(--green-frost);border-radius:6px;overflow:hidden;">
+      <div style="padding:8px 16px;font-size:0.58rem;letter-spacing:0.16em;text-transform:uppercase;color:var(--green-mist);background:var(--green-pale);border-bottom:1px solid var(--green-frost);">Document accent bars</div>
+      <div style="padding:20px 24px;background:white;display:flex;flex-direction:column;gap:16px;">
+        <div>
+          <div style="font-size:0.58rem;color:var(--green-mist);letter-spacing:0.12em;text-transform:uppercase;margin-bottom:8px;font-family:system-ui;">Top bar — 5px solid #3B5E45</div>
+          <div style="height:5px;background:#3B5E45;"></div>
+        </div>
+        <div>
+          <div style="font-size:0.58rem;color:var(--green-mist);letter-spacing:0.12em;text-transform:uppercase;margin-bottom:8px;font-family:system-ui;">Bottom bar — 3px · #3B5E45</div>
+          <div style="height:3px;background:#3B5E45;"></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════ VOICE -->
+<div class="section-full" style="padding: 80px;">
+  <div style="max-width: 1000px; margin: 0 auto;">
+    <div class="eyebrow">07 — Voice & Tone</div>
+    <h2 class="section-title">How Amanat speaks</h2>
+    <p class="body-text">
+      Amanat writes like a careful person who takes responsibility seriously —
+      direct, warm without being familiar, and always specific. It never apologises
+      for the gravity of what it does. It never oversells.
+    </p>
+    <div class="voice-grid">
+      <div class="voice-card">
+        <div class="voice-attr">Accountable</div>
+        <div class="voice-not">Not bureaucratic</div>
+        <p style="font-size: 0.78rem; color: var(--green-mist); margin-bottom: 12px;">State exactly what happened and who is responsible for it. Avoid passive constructions that obscure ownership.</p>
+        <div class="voice-example">"Your donation of ৳5,000 has been confirmed and credited to the shared pool. Admin Hossain verified it on 27 September."</div>
+      </div>
+      <div class="voice-card">
+        <div class="voice-attr">Warm</div>
+        <div class="voice-not">Not sentimental</div>
+        <p style="font-size: 0.78rem; color: var(--green-mist); margin-bottom: 12px;">Acknowledge what the person has done without leaning into emotion. The weight of the work does that for you.</p>
+        <div class="voice-example">"We urge you to keep an eye on the ledger until your donation is verified and added to the pool — so you know it arrived properly."</div>
+      </div>
+      <div class="voice-card">
+        <div class="voice-attr">Plain</div>
+        <div class="voice-not">Not colloquial</div>
+        <p style="font-size: 0.78rem; color: var(--green-mist); margin-bottom: 12px;">Write for a first-time reader who has never encountered welfare systems. Avoid jargon. Define terms on first use.</p>
+        <div class="voice-example">"The distribution cycle is the monthly process by which Amanat calculates and delivers funds to each approved family."</div>
+      </div>
+    </div>
+
+    <div style="margin-top: 32px; display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+      <div style="padding: 20px 24px; background: #e8f5ed; border-radius: 4px;">
+        <div style="font-size: 0.6rem; letter-spacing: 0.18em; text-transform: uppercase; color: #2d6640; margin-bottom: 12px; font-weight: 600;">Write this</div>
+        <ul style="list-style: none; display: flex; flex-direction: column; gap: 8px;">
+          <li style="font-size: 0.82rem; color: #1A2E20;">"Your donation reaches us confirmed."</li>
+          <li style="font-size: 0.82rem; color: #1A2E20;">"This receipt can be verified independently."</li>
+          <li style="font-size: 0.82rem; color: #1A2E20;">"Every taka in and every taka out is on record."</li>
+          <li style="font-size: 0.82rem; color: #1A2E20;">"Rejected — document unclear. Please resubmit."</li>
+        </ul>
+      </div>
+      <div style="padding: 20px 24px; background: #fbeaea; border-radius: 4px;">
+        <div style="font-size: 0.6rem; letter-spacing: 0.18em; text-transform: uppercase; color: #8b3030; margin-bottom: 12px; font-weight: 600;">Not this</div>
+        <ul style="list-style: none; display: flex; flex-direction: column; gap: 8px;">
+          <li style="font-size: 0.82rem; color: #3d1a1a;">"Amazing! Your generous gift changes lives!"</li>
+          <li style="font-size: 0.82rem; color: #3d1a1a;">"We're sorry, there was an issue..."</li>
+          <li style="font-size: 0.82rem; color: #3d1a1a;">"100% of donations go to the poor."</li>
+          <li style="font-size: 0.82rem; color: #3d1a1a;">"Please try again later."</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════ DOCUMENT FAMILY -->
+<div class="section-full section-bg" style="padding: 80px;">
+  <div style="max-width: 1000px; margin: 0 auto;">
+    <div class="eyebrow">08 — Document Family</div>
+    <h2 class="section-title">Print & document standards</h2>
+    <p class="body-text">
+      All formal Amanat documents share a common anatomy: a 5px solid green top bar,
+      the wordmark at upper left, a receipt or reference number at upper right,
+      a footer with contact details and an authorised signatory block, and a
+      3px solid bottom bar. This structure is the same whether the document
+      is a donation receipt, a distribution certificate, or a correspondence letter.
+    </p>
+    <div style="margin-top: 40px; border: 1px solid var(--green-border); border-radius: 4px; overflow: hidden; background: white; max-width: 520px; font-family: system-ui, sans-serif;">
+      <!-- mini invoice preview -->
+      <div style="height: 5px; background: #3B5E45;"></div>
+      <div style="padding: 28px 32px 20px; border-bottom: 1px solid #edf2ee; display: flex; flex-direction: column; gap: 16px;">
+        <div style="font-family: Georgia, serif; font-size: 1.6rem; color: #1A2E20;">Amanat</div>
+        <div style="display: flex; justify-content: space-between; align-items: flex-end;">
+          <div>
+            <div style="font-size: 0.6rem; color: #3B5E45; letter-spacing: 0.16em; text-transform: uppercase;">The Hope for All of Us</div>
+            <div style="font-size: 0.55rem; color: #9aaea0; letter-spacing: 0.1em; text-transform: uppercase; margin-top: 2px;">Bangladesh</div>
+          </div>
+          <div style="text-align: right;">
+            <div style="font-size: 0.6rem; color: #3B5E45; letter-spacing: 0.16em; text-transform: uppercase;">Official Donation Receipt</div>
+            <div style="font-size: 0.55rem; color: #9aaea0; letter-spacing: 0.1em; text-transform: uppercase; margin-top: 2px;">AMT-20250927-00012</div>
+          </div>
+        </div>
+      </div>
+      <div style="padding: 20px 32px; font-size: 0.75rem; color: #9aaea0; letter-spacing: 0.06em; text-align: center;">[ Document body ]</div>
+      <div style="border-top: 1px solid #d4ddd6; padding: 16px 32px; display: flex; justify-content: space-between; align-items: flex-end; font-size: 0.62rem;">
+        <div style="color: #6B8070; display: flex; flex-direction: column; gap: 2px;">
+          <span>contact@theamanat.org</span>
+          <span>theamanat.org</span>
+        </div>
+        <div style="text-align: right;">
+          <div style="width: 100px; border-top: 1.5px dashed #3B5E45; padding-top: 4px; color: #1A2E20; font-weight: 600;">Admin Name</div>
+          <div style="font-size: 0.55rem; color: #6B8070; text-transform: uppercase; letter-spacing: 0.08em; margin-top: 2px;">Authorized Signatory</div>
+        </div>
+      </div>
+      <div style="height: 3px; background: #3B5E45;"></div>
+    </div>
+
+    <div style="margin-top: 28px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px;">
+      <div style="padding: 16px 20px; background: white; border: 1px solid var(--green-frost); border-radius: 4px;">
+        <div style="font-size: 0.6rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--green-mist); margin-bottom: 8px;">Document types</div>
+        <ul style="list-style: none; display: flex; flex-direction: column; gap: 6px;">
+          <li style="font-size: 0.78rem; color: #3d5244;">Donation Receipt</li>
+          <li style="font-size: 0.78rem; color: #3d5244;">Correspondence Letterhead</li>
+          <li style="font-size: 0.78rem; color: #3d5244;">Distribution Certificate</li>
+          <li style="font-size: 0.78rem; color: #3d5244;">Volunteer Approval Letter</li>
+        </ul>
+      </div>
+      <div style="padding: 16px 20px; background: white; border: 1px solid var(--green-frost); border-radius: 4px;">
+        <div style="font-size: 0.6rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--green-mist); margin-bottom: 8px;">Paper standard</div>
+        <ul style="list-style: none; display: flex; flex-direction: column; gap: 6px;">
+          <li style="font-size: 0.78rem; color: #3d5244;">A4 · 210 × 297 mm</li>
+          <li style="font-size: 0.78rem; color: #3d5244;">Portrait orientation</li>
+          <li style="font-size: 0.78rem; color: #3d5244;">Gutter: 56px all sides</li>
+          <li style="font-size: 0.78rem; color: #3d5244;">Typeface: Georgia body</li>
+        </ul>
+      </div>
+      <div style="padding: 16px 20px; background: white; border: 1px solid var(--green-frost); border-radius: 4px;">
+        <div style="font-size: 0.6rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--green-mist); margin-bottom: 8px;">Digital</div>
+        <ul style="list-style: none; display: flex; flex-direction: column; gap: 6px;">
+          <li style="font-size: 0.78rem; color: #3d5244;">Email: HTML · max 640px wide</li>
+          <li style="font-size: 0.78rem; color: #3d5244;">Same header / footer anatomy</li>
+          <li style="font-size: 0.78rem; color: #3d5244;">White background, no dark mode</li>
+          <li style="font-size: 0.78rem; color: #3d5244;">Georgia for all body text</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════ FOOTER -->
+<div class="guide-footer">
+  <div class="guide-footer-left">
+    <div class="footer-word">Amanat</div>
+    <div class="footer-tag">The Hope for All of Us</div>
+    <div class="footer-note" style="margin-top: 10px;">contact@theamanat.org · theamanat.org · Bangladesh</div>
+  </div>
+  <div style="text-align: right; display: flex; flex-direction: column; gap: 4px;">
+    <div class="footer-note">Brand Guidelines · Version 1.0</div>
+    <div class="footer-note">Issued 2025. Internal use.</div>
+    <div class="footer-note" style="margin-top: 8px; font-size: 0.6rem; color: rgba(154,174,160,0.5);">These guidelines apply to all Amanat communications,<br>print, digital, and formal correspondence.</div>
+  </div>
+</div>

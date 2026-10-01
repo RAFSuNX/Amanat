@@ -119,6 +119,48 @@ export default async function AdminDashboard() {
           ))}
         </div>
       </div>
+
+      {/* Brand Assets */}
+      <div>
+        <h2 className="text-sm font-medium text-muted-foreground mb-4">Brand Assets</h2>
+        <div className="flex flex-col divide-y divide-border/40 border border-border/60 rounded-xl overflow-hidden">
+          {[
+            {
+              title: "Brand Guidelines",
+              description: "Colour palette, typography, button specs, voice & tone, document standards",
+              href: "/brand/brand-guidelines.html",
+              tag: "PDF",
+            },
+            {
+              title: "Official Letterhead",
+              description: "A4 correspondence template — ready to print or save as PDF",
+              href: "/brand/letterhead.html",
+              tag: "A4 PDF",
+            },
+          ].map((asset) => (
+            <a
+              key={asset.href}
+              href={asset.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="px-5 py-4 flex items-center justify-between gap-4 hover:bg-muted/20 transition-colors group"
+            >
+              <div className="flex items-center gap-3 min-w-0">
+                <span className="border border-border/50 rounded px-1.5 py-0.5 font-medium text-foreground/70 uppercase tracking-wide text-[10px] shrink-0">
+                  {asset.tag}
+                </span>
+                <div className="min-w-0">
+                  <p className="text-sm font-semibold">{asset.title}</p>
+                  <p className="text-xs text-muted-foreground mt-0.5">{asset.description}</p>
+                </div>
+              </div>
+              <span className="text-xs text-primary font-medium group-hover:underline underline-offset-2 shrink-0">
+                Download &rarr;
+              </span>
+            </a>
+          ))}
+        </div>
+      </div>
     </div>
   )
 }

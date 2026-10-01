@@ -96,7 +96,7 @@ export default async function AdminDonationDetailPage({
           {d.status === "PENDING" && (
             <div className="border border-border/60 rounded-xl p-5 flex flex-col gap-3">
               <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">Decision</p>
-              <DonationActions donationId={d.id} />
+              <DonationActions donationId={d.id} donorName={d.donorName} amount={d.amount} transactionRef={d.transactionRef} />
             </div>
           )}
         </div>

@@ -1,0 +1,308 @@
+<title>Amanat — Official Letterhead</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body { background: #d8ddd9; font-family: system-ui, sans-serif; }
+
+  .no-print {
+    background: rgba(243,247,244,0.96);
+    border-bottom: 1px solid #d4ddd6;
+    padding: 10px 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+  .no-print a { font-size: 0.72rem; color: #9aaea0; text-decoration: none; }
+  .no-print a:hover { color: #1A2E20; }
+  .print-btn {
+    background: #3B5E45;
+    color: white;
+    border: none;
+    padding: 7px 18px;
+    font-size: 0.75rem;
+    font-family: system-ui;
+    cursor: pointer;
+  }
+
+  .page-wrap {
+    display: flex;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 32px 20px 60px;
+  }
+
+  /* A4 at 96dpi = 794 × 1123px */
+  .invoice-page {
+    background: white;
+    width: 794px;
+    min-height: 1123px;
+    box-shadow: 0 2px 24px rgba(26,46,32,0.18);
+    display: flex;
+    flex-direction: column;
+    font-family: Georgia, 'Times New Roman', serif;
+  }
+
+  /* ── Top bar — exact invoice: 5px solid #3B5E45 */
+  .bar-top { height: 5px; background: #3B5E45; flex-shrink: 0; }
+
+  /* ── Header — exact invoice: px-14 pt-10 pb-8 border-b */
+  .lh-header {
+    padding: 40px 56px 32px 56px;
+    border-bottom: 1px solid #e5e5e5;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    flex-shrink: 0;
+  }
+
+  /* Logo row — exact invoice: img height 64px, alignSelf flex-start */
+  .lh-logo {
+    height: 64px;
+    width: auto;
+    align-self: flex-start;
+    display: block;
+  }
+
+  /* Tagline + doc-type row — exact invoice: justify-content space-between */
+  .lh-meta-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+  }
+
+  /* Left side — exact invoice font sizes/colors/tracking */
+  .lh-tagline-main {
+    font-size: 0.72rem;
+    color: #3B5E45;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    font-family: system-ui, sans-serif;
+    font-weight: 500;
+    display: block;
+    margin-bottom: 3px;
+  }
+  .lh-tagline-country {
+    font-size: 0.65rem;
+    color: #9aaea0;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    font-family: system-ui, sans-serif;
+    display: block;
+  }
+
+  /* Right side — exact invoice */
+  .lh-ref-type {
+    font-size: 0.72rem;
+    color: #3B5E45;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    font-family: system-ui, sans-serif;
+    font-weight: 500;
+    display: block;
+    text-align: right;
+    margin-bottom: 3px;
+  }
+  .lh-ref-number {
+    font-size: 0.65rem;
+    color: #9aaea0;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    font-family: system-ui, sans-serif;
+    display: block;
+    text-align: right;
+  }
+
+  /* ── Body — blank A4 writing space */
+  .lh-body {
+    flex: 1;
+    padding: 40px 56px 32px 56px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+
+  /* Writing lines */
+  .lh-lines { display: flex; flex-direction: column; flex: 1; }
+  .lh-line { border-bottom: 1px solid #edf2ee; height: 34px; flex-shrink: 0; }
+
+  /* ── Footer — exact invoice: border-top padding 20px 56px 28px flex-col gap-16px */
+  .lh-footer {
+    border-top: 1px solid #d4ddd6;
+    padding: 20px 56px 28px 56px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    flex-shrink: 0;
+  }
+
+  /* Footer main row — exact invoice: justify-between align-end */
+  .lh-footer-main {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+  }
+
+  /* Contact block — exact invoice */
+  .lh-contact-label {
+    font-size: 0.6rem;
+    color: #9aaea0;
+    font-family: system-ui, sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 4px;
+    display: block;
+  }
+  .lh-contact-line {
+    font-size: 0.65rem;
+    color: #6B8070;
+    font-family: system-ui, sans-serif;
+    display: block;
+  }
+
+  /* Signature block — exact invoice: flex-col align-end */
+  .lh-sig-block {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 0;
+  }
+  .lh-sig-space { height: 32px; }
+  /* dashed line — exact invoice: width 160px borderTop 2px dashed #3B5E45 pt-6px */
+  .lh-sig-line {
+    width: 160px;
+    border-top: 2px dashed #3B5E45;
+    padding-top: 6px;
+  }
+  .lh-sig-name {
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: #1A2E20;
+    font-family: system-ui, sans-serif;
+    text-align: right;
+    display: block;
+  }
+  .lh-sig-title {
+    font-size: 0.58rem;
+    color: #6B8070;
+    font-family: system-ui, sans-serif;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    text-align: right;
+    margin-top: 2px;
+    display: block;
+  }
+
+  /* Transparency note — exact invoice */
+  .lh-footer-note {
+    font-size: 0.6rem;
+    color: #c0d4c5;
+    font-family: system-ui, sans-serif;
+    line-height: 1.6;
+    border-top: 1px solid #edf2ee;
+    padding-top: 10px;
+  }
+
+  /* ── Bottom bar — exact invoice: 3px gradient */
+  .bar-bottom {
+    height: 3px;
+    background: #3B5E45;
+    flex-shrink: 0;
+  }
+
+  @media print {
+    .no-print { display: none !important; }
+    body, .page-wrap { background: white; padding: 0; margin: 0; }
+    .invoice-page { box-shadow: none; width: 100%; min-height: 100%; }
+    @page { size: A4 portrait; margin: 0; }
+  }
+</style>
+
+<div class="no-print">
+  <a href="https://theamanat.org/ledger/donations">Back to Ledger</a>
+  <button class="print-btn" onclick="window.print()">Download PDF</button>
+</div>
+
+<div class="page-wrap">
+  <div class="invoice-page">
+
+    <div class="bar-top"></div>
+
+    <!-- Header — exact invoice header -->
+    <div class="lh-header">
+      <img src="/logo.png" alt="Amanat" class="lh-logo" />
+
+      <div class="lh-meta-row">
+        <div>
+          <span class="lh-tagline-main">The Hope for All of Us</span>
+          <span class="lh-tagline-country">Bangladesh</span>
+        </div>
+        <div>
+          <span class="lh-ref-type">Official Correspondence</span>
+          <span class="lh-ref-number">AMT-LTR-__________</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Blank body -->
+    <div class="lh-body">
+      <div class="lh-lines">
+        <div class="lh-line"></div>
+        <div class="lh-line"></div>
+        <div class="lh-line"></div>
+        <div class="lh-line"></div>
+        <div class="lh-line"></div>
+        <div class="lh-line"></div>
+        <div class="lh-line"></div>
+        <div class="lh-line"></div>
+        <div class="lh-line"></div>
+        <div class="lh-line"></div>
+        <div class="lh-line"></div>
+        <div class="lh-line"></div>
+        <div class="lh-line"></div>
+        <div class="lh-line"></div>
+        <div class="lh-line"></div>
+        <div class="lh-line"></div>
+        <div class="lh-line"></div>
+        <div class="lh-line"></div>
+        <div class="lh-line"></div>
+        <div class="lh-line"></div>
+      </div>
+    </div>
+
+    <!-- Footer — exact invoice footer -->
+    <div class="lh-footer">
+      <div class="lh-footer-main">
+
+        <!-- Contact left — exact invoice -->
+        <div>
+          <span class="lh-contact-label">Contact</span>
+          <span class="lh-contact-line">+880 1X-XXXX-XXXX</span>
+          <span class="lh-contact-line">contact@theamanat.org</span>
+          <span class="lh-contact-line">theamanat.org</span>
+        </div>
+
+        <!-- Signature right — exact invoice, no stamp -->
+        <div class="lh-sig-block">
+          <div class="lh-sig-space"></div>
+          <div class="lh-sig-line">
+            <span class="lh-sig-name">Amanat Admin</span>
+            <span class="lh-sig-title">Authorized Signatory</span>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Transparency note — exact invoice -->
+      <p class="lh-footer-note">
+        Amanat operates as a transparent welfare system. Every taka in and every taka out is publicly accounted for.
+        This receipt is verifiable at theamanat.org/ledger using the transaction reference above.
+      </p>
+    </div>
+
+    <div class="bar-bottom"></div>
+
+  </div>
+</div>

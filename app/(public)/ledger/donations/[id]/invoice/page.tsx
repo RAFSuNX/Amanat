@@ -255,7 +255,7 @@ export default async function InvoicePage({
           </div>
 
           {/* Bottom accent bar */}
-          <div style={{ height: "3px", background: "linear-gradient(to right, #3B5E45, #7aab8a)" }} />
+          <div style={{ height: "3px", background: "#3B5E45" }} />
         </div>
       </div>
     </>
